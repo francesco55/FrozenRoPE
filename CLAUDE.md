@@ -33,6 +33,45 @@ Build a working, tested skeleton. Do **not** run large experiments yet. In order
 
 Leave RQ4 (LoRA, full fine-tuning) as a stub with a TODO.
 
+## Status and implementation notes
+
+Branch `chore/skeleton-setup`. Update this list as steps land.
+
+- [x] 1. uv env (Python 3.11): `pyproject.toml`, `uv.lock`, `requirements.txt` exported via
+  `uv export`. Pin verified on the real checkpoint: `uv run python scripts/check_env.py`.
+- [x] 2. `posext/models/olmo2_posext.py` + `positional.py`, all six modes. Identity with stock
+  OLMo-2 checked ad hoc (tiny model and real checkpoint); not yet a pytest.
+- [ ] 3. `tests/test_identity.py` and the other tests. **Next.**
+- [ ] 4. `models/build.py` (do together with 3; the freezing test needs it).
+- [ ] 5–9. Data, training, evaluation, YaRN grid, SCC + README. RQ4 stub.
+
+Notes for the remaining steps:
+- **All positional parameters live in one module, `model.model.posext`** (`PositionalEncoding`).
+  Freeze everything else; save/load only `posext.*`. Attention layers reach it through a
+  plain attribute (`_posext`), not a submodule, so it is registered once.
+- **Positional params stay float32** even when the model is bf16: `PositionalEncoding._apply`
+  undoes downcasts from `.to()`, and `post_init` sets `_keep_in_fp32_modules_strict = ["posext"]`
+  for `from_pretrained(dtype=bf16)` (the non-strict list only covers fp16). It is set per
+  instance and only when posext has parameters, because HF rejects listed modules that own
+  none (modes `none`/`pi`/`yarn`).
+- **Gradient checkpointing must use `use_reentrant=False`.** With a frozen backbone the layer
+  inputs don't require grad, so reentrant checkpointing gives `posext` no gradients, silently.
+- **Identity tolerances (fp32):** all modes exact except DaRoPE, ~3e-7 on the tiny model and
+  ~2e-4 on the real model (logits ~25), from the 0.5 position offset. `darope.eps` must be
+  < 0.5/L (enforced in code).
+- **Stock YaRN cross-check:** `Olmo2Config` rejects `rope_scaling` with keys beyond
+  `type`/`factor`; set `config.rope_scaling = {...}` after construction. Our `yarn` and `pi`
+  modes match stock YaRN / linear scaling exactly.
+- **Per-head modes assume no GQA** (true for OLMo-2-1B; code raises otherwise).
+- **FlashAttention-2 + gapped `position_ids`:** in transformers 4.57.1, with batch size 1,
+  any `position_ids` that are not a plain `arange` (e.g. PoSE gaps) switch FA2 to its
+  packed-sequence path, which starts a new sequence at every position id equal to 0. PoSE ids
+  contain exactly one 0 (the first token), so the result is still one causal sequence and
+  correct. Gapped ids that do **not** start at 0 would be mis-segmented under FA2: keep the
+  first position at 0, or use SDPA/eager (unaffected) for such tests.
+- The copied model file keeps upstream style (ruff per-file ignores in `pyproject.toml`) so it
+  diffs cleanly against transformers 4.57.1's `modeling_olmo2.py`.
+
 ## Repository layout
 
 ```
@@ -92,12 +131,30 @@ values and the attention kernel unchanged). Two forms, selected by `temp.form`:
 - `constant`: one `log_tau ∈ R^{16}` per layer, init 0; scale = exp(log_tau_h).
 - `adascale` (proposed default, see "Proposed choices"): AdaRoPE's length-dependent form,
   scale λ_h(L) = (1/T_h) · [ln(1 + max(L, L_ref)/L_ref)]^{γ_h}, with learned T_h and γ_h per
-  head and `L_ref` a config hyperparameter. L is the current sequence length.
-  Open question for the PoSE regime: whether L means the number of tokens (4k) or the
-  span of position IDs (up to 16k). Make it a config option (`temp.length_source`:
-  `tokens` | `positions`, default `tokens`) since the choice affects RQ2's hypothesis.
+  head and `L_ref` a config hyperparameter (`temp.ref_len`, default L = 4096).
+  **L is per query, not the whole sequence length** (as in AdaRoPE): the query at index i
+  attends causally to i + 1 keys, so L_i = i + 1. A whole-sequence L would make a token's
+  output depend on text after it (non-causal) and break KV-cache generation.
+  Because of the `max(L, L_ref)`, λ is constant up to L_ref and only varies beyond it.
   Initialize T_h = 1 and γ_h = 0, which gives λ_h = 1 at every length, so the identity
-  test still holds. (AdaRoPE's own initialization may differ; note it if so.)
+  test still holds. This matches AdaRoPE's initialization.
+
+  **`temp.length_source`: `tokens` | `positions`** (default `tokens`) chooses what i is:
+  the token's index in the input (= the number of keys it really attends to) or its
+  position id. The two are identical everywhere except PoSE training, so RQ1 training
+  and all evaluation are unaffected. Under PoSE they diverge: with 4096 tokens split as
+  indices 0–2047 → positions 0–2047 and indices 2048–4095 → positions 10000–12047, the token
+  at index 3000 has L = 3001 under `tokens` (below L_ref, λ flat) but L ≈ 10951 under
+  `positions` (λ grows as if at ~11k, although only 3001 keys are present).
+  Consequence for RQ2: with `tokens`, L never exceeds 4096 during PoSE training, so γ_h
+  receives **zero gradient** and T_h can only learn a length-independent rescaling. That
+  makes "temperatures cannot be learned from short sequences" true by construction, not an
+  empirical finding. With `positions`, γ_h does get a gradient, but from a mismatched
+  signal (16k-like positions, 4k-key softmax); whether it transfers to real 16k inputs is
+  the actual test. **Run RQ2 with both settings and report the difference**: `tokens` as
+  the by-construction baseline, `positions` as the real test of the hypothesis.
+  (Minor: in batched generation with left padding, the token index counts pad tokens;
+  `positions` is correct there. Evaluation should use batch size 1 or `positions`.)
 
 Optional field `pos.init_from_yarn: bool` (default false) initializes `a` from YaRN's
 frequencies instead of 0, to compare against AdaRoPE's initialization.

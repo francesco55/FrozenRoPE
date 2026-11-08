@@ -39,3 +39,7 @@ markers = ["gpu: needs a CUDA GPU and the real OLMo-2 checkpoint"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.ruff.lint.per-file-ignores]
+# Copied from transformers: keep upstream style so diffs against modeling_olmo2.py stay small.
+"posext/models/olmo2_posext.py" = ["UP", "PLR0402", "RUF012", "E501"]
