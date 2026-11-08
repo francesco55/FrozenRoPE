@@ -72,7 +72,8 @@ class TempConfig:
     # What "length" means for AdaScale. Following AdaRoPE, the length is per query:
     # L_i = index_i + 1, where index_i is the token's index in the sequence (`tokens`,
     # from cache_position) or its position id (`positions`). They differ only under PoSE,
-    # where `tokens` leaves gamma with zero gradient; RQ2 should run both. See CLAUDE.md,
+    # where `tokens` keeps every length <= L_ref, so gamma only duplicates tau as a constant
+    # scale and learns nothing about length; RQ2 should run both. See CLAUDE.md,
     # "Positional modes" -> adascale.
     length_source: str = "tokens"
     # AdaScale reference length L_ref. None -> native length L.
@@ -310,14 +311,20 @@ class PositionalEncoding(nn.Module):
         Learned positional parameters are finicky in low precision, and bf16 frequencies would
         give wrong angles at large positions. Device moves still apply normally.
         """
+        # Keep the original float32 tensors: casting to bf16 and back would lose precision.
+        saved_params = {n: p.data for n, p in self._parameters.items() if p is not None and p.dtype == torch.float32}
+        saved_buffers = {n: b for n, b in self._buffers.items() if b is not None and b.dtype == torch.float32}
         super()._apply(fn, recurse)
-        # Undo any downcast; `p.data = ...` keeps the same Parameter object (optimizer-safe).
-        for p in self.parameters(recurse=False):
-            if p.is_floating_point() and p.dtype != torch.float32:
-                p.data = p.data.float()
-        for name, b in self._buffers.items():
-            if b is not None and b.is_floating_point() and b.dtype != torch.float32:
-                self._buffers[name] = b.float()
+        # Where fn changed the dtype, restore the original values on the new device.
+        # `p.data = ...` keeps the same Parameter object (optimizer-safe).
+        for name, original in saved_params.items():
+            p = self._parameters[name]
+            if p.dtype != torch.float32:
+                p.data = original.to(device=p.device, dtype=torch.float32)
+        for name, original in saved_buffers.items():
+            b = self._buffers[name]
+            if b.dtype != torch.float32:
+                self._buffers[name] = original.to(device=b.device, dtype=torch.float32)
         return self
 
     @property

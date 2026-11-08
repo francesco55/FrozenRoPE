@@ -39,19 +39,32 @@ Branch `chore/skeleton-setup`. Update this list as steps land.
 
 - [x] 1. uv env (Python 3.11): `pyproject.toml`, `uv.lock`, `requirements.txt` exported via
   `uv export`. Pin verified on the real checkpoint: `uv run python scripts/check_env.py`.
-- [x] 2. `posext/models/olmo2_posext.py` + `positional.py`, all six modes. Identity with stock
-  OLMo-2 checked ad hoc (tiny model and real checkpoint); not yet a pytest.
-- [ ] 3. `tests/test_identity.py` and the other tests. **Next.**
-- [ ] 4. `models/build.py` (do together with 3; the freezing test needs it).
+- [x] 2. `posext/models/olmo2_posext.py` + `positional.py`, all six modes.
+- [x] 3. Tests: `uv run pytest` (157 tests, CPU, ~1 s).
+  - `tests/test_identity.py`: identity for every mode (default/contiguous/gapped positions,
+    lengths 1..L, beyond L, SDPA, KV-cache generation, from_pretrained).
+  - `tests/test_positional.py`: slow-band mask, yarn/pi vs stock, config guards, shapes at
+    OLMo-2 size, fp32 values, save/reload, gradients, DaRoPE saturation, AdaScale.
+  - `tests/test_behavior.py`: trained-like (non-identity) parameters: cached decoding = full
+    forward beyond L, exact equivalences (shared a = -ln 4 == PI, constant temperature ==
+    doubled scaling, exact AdaScale values), per-layer/per-head isolation and gradients,
+    non-reentrant checkpointing, bf16 rotation precision, and the PoSE masking regression.
+  - Real checkpoint, opt-in: `POSEXT_REAL_CKPT=1 uv run pytest -m real` (~1 min CPU).
+  - Still to add with their code: freezing test and strict loading of trained posext weights
+    (step 4), PoSE generator test (step 5), FA2 + PoSE test on an SCC GPU.
+  - Review of the suite and its follow-ups: `Documentation/test_review.md`.
+- [ ] 4. `models/build.py` + the freezing test. **Next.**
 - [ ] 5–9. Data, training, evaluation, YaRN grid, SCC + README. RQ4 stub.
 
 Notes for the remaining steps:
 - **All positional parameters live in one module, `model.model.posext`** (`PositionalEncoding`).
   Freeze everything else; save/load only `posext.*`. Attention layers reach it through a
   plain attribute (`_posext`), not a submodule, so it is registered once.
-- **Positional params stay float32** even when the model is bf16: `PositionalEncoding._apply`
-  undoes downcasts from `.to()`, and `post_init` sets `_keep_in_fp32_modules_strict = ["posext"]`
-  for `from_pretrained(dtype=bf16)` (the non-strict list only covers fp16). It is set per
+- **Positional params stay float32, values exact,** even when the model is bf16:
+  `PositionalEncoding._apply` keeps the original fp32 tensors and restores them after `.to()`
+  (casting to bf16 and back would report float32 but lose precision; tests check values),
+  and `post_init` sets `_keep_in_fp32_modules_strict = ["posext"]` for
+  `from_pretrained(dtype=bf16)` (the non-strict list only covers fp16). It is set per
   instance and only when posext has parameters, because HF rejects listed modules that own
   none (modes `none`/`pi`/`yarn`).
 - **Gradient checkpointing must use `use_reentrant=False`.** With a frozen backbone the layer
@@ -63,12 +76,18 @@ Notes for the remaining steps:
   `type`/`factor`; set `config.rope_scaling = {...}` after construction. Our `yarn` and `pi`
   modes match stock YaRN / linear scaling exactly.
 - **Per-head modes assume no GQA** (true for OLMo-2-1B; code raises otherwise).
-- **FlashAttention-2 + gapped `position_ids`:** in transformers 4.57.1, with batch size 1,
-  any `position_ids` that are not a plain `arange` (e.g. PoSE gaps) switch FA2 to its
-  packed-sequence path, which starts a new sequence at every position id equal to 0. PoSE ids
-  contain exactly one 0 (the first token), so the result is still one causal sequence and
-  correct. Gapped ids that do **not** start at 0 would be mis-segmented under FA2: keep the
-  first position at 0, or use SDPA/eager (unaffected) for such tests.
+- **Gapped `position_ids` and packed-sequence detection (fixed in the model).** In
+  transformers 4.57.1, when there is no `attention_mask` and no KV cache (e.g. training, where
+  gradient checkpointing turns the cache off), mask creation treats every jump in
+  `position_ids` as the start of a new packed sequence, for every attention backend. PoSE
+  chunks would then be masked off from each other. `Olmo2PosExtModel.forward` therefore
+  defaults to an all-ones `attention_mask` in that case (we never pack sequences). Regression
+  tests in `tests/test_behavior.py` fail without this. Stock OLMo-2 has the same behaviour, so
+  compare against stock with an explicit all-ones mask when the cache is off.
+- **FlashAttention-2** has a separate packed-sequence path keyed on `position_ids` (new
+  sequence at every position 0, batch size 1). PoSE ids start at 0 exactly once, so it should
+  be fine, and with the all-ones mask FA2 may take its masked path instead. **Unverified:**
+  needs a GPU test on SCC with PoSE positions.
 - The copied model file keeps upstream style (ruff per-file ignores in `pyproject.toml`) so it
   diffs cleanly against transformers 4.57.1's `modeling_olmo2.py`.
 
@@ -146,10 +165,16 @@ values and the attention kernel unchanged). Two forms, selected by `temp.form`:
   indices 0–2047 → positions 0–2047 and indices 2048–4095 → positions 10000–12047, the token
   at index 3000 has L = 3001 under `tokens` (below L_ref, λ flat) but L ≈ 10951 under
   `positions` (λ grows as if at ~11k, although only 3001 keys are present).
-  Consequence for RQ2: with `tokens`, L never exceeds 4096 during PoSE training, so γ_h
-  receives **zero gradient** and T_h can only learn a length-independent rescaling. That
-  makes "temperatures cannot be learned from short sequences" true by construction, not an
-  empirical finding. With `positions`, γ_h does get a gradient, but from a mismatched
+  Consequence for RQ2: with `tokens`, L never exceeds 4096 during PoSE training, so the
+  growth term is the constant ln 2 and λ_h = (ln 2)^{γ_h} / T_h. γ_h still gets a gradient,
+  but only as a **second constant scale, redundant with T_h** (its gradient is an exact
+  multiple of T_h's; tested in `test_positional.py`). It learns nothing about length, yet
+  whatever value it drifts to sets how λ grows at real 16k lengths during evaluation. The
+  drift has a fixed direction: because ln(ln 2) < 0, wanting sharper attention in training
+  pushes γ_h negative, which then makes attention at 16k *flatter* than at 4k
+  (λ(16k)/λ(4k) = (ln 5 / ln 2)^{γ_h} < 1), the opposite of what dilution needs. That makes "temperatures cannot
+  be learned from short sequences" largely true by construction, not an empirical finding.
+  With `positions`, γ_h does get a length-dependent gradient, but from a mismatched
   signal (16k-like positions, 4k-key softmax); whether it transfers to real 16k inputs is
   the actual test. **Run RQ2 with both settings and report the difference**: `tokens` as
   the by-construction baseline, `positions` as the real test of the hypothesis.

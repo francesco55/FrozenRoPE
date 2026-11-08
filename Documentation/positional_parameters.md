@@ -75,8 +75,9 @@ attention more thinly than with 4k ("dilution"), and a temperature can counter t
   see, L_i = i + 1, and is flat up to 4096. Learned per head: a base temperature τ and a
   growth rate γ.
 - `temp.length_source` decides whether L_i counts real tokens or position ids. This only
-  matters for PoSE training (RQ2): with `tokens`, γ cannot learn at all. Run RQ2 both ways.
-  `CLAUDE.md` has the full explanation.
+  matters for PoSE training (RQ2): with `tokens`, every training length is ≤ 4096, so γ
+  can't learn how λ should grow with length (it only duplicates τ as a constant scale).
+  Run RQ2 both ways. `CLAUDE.md` has the full explanation.
 
 **DaRoPE coordinates** (`darope`, RQ3). On slow bands only, the position *m* is replaced
 by a learned coordinate *c* = 4096 · sigmoid(**w** · x + α · logit((*m* + 0.5)/4096)),
@@ -103,8 +104,10 @@ this a permanent test.
   training updates would round away. This is automatic; don't fight it.
 - **Training with gradient checkpointing needs `use_reentrant=False`.** Otherwise, with a
   frozen backbone, the positional parameters silently get no gradient.
-- **Pass `position_ids` explicitly** when using PoSE. Keep the first position at 0
-  (FlashAttention-2 relies on it).
+- **Pass `position_ids` explicitly** when using PoSE, and keep the first position at 0.
+  Without an attention mask and KV cache (i.e. in training), transformers would treat PoSE's
+  position jumps as separate sequences that can't see each other; the model now passes an
+  all-ones mask by default to prevent this.
 - **Per-head modes assume no grouped-query attention.** True for OLMo-2-1B.
 
 ## Using it

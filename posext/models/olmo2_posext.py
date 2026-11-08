@@ -410,6 +410,13 @@ class Olmo2PosExtModel(Olmo2PosExtPreTrainedModel):
         if position_ids is None:
             position_ids = cache_position.unsqueeze(0)
 
+        # posext: without a 2D mask and a cache (e.g. training), transformers treats every jump in
+        # position_ids as the start of a new packed sequence and masks the pieces off from each
+        # other, which would stop PoSE chunks from attending to earlier chunks. We never pack
+        # sequences, so default to an all-ones mask: one causal sequence per row.
+        if attention_mask is None and past_key_values is None:
+            attention_mask = torch.ones(inputs_embeds.shape[:2], dtype=torch.long, device=inputs_embeds.device)
+
         causal_mask = create_causal_mask(
             config=self.config,
             input_embeds=inputs_embeds,
