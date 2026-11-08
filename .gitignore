@@ -1,1 +1,31 @@
+# macOS
 .DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Experiment outputs
+outputs/
+checkpoints/
+results/*.tmp
+wandb/
+*.safetensors
+*.pt
+*.bin
+
+# Data caches
+data_cache/
+.cache/
+
+# SGE job logs
+*.o[0-9]*
+*.e[0-9]*
+*.po[0-9]*
+*.pe[0-9]*

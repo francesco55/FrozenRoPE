@@ -1,6 +1,7 @@
 # CLAUDE.md — Learned RoPE parameters for context extension (CS599 B1 project)
 
-Read this file and `docs/proposal.pdf` (or `docs/proposal.tex`) before writing code.
+Read this file and `Documentation/Learning RoPE Parameters for Context Extension.pdf` (the proposal)
+before writing code. Reference papers are in `Documentation/papers/`.
 The proposal states the research questions; this file states the engineering decisions.
 
 ## Project in one paragraph
@@ -47,7 +48,7 @@ posext/
 configs/                      # one YAML per experiment
 scripts/scc/                  # qsub templates
 tests/
-docs/proposal.pdf
+Documentation/                # proposal PDF; papers/ holds reference papers
 ```
 
 ## Model facts (verify against the loaded config at runtime; assert them in code)
