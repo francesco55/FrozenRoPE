@@ -64,8 +64,30 @@ def test_real_checkpoint_identity(reference: dict, posext: dict) -> None:
     ).to(reference["device"]).eval()
     assert model.posext.slow_mask.nonzero().flatten().tolist() == list(range(32, 64))
     ids, gapped = reference["ids"], reference["gapped"]
-    atol = ATOL[posext["mode"]]
+    atol = ATOL[posext["mode"]]  # see top of file
     assert (model(ids).logits - reference["contig_logits"]).abs().max().item() < atol
     assert (model(ids, position_ids=gapped).logits - reference["gapped_logits"]).abs().max().item() < atol
+    del model
+    gc.collect()
+
+
+@pytest.mark.parametrize(
+    "posext,expected",
+    [
+        ({"mode": "learned_freq", "granularity": "shared"}, 64),
+        ({"mode": "learned_freq_temp", "granularity": "head"}, 16 * 16 * 64 + 2 * 16 * 16),
+        ({"mode": "darope"}, 16 * 16 * (2048 + 1)),
+    ],
+    ids=["shared", "learned_freq_temp-head", "darope"],
+)
+def test_real_checkpoint_build_and_freeze(posext: dict, expected: int) -> None:
+    """load_model checks the model facts; after freezing, trainable counts match CLAUDE.md."""
+    from posext.models.build import count_parameters, freeze_backbone, load_model
+
+    model = load_model(NAME, posext)  # bf16 backbone, fp32 positional params
+    freeze_backbone(model)
+    counts = count_parameters(model)
+    assert counts["trainable"] == expected
+    assert 1.4e9 < counts["total"] < 1.6e9
     del model
     gc.collect()

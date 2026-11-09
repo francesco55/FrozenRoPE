@@ -14,6 +14,7 @@ from transformers import Olmo2ForCausalLM
 from transformers.cache_utils import DynamicCache
 
 from posext.models import PosConfig
+from posext.models.build import freeze_backbone
 from posext.models.positional import PositionalEncoding
 
 from .conftest import NATIVE_LEN, make_posext, make_stock, random_ids
@@ -22,12 +23,6 @@ from .conftest import NATIVE_LEN, make_posext, make_stock, random_ids
 def max_diff(a: torch.Tensor, b: torch.Tensor) -> float:
     """Largest absolute elementwise difference."""
     return (a - b).abs().max().item()
-
-
-def freeze_backbone(model: torch.nn.Module) -> None:
-    """Only positional parameters train (stand-in until models/build.py exists)."""
-    for n, p in model.named_parameters():
-        p.requires_grad_(n.startswith("model.posext."))
 
 
 # ---- PoSE masking regression ---------------------------------------------------------

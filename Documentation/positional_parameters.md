@@ -112,24 +112,22 @@ this a permanent test.
 
 ## Using it
 
-Until `models/build.py` (Step 4) wraps this, loading looks like:
-
 ```python
-import torch
-from transformers import AutoConfig
-from posext.models import Olmo2PosExtConfig, Olmo2PosExtForCausalLM
-
-name = "allenai/OLMo-2-0425-1B"
-cfg = Olmo2PosExtConfig(
-    **AutoConfig.from_pretrained(name).to_dict(),
-    posext={"mode": "learned_freq_temp", "granularity": "head", "temp": {"form": "adascale"}},
+from posext.models import (
+    enable_gradient_checkpointing, freeze_backbone, load_model, load_trained,
+    log_parameter_counts, save_positional,
 )
-model = Olmo2PosExtForCausalLM.from_pretrained(name, config=cfg, dtype=torch.bfloat16)
 
-# Freeze the backbone: only positional parameters train.
-for n, p in model.named_parameters():
-    p.requires_grad_(n.startswith("model.posext."))
-print(model.posext)  # mode, granularity, slow bands
+# Stock OLMo-2-1B (bf16) with per-head learned frequencies + AdaScale, starting at identity.
+model = load_model(pos={"mode": "learned_freq_temp", "granularity": "head"})
+freeze_backbone(model)                 # only model.model.posext trains
+enable_gradient_checkpointing(model)   # non-reentrant, so gradients still flow
+log_parameter_counts(model)            # 16,896 trainable of ~1.49B
+print(model.posext)                    # mode, granularity, slow bands
+
+# ... train ...
+save_positional(model, "outputs/run1")  # positional.safetensors + positional_config.json
+model = load_trained("outputs/run1")    # base weights + trained params (strict)
 ```
 
 ## Where to look in the code
@@ -143,4 +141,5 @@ print(model.posext)  # mode, granularity, slow bands
 | DaRoPE coordinate | `positional.py`: `_darope_angles` |
 | Temperature | `positional.py`: `_query_scale` |
 | Where the rotation is applied | `posext/models/olmo2_posext.py`: `Olmo2PosExtAttention.forward` (search `posext:`) |
+| Loading, freezing, saving runs | `posext/models/build.py` |
 | Real-checkpoint sanity check | `scripts/check_env.py` |
