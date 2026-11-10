@@ -34,7 +34,10 @@ packages = ["posext"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["real: uses the real OLMo-2 checkpoint (opt-in, set POSEXT_REAL_CKPT=1)"]
+markers = [
+    "real: uses the real OLMo-2 checkpoint (opt-in, set POSEXT_REAL_CKPT=1)",
+    "network: downloads data (opt-in, set POSEXT_NETWORK=1)",
+]
 
 [tool.ruff]
 line-length = 100

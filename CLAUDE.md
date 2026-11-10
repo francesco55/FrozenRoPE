@@ -40,7 +40,7 @@ Branch `chore/skeleton-setup`. Update this list as steps land.
 - [x] 1. uv env (Python 3.11): `pyproject.toml`, `uv.lock`, `requirements.txt` exported via
   `uv export`. Pin verified on the real checkpoint: `uv run python scripts/check_env.py`.
 - [x] 2. `posext/models/olmo2_posext.py` + `positional.py`, all six modes.
-- [x] 3. Tests: `uv run pytest` (184 tests incl. step 4, CPU, ~1 s).
+- [x] 3. Tests: `uv run pytest` (204 tests incl. steps 4–5, CPU, ~1.5 s).
   - `tests/test_identity.py`: identity for every mode (default/contiguous/gapped positions,
     lengths 1..L, beyond L, SDPA, KV-cache generation, from_pretrained).
   - `tests/test_positional.py`: slow-band mask, yarn/pi vs stock, config guards, shapes at
@@ -50,7 +50,7 @@ Branch `chore/skeleton-setup`. Update this list as steps land.
     doubled scaling, exact AdaScale values), per-layer/per-head isolation and gradients,
     non-reentrant checkpointing, bf16 rotation precision, and the PoSE masking regression.
   - Real checkpoint, opt-in: `POSEXT_REAL_CKPT=1 uv run pytest -m real` (~1 min CPU).
-  - Still to add: PoSE generator test (step 5), FA2 + PoSE test on an SCC GPU.
+  - Still to add: FA2 + PoSE test on an SCC GPU.
   - Review of the suite and its follow-ups: `Documentation/test_review.md`.
 - [x] 4. `posext/models/build.py`: `load_model` (checks model facts for OLMo-2-1B),
   `freeze_backbone`, `count_parameters` / `log_parameter_counts`,
@@ -59,9 +59,13 @@ Branch `chore/skeleton-setup`. Update this list as steps land.
   (base model, posext config, extras), kilobytes not GBs; loading is strict (config, keys
   and shapes must match). Tests: `tests/test_build.py`; real-checkpoint counts 64 / 16,896 /
   524,544 in `test_real_checkpoint.py`.
-- [ ] 5. PG-19 pipeline + PoSE generator (+ its test; training batches pass an attention
-  mask too, see the packed-sequence note). **Next.**
-- [ ] 6–9. Training, evaluation, YaRN grid, SCC + README. RQ4 stub.
+- [x] 5. `posext/data/`: `pg19.py` (`load_pg19_chunks(split, seq_len, max_sequences=...,
+  max_chunks_per_book=..., seed=...)`: shuffled books, non-overlapping chunks within one book,
+  tail dropped, cached), `pose.py` (`pose_position_ids`), `collate.py` (`Collator` for the
+  `long` / `pose` regimes; always passes labels and an all-ones attention mask). Tests:
+  `tests/test_data.py` (offline fakes) + opt-in real data: `POSEXT_NETWORK=1 uv run pytest -m network`.
+- [ ] 6. `train.py` + YAML configs. **Next.**
+- [ ] 7–9. Evaluation, YaRN grid, SCC + README. RQ4 stub.
 
 Notes for the remaining steps:
 - **All positional parameters live in one module, `model.model.posext`** (`PositionalEncoding`).
@@ -95,6 +99,20 @@ Notes for the remaining steps:
   sequence at every position 0, batch size 1). PoSE ids start at 0 exactly once, so it should
   be fine, and with the all-ones mask FA2 may take its masked path instead. **Unverified:**
   needs a GPU test on SCC with PoSE positions.
+- **PG-19 source: the `emozilla/pg19` Parquet mirror** (`deepmind/pg19` needs a loading
+  script that `datasets` >= 4 refuses to run). Validation (50) and test (100) are complete and
+  checked on load; train has 13,684 of 28,602 books (plenty for positional-only training).
+  `load_pg19_texts` passes `data_files` for the one split it needs: a plain `load_dataset`
+  downloads and converts every split (~18 GB on disk even for the 20 MB test split).
+- **Data cache:** chunks are cached as `.pt` files under `$POSEXT_DATA_CACHE` (default
+  `./data_cache`, gitignored), keyed by split, length, counts, seed, tokenizer and dataset.
+  On SCC, set `POSEXT_DATA_CACHE` and `HF_HOME` to `/projectnb/<project>/...` (home quota).
+- **PoSE vs the original:** with 2 chunks we match PoSE's sampling (first piece length uniform
+  in [1, ceil(n/2)], skip uniform in [0, L' - n]). PoSE also takes the second piece's *text*
+  from later in the document; per this file we keep the text contiguous and only skip
+  positions. Revisit if RQ2 results look off.
+- **Collator randomness:** PoSE positions come from the collator's own seeded generator; use
+  `num_workers=0` (or one collator per worker with distinct seeds).
 - The copied model file keeps upstream style (ruff per-file ignores in `pyproject.toml`) so it
   diffs cleanly against transformers 4.57.1's `modeling_olmo2.py`.
 
