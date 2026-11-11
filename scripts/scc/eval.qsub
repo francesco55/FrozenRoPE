@@ -1,0 +1,42 @@
+#!/bin/bash -l
+#$ -P cs599b1
+#$ -N posext_eval
+#$ -l h_rt=8:00:00
+#$ -l gpus=1
+#$ -l gpu_type=A100
+#$ -l gpu_memory=40G
+#$ -pe omp 8
+#$ -j y
+#$ -o logs/eval_$JOB_ID.log
+
+# Usage:
+#   qsub -v RUN_DIR=outputs/rq1_learned_freq_head scripts/scc/eval.qsub
+#   qsub -v POS_MODE=yarn,FACTOR=4 scripts/scc/eval.qsub
+
+set -euo pipefail
+
+POSEXT_ROOT="${POSEXT_ROOT:-/projectnb/cs599b1/students/adithyad/FrozenRoPE}"
+cd "$POSEXT_ROOT"
+# shellcheck disable=SC1091
+source "${POSEXT_ROOT}/scripts/scc/env.sh"
+
+if command -v uv >/dev/null 2>&1; then
+  PY=(uv run python)
+elif [[ -x "${UV_PROJECT_ENVIRONMENT}/bin/python" ]]; then
+  PY=("${UV_PROJECT_ENVIRONMENT}/bin/python")
+else
+  echo "No uv and no venv at $UV_PROJECT_ENVIRONMENT — run scripts/scc/setup.sh first" >&2
+  exit 1
+fi
+
+if [[ -n "${RUN_DIR:-}" ]]; then
+  TAG="$(basename "$RUN_DIR")"
+  "${PY[@]}" -m posext.eval.ppl --run "$RUN_DIR" --split test --out "results/ppl_${TAG}.json" --device cuda
+  "${PY[@]}" -m posext.eval.passkey --run "$RUN_DIR" --seed 1 --out "results/passkey_${TAG}.json" --device cuda
+else
+  MODE="${POS_MODE:-none}"
+  FACTOR="${FACTOR:-4}"
+  TAG="${MODE}"
+  "${PY[@]}" -m posext.eval.ppl --pos-mode "$MODE" --factor "$FACTOR" --split test --out "results/ppl_${TAG}.json" --device cuda
+  "${PY[@]}" -m posext.eval.passkey --pos-mode "$MODE" --factor "$FACTOR" --seed 1 --out "results/passkey_${TAG}.json" --device cuda
+fi

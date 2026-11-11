@@ -1,0 +1,21 @@
+# Training-free baseline - evaluate only (do not pass to posext.train).
+#   uv run python -m posext.eval.ppl --pos-mode yarn --factor 4
+#   uv run python -m posext.eval.passkey --pos-mode yarn --factor 4
+name: rq1_yarn_default
+pos:
+  mode: yarn
+  yarn:
+    factor: 4.0
+    beta_fast: 32.0
+    beta_slow: 1.0
+data:
+  regime: long
+  split: validation
+  seq_len: 16384
+  target_len: 16384
+  max_sequences: 50
+train:
+  steps: 0
+output_dir: outputs/rq1_yarn_default
+wandb:
+  enabled: false

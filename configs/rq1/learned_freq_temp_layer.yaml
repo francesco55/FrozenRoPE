@@ -1,0 +1,35 @@
+name: rq1_learned_freq_temp_layer
+seed: 0
+model: allenai/OLMo-2-0425-1B
+dtype: bfloat16
+attn_implementation: sdpa
+pos:
+  mode: learned_freq_temp
+  granularity: layer
+  init_from_yarn: false
+  temp:
+    form: adascale
+    length_source: tokens
+data:
+  regime: long
+  split: train
+  seq_len: 16384
+  target_len: 16384
+  max_sequences: 100
+  max_chunks_per_book: 1
+train:
+  steps: 500
+  batch_size: 1
+  lr: 1.0e-3
+  weight_decay: 0.0
+  grad_clip: 1.0
+  clip_freq: 1.0
+  clip_temp: 1.0
+  logit_chunk_size: 2048
+  log_every: 10
+  save_every: 100
+output_dir: outputs/rq1_learned_freq_temp_layer
+wandb:
+  enabled: false
+  project: frozenrope
+  run_name: rq1_learned_freq_temp_layer

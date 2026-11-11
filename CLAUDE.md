@@ -64,8 +64,14 @@ Branch `chore/skeleton-setup`. Update this list as steps land.
   tail dropped, cached), `pose.py` (`pose_position_ids`), `collate.py` (`Collator` for the
   `long` / `pose` regimes; always passes labels and an all-ones attention mask). Tests:
   `tests/test_data.py` (offline fakes) + opt-in real data: `POSEXT_NETWORK=1 uv run pytest -m network`.
-- [ ] 6. `train.py` + YAML configs. **Next.**
-- [ ] 7–9. Evaluation, YaRN grid, SCC + README. RQ4 stub.
+- [x] 6. `posext/train.py` + `posext/config.py` + `posext/loss.py` (chunked CE) +
+  `posext/export.py` + `configs/rq1/*.yaml` + `configs/smoke.yaml`. Resume via
+  `train_state.pt`; per-group grad clip for freq vs temperature.
+- [x] 7. `posext/eval/ppl.py`, `passkey.py`, `shortctx.py` (lm-eval); `ruler.py` is a
+  stub that exports the model and documents the NVIDIA RULER checkout.
+- [x] 8. `posext/baselines/yarn_grid.py` (val PPL @16k + val passkey → combined z-score).
+- [x] 9. `scripts/scc/{train,eval,yarn_grid}.qsub` (placeholders) + README run instructions.
+  RQ4 stub: `posext/rq4.py`.
 
 Notes for the remaining steps:
 - **All positional parameters live in one module, `model.model.posext`** (`PositionalEncoding`).

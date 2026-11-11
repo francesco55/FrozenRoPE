@@ -1,0 +1,28 @@
+# Shared RQ1 training defaults (long 16k sequences). Copied into each learned config.
+# Learning rate / steps should be tuned on validation before the final runs.
+seed: 0
+model: allenai/OLMo-2-0425-1B
+dtype: bfloat16
+attn_implementation: sdpa
+data:
+  regime: long
+  split: train
+  seq_len: 16384
+  target_len: 16384
+  max_sequences: 100
+  max_chunks_per_book: 1
+  num_workers: 0
+train:
+  steps: 500
+  batch_size: 1
+  lr: 1.0e-3
+  weight_decay: 0.0
+  grad_clip: 1.0
+  clip_freq: 1.0
+  clip_temp: 1.0
+  logit_chunk_size: 2048
+  log_every: 10
+  save_every: 100
+wandb:
+  enabled: true
+  project: frozenrope
