@@ -10,7 +10,7 @@ import yaml
 from transformers import AutoTokenizer
 
 from posext.config import ExperimentConfig, load_config
-from posext.eval.passkey import generate_passkey_prompts, key_in_text
+from posext.eval.passkey import PasskeyPrompt, answer_passkey, generate_passkey_prompts, key_in_text
 from posext.loss import chunked_lm_cross_entropy
 from posext.models import freeze_backbone, log_parameter_counts
 from posext.train import build_optimizer, clip_gradients, set_seed
@@ -88,6 +88,34 @@ def test_passkey_prompt_lengths() -> None:
     for p in prompts:
         assert len(p.input_ids) == p.length
         assert len(p.key) == 5 and p.key.isdigit()
+
+
+def test_passkey_generation_matches_full_forward() -> None:
+    """Cached greedy generation in answer_passkey = greedy decoding with full forwards (positions 0..n-1).
+
+    Regression: passing position_ids to generate() froze every new token at the last prompt position.
+    """
+    torch.manual_seed(0)
+    model = make_posext({"mode": "learned_freq", "granularity": "head"})
+    with torch.no_grad():
+        model.posext.a.normal_(0, 0.5)  # non-identity, so wrong positions change the output
+    prompt = torch.randint(0, TINY["vocab_size"], (24,)).tolist()
+
+    class _Tok:  # answer_passkey only needs eos_token_id and decode
+        eos_token_id = 0
+
+        @staticmethod
+        def decode(ids, skip_special_tokens=True):  # noqa: ARG004
+            return " ".join(str(int(i)) for i in ids)
+
+    text = answer_passkey(model, _Tok(), PasskeyPrompt(prompt, "00000", len(prompt), 0.0), max_new_tokens=6)
+
+    ids = torch.tensor([prompt])
+    with torch.no_grad():
+        for _ in range(6):
+            next_id = model(input_ids=ids).logits[0, -1].argmax()
+            ids = torch.cat([ids, next_id.view(1, 1)], dim=1)
+    assert text == _Tok.decode(ids[0, len(prompt) :])
 
 
 def test_key_in_text() -> None:

@@ -1,0 +1,34 @@
+# RQ1 follow-up: lr sweep (AdaRoPE used 3e-2 for its frequency parameters).
+# Same as configs/rq1/learned_freq_shared.yaml except lr (granularity follow-up to the per-head lr 3e-2 run).
+# Choose between runs by VALIDATION perplexity (posext.eval.ppl --split validation), not test.
+name: rq1f_learned_freq_shared_lr3e-2
+seed: 0
+model: allenai/OLMo-2-0425-1B
+dtype: bfloat16
+attn_implementation: sdpa
+pos:
+  mode: learned_freq
+  granularity: shared
+  init_from_yarn: false
+data:
+  regime: long
+  split: train
+  seq_len: 16384
+  target_len: 16384
+  max_sequences: 100
+  max_chunks_per_book: 1
+train:
+  steps: 500
+  batch_size: 1
+  lr: 3.0e-2
+  weight_decay: 0.0
+  grad_clip: 1.0
+  clip_freq: 1.0
+  logit_chunk_size: 2048
+  log_every: 10
+  save_every: 100
+output_dir: outputs/rq1f_learned_freq_shared_lr3e-2
+wandb:
+  enabled: false
+  project: frozenrope
+  run_name: rq1f_learned_freq_shared_lr3e-2

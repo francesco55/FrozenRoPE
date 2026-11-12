@@ -1,0 +1,72 @@
+#!/bin/bash -l
+#$ -P cs599b1
+#$ -N posext_val
+#$ -l h_rt=4:00:00
+#$ -l gpus=1
+#$ -l gpu_type=A100
+#$ -l gpu_memory=40G
+#$ -pe omp 8
+#$ -cwd
+#$ -j y
+#$ -o logs/val_$JOB_ID.log
+
+# Validation evaluation for the RQ1 follow-up runs: perplexity (PG-19 validation split,
+# 4k/8k/16k) or passkey (validation prompts, seed 0; test uses seed 1).
+# scripts/scc/eval.qsub always scores on test; use this one for choosing between runs.
+#
+# Submit from the repo root. Pick a model (RUN, YARN or STOCK) and optionally EVAL (default ppl):
+#   qsub -v RUN=lr3e-2 configs/rq1/followup/val_ppl.qsub    # outputs/rq1f_learned_freq_head_lr3e-2
+#   qsub -v RUN=rq1f_learned_freq_shared_lr3e-2 configs/rq1/followup/val_ppl.qsub  # any outputs/<name>
+#   qsub -v YARN=default configs/rq1/followup/val_ppl.qsub  # factor 4, paper defaults
+#   qsub -v YARN=tuned configs/rq1/followup/val_ppl.qsub    # grid winner (configs/rq1/yarn_tuned.yaml)
+#   qsub -v STOCK=1 configs/rq1/followup/val_ppl.qsub       # unmodified OLMo-2 (pos mode none)
+#   qsub -v RUN=lr3e-2,EVAL=passkey configs/rq1/followup/val_ppl.qsub
+#   qsub -v RUN=lr3e-2,SPLIT=test configs/rq1/followup/val_ppl.qsub   # final numbers only
+# Results: results/<val|test>_<ppl|passkey>_<name>.json
+
+set -euo pipefail
+
+# Paths come from the submitting user and folder, not a hard-coded student directory.
+export POSEXT_ROOT="${SGE_O_WORKDIR:-$PWD}"
+export POSEXT_STUDENT_ROOT="${POSEXT_STUDENT_ROOT:-/projectnb/cs599b1/students/$USER}"
+cd "$POSEXT_ROOT"
+# shellcheck disable=SC1091
+source scripts/scc/env.sh
+
+# Which model: a trained run or a training-free baseline.
+if [[ -n "${RUN:-}" ]]; then
+  # RUN is either a full run name (outputs/<RUN>) or a per-head suffix like lr3e-2.
+  RUN_DIR="outputs/${RUN}"
+  [[ -d "$RUN_DIR" ]] || RUN_DIR="outputs/rq1f_learned_freq_head_${RUN}"
+  MODEL=(--run "$RUN_DIR"); NAME="$RUN"
+elif [[ "${YARN:-}" == tuned ]]; then
+  MODEL=(--pos-mode yarn --factor 4 --beta-fast 64 --beta-slow 2 --attention-factor 1.2); NAME=yarn_tuned
+elif [[ "${YARN:-}" == default ]]; then
+  MODEL=(--pos-mode yarn --factor 4); NAME=yarn_default
+elif [[ -n "${STOCK:-}" ]]; then
+  MODEL=(--pos-mode none); NAME=stock
+else
+  echo "Set RUN=<run name>, YARN=<default|tuned> or STOCK=1" >&2
+  exit 1
+fi
+
+# Which split: validation (default; passkey seed 0) or test (passkey seed 1).
+case "${SPLIT:-validation}" in
+  validation) TAG=val; PASSKEY_SEED=0 ;;
+  test) TAG=test; PASSKEY_SEED=1 ;;
+  *) echo "SPLIT must be validation or test" >&2; exit 1 ;;
+esac
+
+# Which evaluation.
+case "${EVAL:-ppl}" in
+  ppl)
+    uv run python -m posext.eval.ppl --split "${SPLIT:-validation}" --device cuda "${MODEL[@]}" \
+      --out "results/${TAG}_ppl_${NAME}.json" ;;
+  passkey)
+    # 3 lengths x 5 depths x 10 prompts = 150 prompts.
+    uv run python -m posext.eval.passkey --seed "$PASSKEY_SEED" --n-per-cell 10 --device cuda "${MODEL[@]}" \
+      --out "results/${TAG}_passkey_${NAME}.json" ;;
+  *)
+    echo "EVAL must be ppl or passkey" >&2
+    exit 1 ;;
+esac

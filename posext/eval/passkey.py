@@ -92,11 +92,12 @@ def answer_passkey(model, tokenizer, prompt: PasskeyPrompt, *, max_new_tokens: i
     device = next(model.parameters()).device
     input_ids = torch.tensor([prompt.input_ids], device=device)
     attention_mask = torch.ones_like(input_ids)
-    position_ids = torch.arange(input_ids.shape[1], device=device).unsqueeze(0)
+    # No explicit position_ids: generate() never extends a passed tensor, so every new token
+    # would reuse the last prompt position. Without it, positions come from the attention mask
+    # and keep counting (0..L-1 for the prompt, then L, L+1, ...).
     out = model.generate(
         input_ids=input_ids,
         attention_mask=attention_mask,
-        position_ids=position_ids,
         max_new_tokens=max_new_tokens,
         do_sample=False,
         use_cache=True,
