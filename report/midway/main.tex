@@ -34,12 +34,28 @@ TODO.
 \end{abstract}
 
 \section{Introduction}
-% - Problem area, a specific example, and a technical definition of the task
-%   (frozen OLMo-2-0425-1B, L = 4096 -> L' = 16384, train only positional parameters).
-% - Why it is interesting/important.
-% - Why it is hard and how obvious solutions fail (stock RoPE beyond L; PI / YaRN baselines).
-% - Research questions RQ1-RQ4.
-TODO.
+
+Nearly every open-weight language model encodes position with rotary embeddings (RoPE; \citealp{su2021roformer}), and nearly every one degrades sharply once its input exceeds the length $L$ it was pretrained on \citep{chen2023pi, peng2024yarn}. OLMo-2-1B \citep{olmo2024olmo2}, for example, is trained with $L = 4096$. Given a 16k-token book, its perplexity explodes, and it fails every RULER retrieval task \citep{hsieh2024ruler} at 8k and 16k, although the whole input fits in memory (Table~\ref{tab:main}). Pretraining at longer lengths is costly: self-attention compares every token with every earlier one, so its FLOPs grow quadratically with sequence length, and a 16k sequence costs 16 times the attention compute of a 4k one. Inexpensive context extension of existing models is a practical, widely shared problem.
+
+\paragraph{Why it is hard.}
+RoPE divides each head's query and key vectors into $d/2$ two-dimensional \emph{bands} and rotates band $j$ of the token at position $m$ by angle $m\theta_j$, where $\theta_j = b^{-2j/d}$. Only the difference in angle survives the dot product, so the attention logit depends on relative distance alone:
+\begin{equation}
+s_{mn} = \textstyle\sum_{j} \mathrm{Re}\big[\,q_{m,j}\,\overline{k_{n,j}}\,e^{\,i(m-n)\theta_j}\big].
+\end{equation}
+Fast bands cycle many times within $L$ and encode local order. \emph{Slow bands}, whose wavelength $2\pi/\theta_j$ exceeds $L$, never complete a rotation in training; beyond $L$ they take angles the model has never seen. A second problem remains even when the angles are fixed: with four times as many keys, each softmax spreads its mass more thinly, so attention becomes flatter than the model was trained on.
+
+\paragraph{How obvious solutions fail.}
+Position Interpolation (PI; \citealp{chen2023pi}) divides every position by $L'/L$, which keeps slow-band angles in range but also compresses the fast bands; it harms the model even at 4k. YaRN \citep{peng2024yarn} interpolates only the slow bands and sharpens attention with a temperature, but it applies one hand-designed rule to every head, and its default settings fall far short of settings found by a grid search on validation data (Table~\ref{tab:main}).
+
+\paragraph{Task.}
+We treat context extension as a parameter-efficient learning problem. Given a pretrained model with frozen \emph{backbone weights} $W$ (all of its original parameters) and native length $L$, we seek a small set of \emph{positional parameters} $\phi$, $|\phi| \ll |W|$, that change only how positions are encoded and let the model operate at $L' = 4L$:
+\begin{equation}
+\min_{\phi}\; \mathbb{E}_{x\sim\mathcal{D}_{L'}}\big[-\log p_{W,\phi}(x)\big],
+\end{equation}
+while preserving its behavior up to $L$. Our base parameterization rescales each frequency, $\hat\theta_{h,j} = e^{a_{h,j}}\theta_j$, and adds a per-head temperature. At $a=0$ the model is exactly the original. Beyond the practical goal, this asks a scientific question: \emph{how much of context extension is positional?} If training $\phi$ alone closes most of the gap to fine-tuning $W$, the length limit lies in how positions are encoded, not in the backbone weights.
+
+\paragraph{Questions and progress.}
+RQ1 asks what learning RoPE parameters per model, layer or head on a frozen backbone adds beyond tuned YaRN; RQ2 whether they can be learned from 4k sequences alone with PoSE position skipping \citep{zhu2024pose}; RQ3 whether slow bands should instead learn a content-dependent coordinate, as in DaRoPE \citep{levy2026darope}; and RQ4 which backbone weights must change to close what remains. RQ1 is complete on test data: every learned configuration beats tuned YaRN on 16k perplexity while training at most ${\sim}$17k parameters, and the best one, per-head and started from YaRN, also leads on RULER at 16k at a small cost at 4k. Passkey retrieval disagrees for this model, which we analyze in \S\ref{sec:results}. RQ2 is running.
 
 \section{Related Work}
 % Brief: RoPE \citep{su2021roformer}; PI \citep{chen2023pi}; YaRN \citep{peng2024yarn};
@@ -60,8 +76,36 @@ TODO.
 TODO.
 
 \section{Results}
+\label{sec:results}
 % Tables/plots only, no numbers in the main text. Expected vs. observed; error analysis.
 TODO.
+
+% Source: Documentation/rq1_temp_results.md (test split, seed 0, one run per cell).
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{@{}llrrrrrrrr@{}}
+\toprule
+& & & \multicolumn{3}{c}{PG-19 test PPL $\downarrow$} & & \multicolumn{3}{c}{RULER NIAH $\uparrow$} \\
+\cmidrule(lr){4-6}\cmidrule(lr){8-10}
+Method & Start & Trainable & 4k & 8k & 16k & Passkey@16k $\uparrow$ & 4k & 8k & 16k \\
+\midrule
+Stock OLMo-2 & -- & 0 & \textbf{16.41} & 124.6 & 430.3 & 0.00 & \textbf{72.8} & 0.0 & 0.0 \\
+PI ($\times 4$) & -- & 0 & 109.1 & 118.6 & 110.9 & 0.00 & 0.0 & 0.0 & 0.0 \\
+YaRN, default & -- & 0 & 27.11 & 40.14 & 41.67 & 0.01 & 8.3 & 6.6 & 1.2 \\
+YaRN, tuned & -- & 0 & 19.95 & 22.87 & 21.38 & 0.80 & 45.7 & 35.4 & 24.0 \\
+\midrule
+Learned, shared & $a=0$ & 576 & 18.10 & 18.68 & 16.23 & \textbf{0.81} & 61.0 & 49.1 & 36.8 \\
+Learned, layer & $a=0$ & 1{,}536 & 17.90 & 18.43 & 16.05 & 0.01 & 59.9 & 43.7 & 33.3 \\
+Learned, head & $a=0$ & 16{,}896 & 18.73 & 19.40 & 17.20 & 0.00 & 24.5 & 21.3 & 5.9 \\
+Learned, shared & YaRN & 576 & 17.32 & 17.76 & 15.43 & 0.80 & 61.4 & 49.0 & 36.2 \\
+Learned, layer & YaRN & 1{,}536 & 17.19 & 17.65 & 15.31 & 0.04 & 58.6 & 50.1 & 35.6 \\
+Learned, head & YaRN & 16{,}896 & 17.01 & \textbf{17.41} & \textbf{15.09} & 0.00 & 69.8 & \textbf{62.9} & \textbf{53.1} \\
+\bottomrule
+\end{tabular}
+\caption{RQ1 test results on frozen OLMo-2-1B extended from 4k to 16k. Learned rows train frequency scales plus a per-head AdaScale temperature (512 parameters) for 500 steps; learning rate chosen by validation PPL at 16k. Passkey: accuracy over 250 prompts at 16k (5 depths). RULER: average over the 8 needle-in-a-haystack tasks, 500 samples each. One seed.}
+\label{tab:main}
+\end{table*}
 
 \section{Project Plan}
 % Concrete list of remaining experiments/analyses until the final report (Dec 17);
