@@ -1,8 +1,8 @@
 # RQ1 follow-up report: learning rate, initialization and granularity
 
-**Branch:** `feat/rq1-learned-rope`
-**Cluster:** BU SCC (A100, `scc-212`)
-**Dates:** 2026-11-11 (training, validation and test evaluation)
+**Branch:** `feat/rq1-wo-temp-ruler`; RULER and 50-per-cell passkey on `feat/rq1-wo-temp-ruler`
+**Cluster:** BU SCC (training and PPL/passkey on A100, `scc-212`; RULER on mixed ≥40 GB GPUs)
+**Dates:** 2026-11-11 (training, validation and test evaluation); 2026-11-12 (RULER, passkey re-test)
 **Model:** `allenai/OLMo-2-0425-1B`, native context L = 4096, target L' = 16384
 **Follows up on:** `Documentation/rq1_experiment.md`
 
@@ -15,11 +15,24 @@
   is **per layer** (1,024 parameters): PG-19 **test** PPL@16k **19.48** vs tuned YaRN **21.38**
   (validation: 17.40 vs 18.92). Per head is close behind, and shared doesn't beat tuned YaRN.
 - **Passkey: every learned run gets 0% at 16k**, while tuned YaRN gets 48% (test) and 60%
-  (validation). At 16k the learned models write fluent filler instead of the key. Per layer is
-  perfect up to 8k (100%), so retrieval breaks somewhere between 8k and 16k.
-- **So RQ1's success criterion is not met yet.** Lower perplexity didn't turn into long-range
-  retrieval. The leading hypothesis (untested): these runs learn frequencies only, with no
-  temperature, while tuned YaRN's attention factor 1.2 sharpens attention at long lengths.
+  (validation). A re-test with 50 prompts per cell (750 per model) confirms it: 0–2% at 16k for
+  all three granularities. At 16k the learned models write fluent filler instead of the key. Per
+  layer is perfect up to 8k (100%), so retrieval breaks somewhere between 8k and 16k.
+- **The 16k failure is not about distance.** At 16k the learned models get 0% at *every* depth,
+  including depth 1.0, where the key sits right before the question (at 8k depth 1.0 they get
+  100%). So at 16k they stop answering the question at all; it isn't that the key is too far back.
+- **RULER (8 needle-in-a-haystack tasks, test) confirms the collapse:** per layer scores 39.3 /
+  21.9 / **1.3** at 4k / 8k / 16k, against tuned YaRN's 45.7 / 35.4 / **24.0**. Shared (0.2) and
+  per head (0.0) are no better at 16k.
+- **Temperature is what this method is missing for RULER.** A teammate's `learned_freq_temp` per
+  layer run, same lr and start (`a = 0`), scores **33.3** on 16k RULER vs our **1.3** (shared:
+  36.8 vs 0.2). All temperature runs except per head from `a = 0` (5.9) reach 33–53 at 16k, above
+  tuned YaRN. Passkey at 16k is different: most
+  temperature runs still get 0–18% there, so passkey has a second problem (see Interpretation).
+- **So RQ1's success criterion is not met by frequencies alone.** Lower perplexity didn't turn into
+  16k retrieval without a learned temperature.
+- **Per head damages the model even at 4k:** RULER 5.8 at 4k (stock 72.8) and passkey 59% at 4k
+  (stock 100%). Its 16,384 frequency parameters hurt retrieval inside the original context.
 - **The short-context cost is real, and the same for tuned YaRN.** On test, PPL@4k rises from
   16.40 (stock) to 19.99 (per layer) and 19.95 (tuned YaRN). The test 4k score comes from a
   single book, though (see Caveats).
@@ -45,20 +58,26 @@ Per layer, lr 3e-2, from `a = 0` (ours) against grid-tuned YaRN (best baseline),
 | Passkey @4k | **100%** | 94% | ours, slightly |
 | Passkey @8k | **100%** | 66% | ours |
 | Passkey @16k | 0% | **48%** | tuned YaRN |
-| RULER, short-context benchmarks | — | — | not run |
+| RULER @4k (avg of 8 NIAH tasks) | 39.3 | **45.7** | tuned YaRN |
+| RULER @8k | 21.9 | **35.4** | tuned YaRN |
+| RULER @16k | 1.3 | **24.0** | tuned YaRN |
+| Short-context benchmarks | — | — | not run |
 
-**Better:** more fluent at 8k and 16k (validation and test agree), and better retrieval up to 8k,
-with parameters learned from the original model rather than set by hand.
-**Not better:** no retrieval at 16k, which is the measure the proposal's success criterion uses.
-Short-context perplexity is no better than tuned YaRN's.
+Passkey: 10 prompts per cell for both columns. Ours with 50 per cell: 100% / 100% / 0%.
+
+**Better:** more fluent at 8k and 16k (validation and test agree), and better passkey retrieval
+up to 8k, with parameters learned from the original model rather than set by hand.
+**Not better:** RULER at every length, and any retrieval at 16k, which is what the proposal's
+success criterion uses. Short-context perplexity is no better than tuned YaRN's.
 
 **Confidence:** the perplexity win holds on both validation and test, and for both per layer and
-per head (fairly confident; one seed, few books). The 16k passkey loss is 0 of 50 prompts in
-every learned run on both splits (very confident).
+per head (fairly confident; one seed, few books). The 16k retrieval failure is 0 of 250 passkey
+prompts and 1.3% on 4,000 RULER prompts for per layer (very confident).
 
-**One-line takeaway:** learning positional parameters on a frozen OLMo-2 beats tuned YaRN on
-long-text perplexity and on retrieval up to 8k, but not on 16k retrieval. The open question is
-what's missing at 16k; the temperature experiment (Next steps 1) tests the leading explanation.
+**One-line takeaway:** learned frequencies alone beat tuned YaRN on long-text perplexity and on
+passkey up to 8k, but they fail at 16k retrieval (passkey and RULER). Adding a learned temperature
+(teammate's runs) brings 16k RULER above tuned YaRN, so frequencies-only is best read as the
+ablation showing that the temperature is necessary.
 
 ## What changed from the first sweep
 
@@ -109,7 +128,14 @@ All passkey numbers below use the fixed code.
 - **Perplexity:** PG-19 validation or test split, 50 chunks per length (4k / 8k / 16k), seed 0.
 - **Passkey:** 3 lengths × 5 depths × 10 prompts = 150 prompts. Validation prompts seed 0, test
   prompts seed 1. Greedy, 16 new tokens. Correct if the 5-digit key appears in the answer.
-- Job script: `configs/rq1/followup/val_ppl.qsub` (`EVAL=ppl|passkey`, `SPLIT=validation|test`).
+  **Re-test:** the same test setup (seed 1) with 50 prompts per cell (750 per model), for the
+  three lr 3e-2 runs.
+- **RULER** (`posext/eval/ruler.py`, from the RULER branch): the 8 needle-in-a-haystack tasks at
+  4k / 8k / 16k, RULER's own data and scoring, our inference. Test split: seed 42, 500 samples per
+  task per length (12,000 per model). Greedy, batch size 1. Score in percent, averaged over tasks.
+  Baselines and temperature runs were scored by teammates on the same test data and settings.
+- Job scripts: `configs/rq1/followup/val_ppl.qsub` (`EVAL=ppl|passkey`, `SPLIT=validation|test`);
+  RULER `scripts/scc/ruler_prepare.qsub` + `scripts/scc/ruler.qsub`.
 
 ## Results
 
@@ -213,6 +239,59 @@ fixed code and 50 prompts per length:
   real but small: default YaRN's test passkey changed from 0.64 / 0.44 / 0.00 to
   0.68 / 0.40 / 0.00 (4k / 8k / 16k), with a different number of prompts per cell.
 
+### Passkey re-test: 50 prompts per cell (test, seed 1)
+
+750 prompts per model. Accuracy by depth (0 = key at the start, 1 = key just before the question).
+
+| Run | Length | d 0 | d 0.25 | d 0.5 | d 0.75 | d 1.0 | All depths |
+|---|---|---:|---:|---:|---:|---:|---:|
+| shared | 4k | 0.94 | 0.78 | 0.52 | 0.98 | 0.98 | 0.84 |
+| | 8k | 1.00 | 1.00 | 0.86 | 0.86 | 1.00 | 0.94 |
+| | 16k | 0.00 | 0.00 | 0.00 | 0.12 | 0.00 | **0.02** |
+| **layer** | 4k | 1.00 | 1.00 | 0.98 | 1.00 | 1.00 | **1.00** |
+| | 8k | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | **1.00** |
+| | 16k | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | **0.00** |
+| head | 4k | 0.22 | 0.46 | 0.50 | 0.78 | 0.98 | 0.59 |
+| | 8k | 0.00 | 0.00 | 0.00 | 0.36 | 0.82 | 0.24 |
+| | 16k | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | **0.00** |
+
+Overall: shared 0.60, layer 0.67, head 0.28 (10-per-cell run: 0.63, 0.67, 0.27). The 10-per-cell
+results hold up. For comparison, tuned YaRN's 10-per-cell test passkey at 16k by depth is
+1.0 / 0.3 / 0.2 / 0.6 / 0.3: it succeeds at every depth some of the time, ours at none.
+
+Per head at 4k fails mostly when the key is far back (22% at depth 0, 98% at depth 1.0): it has
+lost some long-range lookup *inside* the original 4k context.
+
+### RULER (test, 8 NIAH tasks, 500 samples each)
+
+Average over the 8 tasks, in percent. Rows other than ours are from teammates
+(`results/sweeps/*/test_ruler_*.json`), same data, seed and scoring.
+
+| Method | 4k | 8k | 16k | Avg |
+|---|---:|---:|---:|---:|
+| stock | **72.8** | 0.0 | 0.0 | 24.3 |
+| PI (factor 4) | 0.0 | 0.0 | 0.0 | 0.0 |
+| YaRN default | 8.3 | 6.6 | 1.2 | 5.4 |
+| **YaRN tuned** | 45.7 | 35.4 | **24.0** | 35.0 |
+| ours: shared, lr 3e-2 | 12.2 | 4.7 | 0.2 | 5.7 |
+| **ours: layer, lr 3e-2** | 39.3 | 21.9 | 1.3 | 20.8 |
+| ours: head, lr 3e-2 | 5.8 | 0.8 | 0.0 | 2.2 |
+| + temp: shared, `a = 0`, lr 3e-2 | 61.0 | 49.1 | 36.8 | 49.0 |
+| + temp: layer, `a = 0`, lr 3e-2 | 59.9 | 43.7 | 33.3 | 45.7 |
+| + temp: head, `a = 0`, lr 3e-2 | 24.5 | 21.3 | 5.9 | 17.3 |
+| + temp: head, YaRN init, lr 1e-2 | 69.8 | 62.9 | **53.1** | **62.0** |
+
+Per task, per layer (ours) vs tuned YaRN at 16k: single_1 0.0 vs 50.4, single_2 2.2 vs 58.6,
+multikey_1 6.2 vs 29.4, multiquery 1.2 vs 21.9; both near 0 on multikey_2/3. Per-task scores for
+every length are in `results/ruler_rq1f_learned_freq_*_lr3e-2_test.json`.
+
+- **Ours vs tuned YaRN:** per layer is below tuned YaRN at every length, and collapses at 16k.
+- **The frequencies-only vs temperature pair** (same granularity, lr, start and training data):
+  per layer 1.3 → 33.3 at 16k, shared 0.2 → 36.8. Adding the temperature is the only change.
+- **Same granularity ranking as perplexity and passkey:** layer > shared > head.
+- **4k cost:** every method that works at 16k loses retrieval at 4k compared with stock (72.8);
+  ours (39.3) loses more than the temperature runs (60–70).
+
 ## Interpretation
 
 1. **The method can learn once the learning rate is right.** From the original model (`a = 0`),
@@ -222,25 +301,37 @@ fixed code and 50 prompts per length:
    every perplexity column and on passkey up to 8k. Shared is not enough. This disagrees with
    AdaRoPE's claim that per-head is needed. One seed, so it needs repeating.
 3. **Perplexity and retrieval disagree at 16k.** The learned models are fluent at 16k (low
-   perplexity, grammatical filler) but copy the nearby filler pattern ("...is yellow") instead of
-   retrieving the key from far back. Stock, by contrast, produces broken text. So the learned
-   models aren't broken at 16k: they've lost long-range lookup. PG-19 perplexity mostly rewards
-   local prediction, so it can improve without long-range retrieval.
-4. **Hypothesis for the 16k retrieval failure (not tested):** these runs use `learned_freq` with
-   no temperature. Tuned YaRN multiplies attention logits by 1.2² ≈ 1.44, which counters the
-   dilution of attention over 16k keys. That is exactly what `learned_freq_temp` adds. Other
-   candidates: the sped-up slow bands (values up to +6.8 in per layer) aliasing at long distances,
-   or a training objective that never needs 16k-range lookup.
-5. **Starting from YaRN's values gives the best validation perplexity** (16.49 at 16k), but that is
-   AdaRoPE's initialization, so it's an ablation for us. It hasn't been evaluated on passkey.
-6. **Short context:** on test, both tuned YaRN and per layer lose about 3.6 PPL at 4k relative to
-   stock (16.40 → ~20). The success criterion is measured on HellaSwag / ARC-Easy / PIQA, which
-   haven't been run.
+   perplexity, grammatical filler) but continue the filler ("...is yellow. Here we go.") instead
+   of giving the key. Stock, by contrast, produces broken text. *An earlier version of this report
+   said they had "lost long-range lookup"; the per-depth results rule that out.* At 16k they get
+   0% even at depth 1.0, where the key is a sentence before the question, and at 8k they get 100%
+   at that depth. So at 16k they stop treating the question as a question at all, whatever the
+   distance. PG-19 perplexity mostly rewards local prediction, so it can improve while this breaks.
+4. **Why: mostly the missing temperature.** These runs use `learned_freq` with no temperature. At
+   16k each query spreads its attention over 4× more keys than at 4k ("attention dilution"), so the
+   few relevant tokens get too little weight. Tuned YaRN counters this by multiplying attention
+   logits by 1.2² ≈ 1.44, and `learned_freq_temp` learns such a scale. The RULER pairs above
+   support this: with everything else equal, adding the temperature takes 16k RULER from 1.3 to
+   33.3 (per layer) and from 0.2 to 36.8 (shared).
+5. **Passkey at 16k has a second problem.** With temperature, most runs still get 0–18% on 16k
+   passkey (layer `a = 0`: 0%; head: 0–18%), even where they reach 33–53 on 16k RULER. Only shared
+   + temperature works (96%). Passkey's haystack is one sentence repeated thousands of times; RULER's
+   is real essays. Two untested explanations: very repetitive filler is a special case where
+   dilution is extreme, or the sped-up slow bands (`a` up to +6.8 in per layer) alias, making
+   distant identical filler look nearby. Shared has a single `a` per band for all layers, which
+   may be why it avoids this. Teammates' passkey numbers use 10 prompts per cell.
+6. **Starting from YaRN's values gives the best validation perplexity** (16.49 at 16k), but that is
+   AdaRoPE's initialization, so it's an ablation for us. It hasn't been evaluated on passkey or RULER.
+7. **Short context:** on test, both tuned YaRN and per layer lose about 3.6 PPL at 4k relative to
+   stock (16.40 → ~20), and per layer loses about half of stock's 4k RULER score (72.8 → 39.3). The
+   success criterion is measured on HellaSwag / ARC-Easy / PIQA, which haven't been run.
 
 ### Success criteria (from the proposal)
 
 Beat tuned YaRN on 16k RULER and passkey while losing at most 1 point of short-context accuracy:
-**not met.** 16k passkey is 0% vs tuned YaRN's 48%. RULER and short-context benchmarks were not run.
+**not met** by frequencies alone. 16k passkey is 0% vs tuned YaRN's 48%, and 16k RULER is 1.3 vs
+24.0. Short-context benchmarks were not run. (With temperature, teammates' runs beat tuned YaRN on
+16k RULER but not on 16k passkey, except shared + temperature.)
 
 ## Learned frequency scales
 
@@ -274,18 +365,25 @@ bands stay near 0 in every run (per layer: mean −0.08).
   training seed only changes which 100 books are used and their order.
 - **Selection on validation.** The learning rate and granularity were picked on validation, so
   validation numbers for the winners are slightly optimistic. Test numbers are reported once.
-- **Passkey is synthetic and uses one filler text.** 50 prompts per length cell.
-- Not run: stock validation perplexity, YaRN-init passkey and test, RULER, short-context benchmarks.
+- **Passkey is synthetic and uses one filler text.** 10 prompts per cell (50 per length), and a
+  re-test of the three lr 3e-2 runs with 50 per cell (250 per length).
+- **RULER GPUs varied** (L40S, A100 and others, one job per model and length). Decoding is greedy,
+  so this should only cause tiny bf16 differences.
+- **Cross-team comparisons:** the temperature runs come from a different training sweep (the
+  pipeline on the RULER branch); the RULER pairs match lr, start and granularity, but not every
+  detail was checked to be identical.
+- Not run: stock validation perplexity, YaRN-init passkey / test / RULER, short-context benchmarks.
 
 ## Next steps
 
-1. **Explain the 16k passkey failure.** Train `learned_freq_temp` per layer at lr 3e-2 (needs
-   separate learning rates for frequency and temperature; AdaRoPE uses 3e-2 and 3e-3). A cheaper
-   first check: evaluate the per-layer run with tuned YaRN's attention factor added on top.
+1. **Find what breaks passkey at 16k** (frequencies alone and most temperature runs). Cheap
+   tests: passkey at 10k / 12k / 14k (find the cliff); passkey with PG-19 text as the haystack (is it
+   the repetitive filler?); per layer `a` plus a fixed 1.44× sharpening (constant temperature,
+   `log_tau = ln 1.44 ≈ 0.365`, no training).
 2. **Fix the few-books evaluation** (`max_chunks_per_book`) and rerun validation and test perplexity.
 3. **Seeds 1 and 2** for per layer and per head at lr 3e-2.
-4. Stock validation perplexity, and passkey for the YaRN-init run.
-5. Short-context benchmarks (`posext/eval/shortctx.py`) and RULER (`posext/eval/ruler.py` is a stub).
+4. Stock validation perplexity, and passkey / RULER for the YaRN-init run.
+5. Short-context benchmarks (`posext/eval/shortctx.py`).
 6. Training-recipe options: warmup and decay, more training books, mixing in 4k chunks.
 
 ## How to reproduce
@@ -301,6 +399,20 @@ qsub -v POSEXT_ROOT=$PWD,POSEXT_STUDENT_ROOT=/projectnb/cs599b1/students/$USER,C
 qsub -v RUN=rq1f_learned_freq_layer_lr3e-2 configs/rq1/followup/val_ppl.qsub
 qsub -v RUN=rq1f_learned_freq_layer_lr3e-2,EVAL=passkey,SPLIT=test configs/rq1/followup/val_ppl.qsub
 qsub -v YARN=tuned,SPLIT=test configs/rq1/followup/val_ppl.qsub
+
+# RULER (once: bash scripts/scc/ruler_setup.sh on a login node), then one GPU job per length
+MYENV=POSEXT_ROOT=$PWD,POSEXT_STUDENT_ROOT=/projectnb/cs599b1/students/$USER
+qsub -v $MYENV,SPLIT=test scripts/scc/ruler_prepare.qsub
+qsub -hold_jid <prepare job> -v $MYENV,RUN_DIR=outputs/rq1f_learned_freq_layer_lr3e-2,SPLIT=test,LENGTHS=16384 scripts/scc/ruler.qsub
+# combine the lengths into one file (each job only writes its own length)
+uv run python -m posext.eval.ruler score --pred-dir outputs/ruler/rq1f_learned_freq_layer_lr3e-2/test \
+  --out results/ruler_rq1f_learned_freq_layer_lr3e-2_test.json
+
+# passkey re-test, 50 per cell
+uv run python -m posext.eval.passkey --run outputs/rq1f_learned_freq_layer_lr3e-2 --seed 1 \
+  --n-per-cell 50 --device cuda --out results/passkey_n50/test_passkey_n50_nandini_layer_lr3e-2.json
 ```
 
-Outputs: `outputs/rq1f_*/`. Logs: `logs/`. Results: `results/<val|test>_<ppl|passkey>_<name>.json`.
+Outputs: `outputs/rq1f_*/`, RULER predictions `outputs/ruler/<run>/test/`. Logs: `logs/`.
+Results: `results/<val|test>_<ppl|passkey>_<name>.json`, `results/ruler_<run>_test.json`,
+`results/passkey_n50/`.
