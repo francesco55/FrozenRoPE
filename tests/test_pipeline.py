@@ -422,7 +422,8 @@ def test_retest_submits_holds_and_skips(repo: Path) -> None:
     for c in calls:
         env = c[c.index("-v") + 1]
         assert "STAGE=retest" in env and "PASSKEY_N=50" in env and "gpus=1" in c and "h_rt=2:00:00" in c
-        assert c[c.index("-N") + 1].startswith("sw-retest50-")
+        assert "PASSKEY_PROMPT=v2" in env  # standard prompt by default
+        assert c[c.index("-N") + 1].startswith("sw-retestv2n50-")
     assert pl.load_plan(pending)["jobs"]  # plan.json untouched (same-plan resubmission still works)
     assert "retest" not in json.dumps(pl.load_plan(done))
 
@@ -437,12 +438,21 @@ def test_retest_dry_run_and_already_done(repo: Path) -> None:
     assert pl.retest(args, qsub=no_qsub, queued=lambda j: False) == {}
     plan = pl.load_plan(sweep)
     best = json.loads((sweep / "selection.json").read_text())["best"]["name"]
-    out = pl.retest_path(plan, best, 50)
+    out = pl.retest_path(plan, best, 50, "v2")
+    assert out.name == f"test_passkey_v2_n50_{best}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"accuracy": 0.8, "n": 750, "by_length": {"16384": 0.6}}))
     args = pl.parse_args(["retest", str(sweep), "--passkey-n-per-cell", "50"])
-    assert pl.retest(args, qsub=no_qsub, queued=lambda j: False) == {}  # result exists: skipped
-    assert "passkey n50: acc=0.800  (n=750)" in pl.status(sweep)
+    assert pl.retest(args, qsub=no_qsub, queued=lambda j: False) == {}  # v2 result exists: skipped
+    assert "passkey v2_n50: acc=0.800  (n=750)" in pl.status(sweep)
+    # An existing v1 (original prompt) result does not block a v2 re-test, and keeps its old name.
+    v1 = pl.retest_path(plan, best, 20)
+    assert v1.name == f"test_passkey_n20_{best}.json"
+    v1.write_text(json.dumps({"accuracy": 0.5, "n": 300, "by_length": {"16384": 0.1}}))
+    calls: list[list[str]] = []
+    args = pl.parse_args(["retest", str(sweep), "--passkey-n-per-cell", "20"])
+    assert pl.retest(args, qsub=lambda c: calls.append(c) or "1", queued=lambda j: False) == {"r_dry": "1"}
+    assert "passkey n20: acc=0.500  (n=300)" in pl.status(sweep)
 
 
 def test_stage_retest_command(repo: Path) -> None:
@@ -455,18 +465,23 @@ def test_stage_retest_command(repo: Path) -> None:
         out.parent.mkdir(parents=True, exist_ok=True)  # as posext.eval.passkey does
         out.write_text("{}")
 
-    pl.stage_retest(sweep, 50, run=fake_run)
+    pl.stage_retest(sweep, 50, "v2", run=fake_run)
     (cmd,) = ran
     plan = pl.load_plan(sweep)
     assert cmd[2] == "posext.eval.passkey" and cmd[cmd.index("--seed") + 1] == "1"
     assert cmd[cmd.index("--n-per-cell") + 1] == "50" and "--run" in cmd
-    assert cmd[cmd.index("--out") + 1].endswith(f"test_passkey_n50_{plan['variants'][0]['name']}.json")
-    pl.stage_retest(sweep, 50, run=fake_run)  # already done: nothing re-runs
+    assert cmd[cmd.index("--prompt") + 1] == "v2"
+    assert cmd[cmd.index("--out") + 1].endswith(f"test_passkey_v2_n50_{plan['variants'][0]['name']}.json")
+    pl.stage_retest(sweep, 50, "v2", run=fake_run)  # already done: nothing re-runs
     assert len(ran) == 1
+    pl.stage_retest(sweep, 50, "v1", run=fake_run)  # v1 is a different result file
+    assert ran[-1][ran[-1].index("--prompt") + 1] == "v1"
+    assert ran[-1][ran[-1].index("--out") + 1].endswith(f"test_passkey_n50_{plan['variants'][0]['name']}.json")
 
 
 def test_stage_script_and_wrapper_know_retest() -> None:
     stage = (ROOT / "scripts" / "scc" / "sweep_stage.qsub").read_text()
     assert 'retest_stage "$SWEEP_DIR" --n "${PASSKEY_N:?' in stage
+    assert '--prompt "${PASSKEY_PROMPT:-v1}"' in stage
     wrapper = (ROOT / "scripts" / "scc" / "pipeline.sh").read_text()
     assert 'if [[ "${1:-}" == retest ]]' in wrapper

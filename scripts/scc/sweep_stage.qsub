@@ -43,7 +43,8 @@ case "$STAGE" in
   ruler_merge)
     "${PY[@]}" -m posext.pipeline ruler_merge "$SWEEP_DIR" ;;
   retest)
-    "${PY[@]}" -m posext.pipeline retest_stage "$SWEEP_DIR" --n "${PASSKEY_N:?set by posext.pipeline retest}" ;;
+    "${PY[@]}" -m posext.pipeline retest_stage "$SWEEP_DIR" --n "${PASSKEY_N:?set by posext.pipeline retest}" \
+      --prompt "${PASSKEY_PROMPT:-v1}" ;;
   *)
     echo "Unknown STAGE=$STAGE" >&2
     exit 1 ;;
