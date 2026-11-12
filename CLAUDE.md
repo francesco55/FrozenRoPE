@@ -73,6 +73,11 @@ Branch `chore/skeleton-setup`. Update this list as steps land.
 - [x] 8. `posext/baselines/yarn_grid.py` (val PPL @16k + val passkey → combined z-score).
 - [x] 9. `scripts/scc/{train,eval,yarn_grid}.qsub` (placeholders) + README run instructions.
   RQ4 stub: `posext/rq4.py`.
+  - Overnight pipeline: `scripts/scc/pipeline.sh <config> --sweep key=v1,v2` (`posext/pipeline.py`,
+    `scripts/scc/sweep_stage.qsub`): train array -> val PPL/passkey -> select -> test PPL/passkey +
+    RULER (array, one job per length) -> merge, chained with `-hold_jid`. Baselines (none/pi/yarn)
+    use the same call (no training; eval flags checked against the config). Tests:
+    `tests/test_pipeline.py`. README has the smoke-run recipe.
 
 Notes for the remaining steps:
 - **All positional parameters live in one module, `model.model.posext`** (`PositionalEncoding`).
@@ -227,7 +232,12 @@ values and the attention kernel unchanged). Two forms, selected by `temp.form`:
   `positions` is correct there. Evaluation should use batch size 1 or `positions`.)
 
 Optional field `pos.init_from_yarn: bool` (default false) initializes `a` from YaRN's
-frequencies instead of 0, to compare against AdaRoPE's initialization.
+frequencies (settings from `pos.yarn`) instead of 0, to compare against AdaRoPE's initialization.
+For `learned_freq_temp` it also starts the temperature at YaRN's attention scaling
+(team decision 2026-11-12): YaRN multiplies cos/sin by f, i.e. logits by f², so
+`log_tau = ln f²` (constant) or `tau = 1/f²`, `gamma = 0` (AdaScale), and the model equals
+`yarn` mode exactly at step 0 (tested). `learned_freq` has no temperature, so there it sets
+the frequencies only.
 
 ### DaRoPE coordinate
 

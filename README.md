@@ -23,6 +23,8 @@ folder, `/projectnb/cs599b1/students/$USER`; `env.sh` and the `.qsub` scripts de
 cd /projectnb/cs599b1/students/$USER/FrozenRoPE
 source scripts/scc/env.sh          # redirects every cache off $HOME
 bash scripts/scc/setup.sh          # uv sync into projectnb .venv
+TMPDIR=/tmp uv run pytest          # tests on SCC: env.sh puts TMPDIR on projectnb (NFS), where
+                                   # 6 save/reload tests fail to delete their temp dirs
 ```
 
 ## RQ1 at a glance
@@ -103,6 +105,77 @@ Results: `results/ruler_<tag>_<split>.json` (score per task and length, averages
 `complete` flag); per-sample predictions in `outputs/ruler/<tag>/<split>/`. `run` resumes
 where it stopped, so a job that hits its wall time can be resubmitted unchanged. Use
 `--max-samples N` for a quick check and `--tasks vt,...` for other RULER tasks.
+
+### Overnight pipeline: sweep -> select on validation -> test (one call)
+
+Run on an SCC **login node**. It queues every job at once; each waits for the ones it needs
+(`-hold_jid`), so you can submit and walk away.
+
+```bash
+bash scripts/scc/pipeline.sh configs/rq1/learned_freq_head.yaml --sweep train.lr=1e-3,1e-2,3e-2
+# grid: repeat --sweep (e.g. --sweep pos.temp.form=adascale,constant); --dry-run prints the plan only
+bash scripts/scc/pipeline.sh configs/rq1/yarn_tuned.yaml          # baselines (none/pi/yarn): same call, no training
+uv run python -m posext.pipeline status outputs/sweeps/<name>     # check progress / results
+```
+
+| # | Job | Runs | Waits for |
+|---|---|---|---|
+| 1 | `train` (GPU array, one task per setting) | train (skipped for baselines), then PG-19 **validation** PPL and passkey (seed 0) | — |
+| 2 | `rulerprep` (CPU) | generate RULER **test** data; only submitted if missing | — |
+| 3 | `select` (CPU) | rank settings on validation, write `selection.json` | 1 |
+| 4 | `test` (GPU) | PG-19 **test** PPL + passkey (seed 1), winner only | 3 |
+| 5 | `ruler` (GPU array, one task per length) | RULER **test** (8 NIAH tasks) at 4k / 8k / 16k in parallel, winner only | 3 (+ 2) |
+| 6 | `rulermerge` (CPU) | combine the lengths into one RULER result | 5 |
+
+- **Selection:** the YaRN grid's combined score (val NLL at 16k + val passkey) by default;
+  `--metric ppl` or `--metric passkey` to change. Test data is used only by the winner.
+  Sweep hyperparameters, not seeds.
+- **Where things go:** `outputs/sweeps/<name>/` (plan, generated configs, `runs/<setting>/`,
+  `selection.json`, `logs/`); test results in `results/sweeps/<name>/test_{ppl,passkey,ruler}_<setting>.json`.
+- **Safe to re-run:** the same command with the same `--name` resubmits and skips finished
+  work (training resumes, RULER resumes). A different sweep under an existing name is refused.
+- **Failures:** a setting that crashes is listed as missing and selection uses the others. If
+  nothing finishes validation, `select` fails and so do 4 and 5.
+- **Baselines** (`none`, `pi`, `yarn` configs) go through the same jobs with the same eval
+  settings, loaded with `--pos-mode` flags instead of a trained run; a setting those flags
+  can't express is refused at submit time.
+- **Typical times** (one model): train + validate ~20 min; test PPL + passkey ~5 min; RULER
+  test ~3 h at 16k (2.3–2.9 s/sample), much less at 4k / 8k (answers stop early); RULER test
+  data generation ~20 min per length, once.
+- **Options:** `--name`, `--gpu-type A100` (pin one GPU type for final numbers; SCC has few
+  A100s, so expect longer waits), `--max-concurrent N`, `--no-ruler`, `--train-hours` (6, or 1
+  for baselines), `--test-hours 4`, `--ruler-hours 12` (per length).
+  All: `uv run python -m posext.pipeline submit --help`.
+
+**Testing the pipeline before a real overnight run.** Each tier catches what the previous one can't:
+
+1. **Unit tests (laptop, seconds):** `uv run pytest tests/test_pipeline.py`. Covers the plan,
+   selection, job chaining and skip logic, with qsub and the GPU stages faked.
+2. **Dry run (SCC login node, seconds):** add `--dry-run`. Checks the config and sweep keys,
+   SCC paths and RULER data status, and prints the exact qsub commands. Submits nothing.
+3. **Smoke run (SCC, a few GPU-minutes plus queue time):** every real job and dependency on a tiny budget:
+
+   ```bash
+   bash scripts/scc/pipeline.sh configs/rq1/learned_freq_shared.yaml --name smoke_pipeline \
+     --sweep train.lr=1e-2,3e-2 --sweep train.steps=20 \
+     --ppl-max-sequences 2 --passkey-n-per-cell 1 \
+     --ruler-tasks niah_single_1 --ruler-lengths 4096 --ruler-max-samples 20 \
+     --train-hours 1 --test-hours 1 --ruler-hours 1
+   ```
+
+   It works if, once `qstat -u $USER` is empty:
+   - `status outputs/sweeps/smoke_pipeline` shows both settings trained with val numbers, one
+     marked selected, and test PPL / passkey / RULER filled in (`complete=True`).
+   - For a baseline, run the same check with `configs/rq1/pi.yaml --name smoke_baseline` and the
+     same eval flags (no `--sweep`). Use `--ruler-lengths 4096,8192` so the length array has more than one task.
+   - `grep -l Traceback outputs/sweeps/smoke_pipeline/logs/*` prints nothing.
+   - Re-running the identical command finishes in minutes, with logs saying "Already trained"
+     and no new results (proves resubmission is safe).
+   - Optional failure check: `qdel <train job id>.1` (task 1 only) while it runs; `select` should list
+     that setting as missing and still pick the other.
+
+   Smoke numbers are meaningless (20 steps, tiny evals); delete `outputs/sweeps/smoke_*`
+   and `results/sweeps/smoke_*` afterwards. `--ruler-max-samples` is for smoke runs only.
 
 ## Layout
 

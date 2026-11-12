@@ -189,7 +189,8 @@ def load_pg19_chunks(
         logger.warning("Only %d chunks of length %d available in %s (asked for %d)",
                        len(chunks), seq_len, split, spec.max_sequences)
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(".tmp")
+    # Per-process temp name: concurrent jobs (e.g. sweep array tasks) must not interleave writes.
+    tmp = path.with_suffix(f".{os.uname().nodename}.{os.getpid()}.tmp")
     torch.save({"spec": asdict(spec), "input_ids": chunks.to(torch.int32), "books": books}, tmp)
     tmp.replace(path)  # atomic: concurrent jobs never read a half-written file
     logger.info("Cached %d PG-19 %s chunks of length %d at %s", len(chunks), split, seq_len, path)

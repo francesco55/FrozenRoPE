@@ -13,6 +13,7 @@
 #   qsub -v SPLIT=validation scripts/scc/ruler_prepare.qsub       # 100 samples/task/length
 #   qsub -v SPLIT=test scripts/scc/ruler_prepare.qsub             # 500 samples/task/length
 #   qsub -v SPLIT=validation,TASKS=niah_single_1,LENGTHS=4096 scripts/scc/ruler_prepare.qsub
+#   qsub -v SPLIT=test,TASKS=niah_single_1:niah_single_2,LENGTHS=4096:8192 scripts/scc/ruler_prepare.qsub
 # Re-running is cheap: files that already match (commit, seed, samples, tokenizer) are skipped.
 
 set -euo pipefail
@@ -34,8 +35,15 @@ else
 fi
 
 ARGS=(--split "${SPLIT:-validation}")
-[[ -n "${TASKS:-}" ]] && ARGS+=(--tasks "$TASKS")
-[[ -n "${LENGTHS:-}" ]] && ARGS+=(--lengths "$LENGTHS")
+# Lists may use ':' instead of ',' (qsub -v itself splits on commas): TASKS=niah_single_1:niah_single_2
+[[ -n "${TASKS:-}" ]] && ARGS+=(--tasks "${TASKS//:/,}")
+[[ -n "${LENGTHS:-}" ]] && ARGS+=(--lengths "${LENGTHS//:/,}")
 [[ -n "${NUM_SAMPLES:-}" ]] && ARGS+=(--num-samples "$NUM_SAMPLES")
 
+# One prepare per split at a time (e.g. two sweep pipelines submitted the same night): the second
+# waits, then finds the files ready and skips them.
+LOCK_DIR="${POSEXT_DATA_CACHE}/ruler"
+mkdir -p "$LOCK_DIR"
+exec 9>"${LOCK_DIR}/.prepare_${SPLIT:-validation}.lock"
+flock 9
 "${PY[@]}" -m posext.eval.ruler prepare "${ARGS[@]}"
