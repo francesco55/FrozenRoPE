@@ -7,6 +7,8 @@ On an SCC login node (the wrapper sources env.sh and cds to the repo):
         --sweep train.lr=1e-2,3e-2 --sweep pos.temp.form=adascale,constant --name temp_head_v1
     bash scripts/scc/pipeline.sh ... --dry-run          # print the plan and qsub commands only
     uv run python -m posext.pipeline status outputs/sweeps/<name>   # next morning
+    # later: re-run test passkey on every sweep's selected model with more prompts
+    bash scripts/scc/pipeline.sh retest outputs/sweeps/* --passkey-n-per-cell 50
 
     # training-free baselines (none / pi / yarn) use the same call: no training, same evals
     bash scripts/scc/pipeline.sh configs/rq1/yarn_tuned.yaml
@@ -603,6 +605,64 @@ def stage_test(sweep_dir: Path, *, run: Callable[[list[str]], None] = _run) -> N
         run(_py("posext.eval.passkey", *model_args(best), *_passkey_args(plan, seed), "--out", str(paths["passkey"])))
 
 
+def retest_path(plan: dict[str, Any], variant: str, n_per_cell: int) -> Path:
+    """Extra test passkey result (more prompts) next to the pipeline's own test results."""
+    return Path(plan["results_dir"]) / f"test_passkey_n{n_per_cell}_{variant}.json"
+
+
+def stage_retest(sweep_dir: Path, n_per_cell: int, *, run: Callable[[list[str]], None] = _run) -> None:
+    """Test passkey (test seed) for the selected variant with `n_per_cell` prompts per cell."""
+    plan, best = load_plan(sweep_dir), _best(sweep_dir)
+    out = retest_path(plan, best["name"], n_per_cell)
+    if out.is_file():
+        logger.info("Already done: %s", out)
+        return
+    seed = plan["eval"]["test_passkey_seed"]
+    run(_py("posext.eval.passkey", *model_args(best), "--seed", str(seed), "--n-per-cell", str(n_per_cell),
+            "--device", "cuda", "--out", str(out)))
+
+
+def job_queued(job_id: str) -> bool:
+    """Whether an SGE job is still queued or running (qstat -j fails once it has finished)."""
+    return subprocess.run(["qstat", "-j", str(job_id)], check=False, capture_output=True).returncode == 0
+
+
+def retest(args: argparse.Namespace, *, qsub: Callable[[list[str]], str] = run_qsub,
+           queued: Callable[[str], bool] = job_queued) -> dict[str, str]:
+    """Queue one passkey re-test job per sweep (waits for the sweep's select job if still queued)."""
+    if not STAGE_SCRIPT.is_file():
+        raise SystemExit("run from the repo root (scripts/scc/pipeline.sh does this)")
+    n = args.passkey_n_per_cell
+    gpu = list(GPU_RESOURCES) + (["-l", f"gpu_type={args.gpu_type}"] if args.gpu_type else [])
+    submitted: dict[str, str] = {}
+    for sweep_dir in args.sweep_dirs:
+        plan = load_plan(sweep_dir)
+        sel = _read_json(Path(sweep_dir) / "selection.json")
+        select_job = (plan.get("jobs") or {}).get("select")
+        hold = [select_job] if select_job and queued(select_job) else []
+        if sel is None and not hold:
+            print(f"skip {plan['name']}: no selection.json and its select job is not queued (failed?)")
+            continue
+        if sel is not None and not hold and retest_path(plan, sel["best"]["name"], n).is_file():
+            print(f"skip {plan['name']}: already has {retest_path(plan, sel['best']['name'], n)}")
+            continue
+        cmd = ["qsub", "-terse", "-cwd", "-j", "y", "-o", f"{plan['sweep_dir']}/logs/",
+               "-N", _job_name(plan["name"], f"retest{n}"), "-l", f"h_rt={hms(args.hours)}", *gpu]
+        if hold:
+            cmd += ["-hold_jid", ",".join(hold)]
+        cmd += ["-v", _forward_env({"SWEEP_DIR": plan["sweep_dir"], "STAGE": "retest", "PASSKEY_N": str(n)}),
+                str(STAGE_SCRIPT)]
+        if args.dry_run:
+            print(" ".join(cmd))
+            continue
+        submitted[plan["name"]] = qsub(cmd)
+        wait = f" (waits for select job {hold[0]})" if hold else ""
+        print(f"submitted retest {plan['name']:32s} job {submitted[plan['name']]}{wait}")
+    if args.dry_run:
+        print("(dry run: nothing submitted)")
+    return submitted
+
+
 def ruler_lengths(plan: dict[str, Any]) -> list[int]:
     """RULER lengths of a plan (default: RULER's 4k / 8k / 16k)."""
     from posext.eval.ruler import DEFAULT_LENGTHS
@@ -702,6 +762,13 @@ def status(sweep_dir: Path) -> str:
             except (KeyError, TypeError, ValueError):
                 summary = "written (unexpected format)"
             lines.append(f"  {key:8s} {summary}   ({path})")
+        for path in sorted(Path(plan["results_dir"]).glob(f"test_passkey_n*_{best}.json")):
+            res = _read_json(path)
+            n = path.name.split("_")[2]
+            try:
+                lines.append(f"  passkey {n}: acc={res['accuracy']:.3f}  (n={res['n']})  by length {res['by_length']}")
+            except (KeyError, TypeError):
+                lines.append(f"  passkey {n}: written (unexpected format)   ({path})")
     else:
         lines.append("\nNot selected yet.")
     return "\n".join(lines)
@@ -738,6 +805,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     sp.add_argument("--ruler-hours", type=float, default=12.0, help="wall time per RULER length job")
     sp.add_argument("--dry-run", action="store_true", help="print plan and qsub commands; submit nothing")
 
+    sp = sub.add_parser("retest", help="queue test passkey with more prompts for each sweep's selected model")
+    sp.add_argument("sweep_dirs", nargs="+", type=Path, help="outputs/sweeps/<name> (globs are fine)")
+    sp.add_argument("--passkey-n-per-cell", type=int, required=True, help="prompts per (length, depth)")
+    sp.add_argument("--hours", type=float, default=2.0, help="wall time per job")
+    sp.add_argument("--gpu-type", default=None)
+    sp.add_argument("--dry-run", action="store_true")
+    sp = sub.add_parser("retest_stage", help="(job) test passkey with more prompts for one sweep")
+    sp.add_argument("sweep_dir", type=Path)
+    sp.add_argument("--n", type=int, required=True)
+
     sp = sub.add_parser("variant", help="(job) train + validate one variant")
     sp.add_argument("sweep_dir", type=Path)
     sp.add_argument("--index", type=int, required=True, help="1-based ($SGE_TASK_ID)")
@@ -756,6 +833,10 @@ def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
     if args.cmd == "submit":
         submit(args)
+    elif args.cmd == "retest":
+        retest(args)
+    elif args.cmd == "retest_stage":
+        stage_retest(args.sweep_dir, args.n)
     elif args.cmd == "variant":
         stage_variant(args.sweep_dir, args.index)
     elif args.cmd == "select":

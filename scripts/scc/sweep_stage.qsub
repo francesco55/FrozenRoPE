@@ -5,7 +5,7 @@
 # One stage of a sweep pipeline. Do not submit by hand: `scripts/scc/pipeline.sh` (posext.pipeline
 # submit) passes the job name, log path, resources (GPU or CPU), wall time, array range,
 # -hold_jid dependencies and these variables on the qsub command line:
-#   SWEEP_DIR=outputs/sweeps/<name>   STAGE=variant|select|test|ruler|ruler_merge   POSEXT_ROOT=<repo>
+#   SWEEP_DIR=outputs/sweeps/<name>   STAGE=variant|select|test|ruler|ruler_merge|retest (+ PASSKEY_N)   POSEXT_ROOT=<repo>
 # Every stage skips work whose outputs already exist, so re-running the pipeline is safe.
 
 set -euo pipefail
@@ -18,7 +18,7 @@ cd "$POSEXT_ROOT"
 source "${POSEXT_ROOT}/scripts/scc/env.sh"
 
 echo "Host=$(hostname)  JOB_ID=${JOB_ID:-}  TASK=${SGE_TASK_ID:-}  STAGE=$STAGE  SWEEP_DIR=$SWEEP_DIR"
-case "$STAGE" in variant|test|ruler) nvidia-smi || true ;; esac
+case "$STAGE" in variant|test|ruler|retest) nvidia-smi || true ;; esac
 
 if command -v uv >/dev/null 2>&1; then
   PY=(uv run python)
@@ -42,6 +42,8 @@ case "$STAGE" in
     "${PY[@]}" -m posext.pipeline ruler "$SWEEP_DIR" --index "${SGE_TASK_ID:?array task id}" ;;
   ruler_merge)
     "${PY[@]}" -m posext.pipeline ruler_merge "$SWEEP_DIR" ;;
+  retest)
+    "${PY[@]}" -m posext.pipeline retest_stage "$SWEEP_DIR" --n "${PASSKEY_N:?set by posext.pipeline retest}" ;;
   *)
     echo "Unknown STAGE=$STAGE" >&2
     exit 1 ;;

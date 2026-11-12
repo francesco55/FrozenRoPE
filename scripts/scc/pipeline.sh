@@ -7,12 +7,13 @@
 #   bash scripts/scc/pipeline.sh configs/rq1/learned_freq_temp_head.yaml \
 #       --sweep train.lr=1e-2,3e-2 --sweep pos.temp.form=adascale,constant --name temp_head_v1
 #   bash scripts/scc/pipeline.sh <config> --sweep ... --dry-run     # show plan + qsub commands
+#   bash scripts/scc/pipeline.sh retest outputs/sweeps/* --passkey-n-per-cell 50   # more test passkey
 #
 # Next morning:
 #   uv run python -m posext.pipeline status outputs/sweeps/<name>
 #
 # Options (all optional): --name, --metric combined|ppl|passkey, --gpu-type A100, --no-ruler,
-# --max-concurrent N, --train-hours 6, --test-hours 4, --ruler-hours 24, --passkey-n-per-cell 10.
+# --max-concurrent N, --train-hours 6, --test-hours 4, --ruler-hours 12, --passkey-n-per-cell 10.
 # Full help: uv run python -m posext.pipeline submit --help
 # Prerequisites (once): scripts/scc/setup.sh; for RULER also scripts/scc/ruler_setup.sh.
 
@@ -39,4 +40,10 @@ else
   exit 1
 fi
 
-"${PY[@]}" -m posext.pipeline submit "$@"
+# `retest ...` re-runs test passkey with more prompts; anything else submits a new pipeline.
+if [[ "${1:-}" == retest ]]; then
+  shift
+  "${PY[@]}" -m posext.pipeline retest "$@"
+else
+  "${PY[@]}" -m posext.pipeline submit "$@"
+fi

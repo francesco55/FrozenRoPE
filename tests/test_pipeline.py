@@ -395,3 +395,78 @@ def test_status_no_ruler(repo: Path) -> None:
     _fake_val(Path(plan["variants"][0]["run_dir"]), 3.0, 0.5)
     pl.stage_select(sweep_dir)
     assert "not run (--no-ruler)" in pl.status(sweep_dir)
+
+
+# ---- retest: more test passkey prompts for each sweep's selected model ------------------
+
+
+def _selected_sweep(name: str) -> Path:
+    plan = pl.submit(_submit_args("--name", name, "--no-ruler"), qsub=lambda c: str(500 + len(name)))
+    sweep_dir = Path(plan["sweep_dir"])
+    _fake_val(Path(plan["variants"][0]["run_dir"]), 3.0, 0.5)
+    pl.stage_select(sweep_dir)
+    return sweep_dir
+
+
+def test_retest_submits_holds_and_skips(repo: Path) -> None:
+    done = _selected_sweep("r_done")  # selected; select job finished
+    pending = Path(pl.submit(_submit_args("--name", "r_pending", "--no-ruler"), qsub=lambda c: "777")["sweep_dir"])
+    failed = Path(pl.submit(_submit_args("--name", "r_failed", "--no-ruler"), qsub=lambda c: "888")["sweep_dir"])
+    calls: list[list[str]] = []
+    args = pl.parse_args(["retest", str(done), str(pending), str(failed), "--passkey-n-per-cell", "50"])
+    out = pl.retest(args, qsub=lambda c: calls.append(c) or str(900 + len(calls)), queued=lambda j: j == "777")
+    assert out == {"r_done": "901", "r_pending": "902"}  # r_failed: no selection, select job gone
+    first, second = calls
+    assert "-hold_jid" not in first
+    assert second[second.index("-hold_jid") + 1] == "777"  # waits for the still-queued select job
+    for c in calls:
+        env = c[c.index("-v") + 1]
+        assert "STAGE=retest" in env and "PASSKEY_N=50" in env and "gpus=1" in c and "h_rt=2:00:00" in c
+        assert c[c.index("-N") + 1].startswith("sw-retest50-")
+    assert pl.load_plan(pending)["jobs"]  # plan.json untouched (same-plan resubmission still works)
+    assert "retest" not in json.dumps(pl.load_plan(done))
+
+
+def test_retest_dry_run_and_already_done(repo: Path) -> None:
+    sweep = _selected_sweep("r_dry")
+    args = pl.parse_args(["retest", str(sweep), "--passkey-n-per-cell", "50", "--dry-run"])
+
+    def no_qsub(cmd: list[str]) -> str:
+        raise AssertionError("dry run must not submit")
+
+    assert pl.retest(args, qsub=no_qsub, queued=lambda j: False) == {}
+    plan = pl.load_plan(sweep)
+    best = json.loads((sweep / "selection.json").read_text())["best"]["name"]
+    out = pl.retest_path(plan, best, 50)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps({"accuracy": 0.8, "n": 750, "by_length": {"16384": 0.6}}))
+    args = pl.parse_args(["retest", str(sweep), "--passkey-n-per-cell", "50"])
+    assert pl.retest(args, qsub=no_qsub, queued=lambda j: False) == {}  # result exists: skipped
+    assert "passkey n50: acc=0.800  (n=750)" in pl.status(sweep)
+
+
+def test_stage_retest_command(repo: Path) -> None:
+    sweep = _selected_sweep("r_stage")
+    ran: list[list[str]] = []
+
+    def fake_run(cmd: list[str]) -> None:
+        ran.append(cmd)
+        out = Path(cmd[cmd.index("--out") + 1])
+        out.parent.mkdir(parents=True, exist_ok=True)  # as posext.eval.passkey does
+        out.write_text("{}")
+
+    pl.stage_retest(sweep, 50, run=fake_run)
+    (cmd,) = ran
+    plan = pl.load_plan(sweep)
+    assert cmd[2] == "posext.eval.passkey" and cmd[cmd.index("--seed") + 1] == "1"
+    assert cmd[cmd.index("--n-per-cell") + 1] == "50" and "--run" in cmd
+    assert cmd[cmd.index("--out") + 1].endswith(f"test_passkey_n50_{plan['variants'][0]['name']}.json")
+    pl.stage_retest(sweep, 50, run=fake_run)  # already done: nothing re-runs
+    assert len(ran) == 1
+
+
+def test_stage_script_and_wrapper_know_retest() -> None:
+    stage = (ROOT / "scripts" / "scc" / "sweep_stage.qsub").read_text()
+    assert 'retest_stage "$SWEEP_DIR" --n "${PASSKEY_N:?' in stage
+    wrapper = (ROOT / "scripts" / "scc" / "pipeline.sh").read_text()
+    assert 'if [[ "${1:-}" == retest ]]' in wrapper

@@ -78,6 +78,9 @@ Branch `chore/skeleton-setup`. Update this list as steps land.
     RULER (array, one job per length) -> merge, chained with `-hold_jid`. Baselines (none/pi/yarn)
     use the same call (no training; eval flags checked against the config). Tests:
     `tests/test_pipeline.py`. README has the smoke-run recipe.
+  - Training curves: `uv run --with matplotlib python -m posext.plot_training outputs/sweeps/<...>`
+    (`posext/plot_training.py`, parses the `step k/N loss=...` log lines; matplotlib not a dependency).
+    Tests: `tests/test_plot_training.py` (plot test runs only with `--with matplotlib`).
 
 Notes for the remaining steps:
 - **All positional parameters live in one module, `model.model.posext`** (`PositionalEncoding`).

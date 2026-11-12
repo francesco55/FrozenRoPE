@@ -142,10 +142,26 @@ uv run python -m posext.pipeline status outputs/sweeps/<name>     # check progre
 - **Typical times** (one model): train + validate ~20 min; test PPL + passkey ~5 min; RULER
   test ~3 h at 16k (2.3–2.9 s/sample), much less at 4k / 8k (answers stop early); RULER test
   data generation ~20 min per length, once.
+- **More test prompts later:** `bash scripts/scc/pipeline.sh retest outputs/sweeps/* --passkey-n-per-cell 50`
+  re-runs test passkey (seed 1) on each sweep's selected model and writes
+  `test_passkey_n50_<setting>.json` next to the original; sweeps still running wait for their
+  selection. `status` shows the extra result.
 - **Options:** `--name`, `--gpu-type A100` (pin one GPU type for final numbers; SCC has few
   A100s, so expect longer waits), `--max-concurrent N`, `--no-ruler`, `--train-hours` (6, or 1
   for baselines), `--test-hours 4`, `--ruler-hours 12` (per length).
   All: `uv run python -m posext.pipeline submit --help`.
+
+**Training curves.** Loss and gradient norm from the training logs (W&B is off in SCC jobs);
+matplotlib comes from `uv run --with`, so it is not a project dependency:
+
+```bash
+uv run --with matplotlib python -m posext.plot_training outputs/sweeps/temp_*            # panel per sweep
+uv run --with matplotlib python -m posext.plot_training logs/train_8576388.log ...       # train.qsub logs
+```
+
+Writes `outputs/plots/<name>/`: `loss.png`, `grad_norm.png`, `compare.png` (each sweep's selected
+setting), `curves.csv` and `summary.md` (final train loss, val PPL / passkey, selection, GPU, minutes).
+Run it on SCC, or copy the sweeps' `logs/` and JSON files locally first (no checkpoints needed).
 
 **Testing the pipeline before a real overnight run.** Each tier catches what the previous one can't:
 
