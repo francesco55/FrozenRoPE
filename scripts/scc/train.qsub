@@ -1,0 +1,39 @@
+#!/bin/bash -l
+#$ -P cs599b1
+#$ -N posext_train
+#$ -l h_rt=12:00:00
+#$ -l gpus=1
+#$ -l gpu_type=A100
+#$ -l gpu_memory=40G
+#$ -pe omp 8
+#$ -j y
+#$ -o logs/train_$JOB_ID.log
+
+# Usage:
+#   source scripts/scc/env.sh   # once per shell on login node
+#   mkdir -p logs
+#   qsub -v CONFIG=configs/rq1/learned_freq_head.yaml scripts/scc/train.qsub
+
+set -euo pipefail
+
+POSEXT_ROOT="${POSEXT_ROOT:-/projectnb/cs599b1/students/adithyad/FrozenRoPE}"
+cd "$POSEXT_ROOT"
+# shellcheck disable=SC1091
+source "${POSEXT_ROOT}/scripts/scc/env.sh"
+# export WANDB_MODE=offline
+
+CONFIG="${CONFIG:?set CONFIG=configs/rq1/....yaml when submitting}"
+echo "Host=$(hostname)  CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-}  CONFIG=$CONFIG"
+nvidia-smi || true
+
+if command -v uv >/dev/null 2>&1; then
+  PY=(uv run python)
+elif [[ -x "${UV_PROJECT_ENVIRONMENT}/bin/python" ]]; then
+  PY=("${UV_PROJECT_ENVIRONMENT}/bin/python")
+else
+  echo "No uv and no venv at $UV_PROJECT_ENVIRONMENT — run scripts/scc/setup.sh first" >&2
+  exit 1
+fi
+
+# --no-wandb: compute nodes usually have no wandb login; logs still go to files.
+"${PY[@]}" -m posext.train --config "$CONFIG" --device cuda --no-wandb

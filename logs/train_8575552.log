@@ -1,0 +1,106 @@
+POSEXT_ROOT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/nnandini/.cache/uv
+HF_HOME=/projectnb/cs599b1/students/nnandini/.cache/huggingface
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/nnandini/posext_data
+Host=scc-212  CUDA_VISIBLE_DEVICES=3  CONFIG=configs/rq1/followup/learned_freq_head_lr1e-2.yaml
+Wed Nov 11 12:26:27 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100 80GB PCIe          On  |   00000000:17:00.0 Off |                    0 |
+| N/A   65C    P0            100W /  300W |    6019MiB /  81920MiB |     48%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100 80GB PCIe          On  |   00000000:65:00.0 Off |                    0 |
+| N/A   43C    P0             82W /  300W |    1785MiB /  81920MiB |     36%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100 80GB PCIe          On  |   00000000:CA:00.0 Off |                    0 |
+| N/A   65C    P0             94W /  300W |    6019MiB /  81920MiB |     48%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100 80GB PCIe          On  |   00000000:E3:00.0 Off |                    0 |
+| N/A   45C    P0             47W /  300W |       0MiB /  81920MiB |      0%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A         1426791      C   ...s/459768633362e5ca/bin/python       6010MiB |
+|    1   N/A  N/A         1434544      C   python                                 1776MiB |
+|    2   N/A  N/A         1434824      C   ...s/459768633362e5ca/bin/python       6010MiB |
++-----------------------------------------------------------------------------------------+
+/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1371.58it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:05<00:05,  5.18s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:06<00:00,  2.71s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:06<00:00,  3.08s/it]
+2026-11-11 12:27:30,018 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq
+2026-11-11 12:27:30,020 INFO posext.models.build: Trainable parameters: 16,384 of 1,484,933,120 (0.001103%) in ['model.posext.a']
+Downloading data:   0%|          | 0/23 [00:00<?, ?files/s]Downloading data:   4%|▍         | 1/23 [00:04<01:46,  4.84s/files]Downloading data:   9%|▊         | 2/23 [00:08<01:32,  4.42s/files]Downloading data:  13%|█▎        | 3/23 [00:10<01:12,  3.60s/files]Downloading data:  17%|█▋        | 4/23 [00:15<01:15,  3.96s/files]Downloading data:  22%|██▏       | 5/23 [00:18<01:06,  3.71s/files]Downloading data:  26%|██▌       | 6/23 [00:23<01:07,  3.95s/files]Downloading data:  30%|███       | 7/23 [00:27<01:02,  3.91s/files]Downloading data:  35%|███▍      | 8/23 [00:29<00:55,  3.68s/files]Downloading data:  39%|███▉      | 9/23 [00:37<00:58,  4.19s/files]Downloading data:  43%|████▎     | 10/23 [00:45<00:59,  4.56s/files]Downloading data:  48%|████▊     | 11/23 [00:49<00:54,  4.54s/files]Downloading data:  52%|█████▏    | 12/23 [00:56<00:51,  4.69s/files]Downloading data:  57%|█████▋    | 13/23 [01:00<00:46,  4.64s/files]Downloading data:  61%|██████    | 14/23 [01:06<00:42,  4.78s/files]Downloading data:  65%|██████▌   | 15/23 [01:15<00:40,  5.02s/files]Downloading data:  70%|██████▉   | 16/23 [01:21<00:35,  5.11s/files]Downloading data:  74%|███████▍  | 17/23 [01:25<00:30,  5.05s/files]Downloading data:  78%|███████▊  | 18/23 [01:39<00:27,  5.51s/files]Downloading data:  83%|████████▎ | 19/23 [01:43<00:21,  5.46s/files]Downloading data:  87%|████████▋ | 20/23 [01:48<00:16,  5.44s/files]Downloading data:  91%|█████████▏| 21/23 [01:53<00:10,  5.42s/files]Downloading data:  96%|█████████▌| 22/23 [02:18<00:06,  6.28s/files]Downloading data: 100%|██████████| 23/23 [02:28<00:00,  6.44s/files]Downloading data: 100%|██████████| 23/23 [02:28<00:00,  6.44s/files]
+Generating train split:   0%|          | 0/28602 [00:00<?, ? examples/s]Generating train split:   3%|▎         | 1000/28602 [00:02<01:06, 413.21 examples/s]Generating train split:   8%|▊         | 2244/28602 [00:04<00:46, 569.24 examples/s]Generating train split:   9%|▊         | 2488/28602 [00:04<00:45, 571.29 examples/s]Generating train split:  12%|█▏        | 3488/28602 [00:05<00:39, 637.49 examples/s]Generating train split:  17%|█▋        | 4732/28602 [00:07<00:36, 662.72 examples/s]Generating train split:  21%|██        | 5976/28602 [00:08<00:29, 765.93 examples/s]Generating train split:  22%|██▏       | 6220/28602 [00:09<00:33, 669.27 examples/s]Generating train split:  25%|██▌       | 7220/28602 [00:11<00:34, 611.82 examples/s]Generating train split:  30%|██▉       | 8464/28602 [00:13<00:32, 614.22 examples/s]Generating train split:  34%|███▍      | 9708/28602 [00:15<00:27, 681.30 examples/s]Generating train split:  35%|███▍      | 9952/28602 [00:15<00:30, 603.59 examples/s]Generating train split:  38%|███▊      | 10952/28602 [00:17<00:27, 649.45 examples/s]Generating train split:  43%|████▎     | 12196/28602 [00:19<00:26, 630.03 examples/s]Generating train split:  47%|████▋     | 13440/28602 [00:21<00:23, 649.44 examples/s]Generating train split:  48%|████▊     | 13684/28602 [00:22<00:25, 578.03 examples/s]Generating train split:  51%|█████▏    | 14684/28602 [00:23<00:23, 581.20 examples/s]Generating train split:  52%|█████▏    | 14928/28602 [00:24<00:24, 567.47 examples/s]Generating train split:  56%|█████▌    | 15928/28602 [00:25<00:21, 587.56 examples/s]Generating train split:  57%|█████▋    | 16172/28602 [00:26<00:22, 562.22 examples/s]Generating train split:  60%|██████    | 17172/28602 [00:28<00:21, 534.18 examples/s]Generating train split:  61%|██████    | 17415/28602 [00:29<00:21, 518.88 examples/s]Generating train split:  64%|██████▍   | 18415/28602 [00:30<00:18, 543.26 examples/s]Generating train split:  69%|██████▊   | 19658/28602 [00:32<00:15, 560.26 examples/s]Generating train split:  73%|███████▎  | 20901/28602 [00:34<00:13, 571.27 examples/s]Generating train split:  77%|███████▋  | 22144/28602 [00:37<00:11, 545.51 examples/s]Generating train split:  82%|████████▏ | 23387/28602 [00:39<00:09, 541.38 examples/s]Generating train split:  86%|████████▌ | 24630/28602 [00:42<00:07, 543.59 examples/s]Generating train split:  90%|█████████ | 25873/28602 [00:44<00:04, 557.61 examples/s]Generating train split:  95%|█████████▍| 27116/28602 [00:46<00:02, 562.15 examples/s]Generating train split:  99%|█████████▉| 28359/28602 [00:47<00:00, 614.05 examples/s]Generating train split: 100%|██████████| 28602/28602 [00:48<00:00, 561.93 examples/s]Generating train split: 100%|██████████| 28602/28602 [00:48<00:00, 585.33 examples/s]
+2026-11-11 12:31:25,240 INFO posext.data.pg19: Cached 100 PG-19 train chunks of length 16384 at /projectnb/cs599b1/students/nnandini/posext_data/pg19_train_16384_632c5421b605.pt
+2026-11-11 12:31:25,290 INFO posext.train: Training rq1f_learned_freq_head_lr1e-2 for 500 steps on cuda (regime=long, seq_len=16384, target_len=16384)
+2026-11-11 12:31:30,053 INFO posext.train: step 1/500  loss=6.7035  ppl?815.25  grad_norm=57.941  4.8s
+2026-11-11 12:31:43,814 INFO posext.train: step 10/500  loss=5.1737  ppl?176.57  grad_norm=38.460  18.5s
+2026-11-11 12:31:59,100 INFO posext.train: step 20/500  loss=5.6663  ppl?288.98  grad_norm=22.233  33.8s
+2026-11-11 12:32:14,488 INFO posext.train: step 30/500  loss=5.3305  ppl?206.54  grad_norm=23.884  49.2s
+2026-11-11 12:32:29,954 INFO posext.train: step 40/500  loss=5.3975  ppl?220.86  grad_norm=18.706  64.7s
+2026-11-11 12:32:45,412 INFO posext.train: step 50/500  loss=5.2540  ppl?191.34  grad_norm=25.211  80.1s
+2026-11-11 12:33:00,885 INFO posext.train: step 60/500  loss=5.1117  ppl?165.95  grad_norm=21.569  95.6s
+2026-11-11 12:33:16,347 INFO posext.train: step 70/500  loss=5.1936  ppl?180.12  grad_norm=28.977  111.1s
+2026-11-11 12:33:31,796 INFO posext.train: step 80/500  loss=5.1294  ppl?168.92  grad_norm=27.861  126.5s
+2026-11-11 12:33:47,337 INFO posext.train: step 90/500  loss=5.0732  ppl?159.68  grad_norm=25.763  142.0s
+2026-11-11 12:34:02,756 INFO posext.train: step 100/500  loss=4.9722  ppl?144.35  grad_norm=31.496  157.5s
+2026-11-11 12:34:02,763 INFO posext.train: Saved checkpoint at step 100 -> outputs/rq1f_learned_freq_head_lr1e-2
+2026-11-11 12:34:18,168 INFO posext.train: step 110/500  loss=4.9412  ppl?139.94  grad_norm=33.748  172.9s
+2026-11-11 12:34:33,558 INFO posext.train: step 120/500  loss=4.8727  ppl?130.67  grad_norm=31.688  188.3s
+2026-11-11 12:34:48,937 INFO posext.train: step 130/500  loss=4.9557  ppl?141.99  grad_norm=24.166  203.6s
+2026-11-11 12:35:04,310 INFO posext.train: step 140/500  loss=4.8259  ppl?124.69  grad_norm=23.552  219.0s
+2026-11-11 12:35:19,714 INFO posext.train: step 150/500  loss=4.7177  ppl?111.91  grad_norm=18.915  234.4s
+2026-11-11 12:35:35,105 INFO posext.train: step 160/500  loss=4.5856  ppl?98.06  grad_norm=15.437  249.8s
+2026-11-11 12:35:50,598 INFO posext.train: step 170/500  loss=4.7093  ppl?110.98  grad_norm=18.975  265.3s
+2026-11-11 12:36:05,975 INFO posext.train: step 180/500  loss=4.6583  ppl?105.46  grad_norm=20.986  280.7s
+2026-11-11 12:36:21,358 INFO posext.train: step 190/500  loss=4.6518  ppl?104.78  grad_norm=17.769  296.1s
+2026-11-11 12:36:36,732 INFO posext.train: step 200/500  loss=4.6254  ppl?102.04  grad_norm=18.986  311.4s
+2026-11-11 12:36:36,738 INFO posext.train: Saved checkpoint at step 200 -> outputs/rq1f_learned_freq_head_lr1e-2
+2026-11-11 12:36:52,106 INFO posext.train: step 210/500  loss=4.5502  ppl?94.65  grad_norm=17.745  326.8s
+2026-11-11 12:37:07,466 INFO posext.train: step 220/500  loss=4.5086  ppl?90.80  grad_norm=28.338  342.2s
+2026-11-11 12:37:22,835 INFO posext.train: step 230/500  loss=4.4827  ppl?88.47  grad_norm=15.616  357.5s
+2026-11-11 12:37:38,302 INFO posext.train: step 240/500  loss=4.4235  ppl?83.39  grad_norm=26.142  373.0s
+2026-11-11 12:37:53,661 INFO posext.train: step 250/500  loss=4.2935  ppl?73.23  grad_norm=16.640  388.4s
+2026-11-11 12:38:09,023 INFO posext.train: step 260/500  loss=4.3070  ppl?74.22  grad_norm=23.466  403.7s
+2026-11-11 12:38:24,377 INFO posext.train: step 270/500  loss=4.2387  ppl?69.32  grad_norm=20.153  419.1s
+2026-11-11 12:38:39,738 INFO posext.train: step 280/500  loss=4.1996  ppl?66.66  grad_norm=19.471  434.4s
+2026-11-11 12:38:55,100 INFO posext.train: step 290/500  loss=4.2109  ppl?67.42  grad_norm=17.883  449.8s
+2026-11-11 12:39:10,449 INFO posext.train: step 300/500  loss=4.1248  ppl?61.85  grad_norm=14.959  465.2s
+2026-11-11 12:39:10,503 INFO posext.train: Saved checkpoint at step 300 -> outputs/rq1f_learned_freq_head_lr1e-2
+2026-11-11 12:39:25,864 INFO posext.train: step 310/500  loss=4.1055  ppl?60.67  grad_norm=28.235  480.6s
+2026-11-11 12:39:41,331 INFO posext.train: step 320/500  loss=3.9731  ppl?53.15  grad_norm=19.997  496.0s
+2026-11-11 12:39:56,685 INFO posext.train: step 330/500  loss=3.9426  ppl?51.55  grad_norm=13.232  511.4s
+2026-11-11 12:40:12,051 INFO posext.train: step 340/500  loss=3.6558  ppl?38.70  grad_norm=28.530  526.8s
+2026-11-11 12:40:27,403 INFO posext.train: step 350/500  loss=3.7669  ppl?43.25  grad_norm=12.490  542.1s
+2026-11-11 12:40:42,764 INFO posext.train: step 360/500  loss=3.6627  ppl?38.97  grad_norm=22.820  557.5s
+2026-11-11 12:40:58,132 INFO posext.train: step 370/500  loss=3.5964  ppl?36.47  grad_norm=12.288  572.8s
+2026-11-11 12:41:13,501 INFO posext.train: step 380/500  loss=3.5809  ppl?35.91  grad_norm=13.102  588.2s
+2026-11-11 12:41:28,861 INFO posext.train: step 390/500  loss=3.4502  ppl?31.51  grad_norm=9.816  603.6s
+2026-11-11 12:41:44,328 INFO posext.train: step 400/500  loss=3.3933  ppl?29.76  grad_norm=11.584  619.0s
+2026-11-11 12:41:44,416 INFO posext.train: Saved checkpoint at step 400 -> outputs/rq1f_learned_freq_head_lr1e-2
+2026-11-11 12:41:59,777 INFO posext.train: step 410/500  loss=3.3494  ppl?28.48  grad_norm=13.742  634.5s
+2026-11-11 12:42:15,144 INFO posext.train: step 420/500  loss=3.2987  ppl?27.08  grad_norm=10.300  649.9s
+2026-11-11 12:42:30,509 INFO posext.train: step 430/500  loss=3.0452  ppl?21.01  grad_norm=9.253  665.2s
+2026-11-11 12:42:45,880 INFO posext.train: step 440/500  loss=3.0345  ppl?20.79  grad_norm=9.275  680.6s
+2026-11-11 12:43:01,239 INFO posext.train: step 450/500  loss=2.9964  ppl?20.01  grad_norm=11.172  695.9s
+2026-11-11 12:43:16,604 INFO posext.train: step 460/500  loss=3.0865  ppl?21.90  grad_norm=36.001  711.3s
+2026-11-11 12:43:31,963 INFO posext.train: step 470/500  loss=3.0966  ppl?22.12  grad_norm=12.890  726.7s
+2026-11-11 12:43:47,431 INFO posext.train: step 480/500  loss=2.9522  ppl?19.15  grad_norm=10.946  742.1s
+2026-11-11 12:44:02,790 INFO posext.train: step 490/500  loss=2.9609  ppl?19.32  grad_norm=10.494  757.5s
+2026-11-11 12:44:18,159 INFO posext.train: step 500/500  loss=2.9569  ppl?19.24  grad_norm=9.508  772.9s
+2026-11-11 12:44:18,198 INFO posext.train: Saved checkpoint at step 500 -> outputs/rq1f_learned_freq_head_lr1e-2

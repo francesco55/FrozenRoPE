@@ -23,16 +23,16 @@ Bugs found and fixed along the way:
 RQ1 compares `learned_freq` (shared, layer, head) with and without temperature against `none`,
 `pi`, default YaRN and tuned YaRN.
 
-| Needed | Step |
-|---|---|
-| `train.py` + YAML configs (memory-efficient loss for 16k, per-group clipping, resume) | 6 |
-| Full-model export for RULER and `lm-eval` | 6 |
-| Perplexity at 4k/8k/16k and passkey retrieval | 7 |
-| RULER wrapper (16k RULER is part of the success criterion) | 7 |
-| HellaSwag/ARC-Easy/PIQA via `lm-eval` (the "lose at most 1 point" criterion) | 7 |
-| YaRN grid search on validation (the tuned-YaRN baseline) | 8 |
-| SCC job templates, uv setup on SCC, FlashAttention-2 + PoSE GPU check | 9 |
-| Then the actual runs: tune learning rate and steps on validation, train 5 learned configs, evaluate all 9 configs | — |
+| Needed | Step | Status |
+|---|---|---|
+| `train.py` + YAML configs (chunked CE, per-group clipping, resume) | 6 | done (`posext/train.py`, `configs/rq1/`) |
+| Full-model export for RULER and `lm-eval` | 6 | done (`posext/export.py`) |
+| Perplexity at 4k/8k/16k and passkey retrieval | 7 | done |
+| RULER wrapper (16k RULER is part of the success criterion) | 7 | stub (`posext/eval/ruler.py`) — still need vendor checkout + wiring |
+| HellaSwag/ARC-Easy/PIQA via `lm-eval` | 7 | done (`posext/eval/shortctx.py`) |
+| YaRN grid search on validation | 8 | done (`posext/baselines/yarn_grid.py`) |
+| SCC job templates; FA2 + PoSE GPU check | 9 | templates done; FA2 GPU check still open |
+| **Actual runs** on SCC: tune lr/steps on val, train learned configs, eval all cells | — | **next** |
 
 ## Remaining repo setup
 

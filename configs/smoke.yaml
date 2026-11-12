@@ -1,0 +1,28 @@
+# Local plumbing check - do NOT use for real numbers.
+# Tiny steps / few sequences; still downloads OLMo-2 + some PG-19 if not cached.
+name: smoke_learned_freq_shared
+seed: 0
+model: allenai/OLMo-2-0425-1B
+dtype: float32
+attn_implementation: eager
+pos:
+  mode: learned_freq
+  granularity: shared
+data:
+  regime: long
+  split: train
+  seq_len: 512
+  target_len: 512
+  max_sequences: 4
+  max_chunks_per_book: 1
+train:
+  steps: 2
+  batch_size: 1
+  lr: 1.0e-3
+  grad_clip: 1.0
+  logit_chunk_size: 128
+  log_every: 1
+  save_every: 2
+output_dir: outputs/smoke_learned_freq_shared
+wandb:
+  enabled: false

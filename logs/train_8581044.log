@@ -1,0 +1,89 @@
+POSEXT_ROOT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/nnandini/.cache/uv
+HF_HOME=/projectnb/cs599b1/students/nnandini/.cache/huggingface
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/nnandini/posext_data
+Host=scc-207  CUDA_VISIBLE_DEVICES=0  CONFIG=configs/rq1/followup/learned_freq_shared_lr3e-2.yaml
+Wed Nov 11 17:57:04 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-PCIE-40GB          On  |   00000000:D8:00.0 Off |                    0 |
+| N/A   38C    P0             31W /  250W |       0MiB /  40960MiB |      0%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1119.38it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:09<00:09,  9.21s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:10<00:00,  4.81s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:10<00:00,  5.47s/it]
+2026-11-11 17:58:16,858 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq
+2026-11-11 17:58:16,860 INFO posext.models.build: Trainable parameters: 64 of 1,484,916,800 (0.000004%) in ['model.posext.a']
+2026-11-11 17:58:16,920 INFO posext.train: Training rq1f_learned_freq_shared_lr3e-2 for 500 steps on cuda (regime=long, seq_len=16384, target_len=16384)
+2026-11-11 17:58:20,874 INFO posext.train: step 1/500  loss=6.7035  ppl?815.25  grad_norm=46.473  4.0s
+2026-11-11 17:58:35,367 INFO posext.train: step 10/500  loss=5.2620  ppl?192.86  grad_norm=23.370  18.4s
+2026-11-11 17:58:51,571 INFO posext.train: step 20/500  loss=5.7853  ppl?325.49  grad_norm=55.574  34.7s
+2026-11-11 17:59:07,948 INFO posext.train: step 30/500  loss=5.3492  ppl?210.43  grad_norm=54.088  51.0s
+2026-11-11 17:59:24,268 INFO posext.train: step 40/500  loss=5.2993  ppl?200.19  grad_norm=88.724  67.3s
+2026-11-11 17:59:40,615 INFO posext.train: step 50/500  loss=5.1088  ppl?165.47  grad_norm=34.727  83.7s
+2026-11-11 17:59:56,984 INFO posext.train: step 60/500  loss=4.8333  ppl?125.63  grad_norm=28.774  100.1s
+2026-11-11 18:00:13,372 INFO posext.train: step 70/500  loss=4.7070  ppl?110.72  grad_norm=56.236  116.5s
+2026-11-11 18:00:29,756 INFO posext.train: step 80/500  loss=4.5636  ppl?95.93  grad_norm=24.454  132.8s
+2026-11-11 18:00:46,133 INFO posext.train: step 90/500  loss=4.3848  ppl?80.22  grad_norm=42.341  149.2s
+2026-11-11 18:01:02,493 INFO posext.train: step 100/500  loss=4.0179  ppl?55.58  grad_norm=34.054  165.6s
+2026-11-11 18:01:02,540 INFO posext.train: Saved checkpoint at step 100 -> outputs/rq1f_learned_freq_shared_lr3e-2
+2026-11-11 18:01:18,894 INFO posext.train: step 110/500  loss=3.7795  ppl?43.80  grad_norm=19.678  182.0s
+2026-11-11 18:01:35,233 INFO posext.train: step 120/500  loss=3.7268  ppl?41.55  grad_norm=29.672  198.3s
+2026-11-11 18:01:51,571 INFO posext.train: step 130/500  loss=3.4815  ppl?32.51  grad_norm=12.302  214.7s
+2026-11-11 18:02:07,895 INFO posext.train: step 140/500  loss=3.5373  ppl?34.37  grad_norm=20.902  231.0s
+2026-11-11 18:02:24,206 INFO posext.train: step 150/500  loss=3.2624  ppl?26.11  grad_norm=13.888  247.3s
+2026-11-11 18:02:40,506 INFO posext.train: step 160/500  loss=2.9521  ppl?19.15  grad_norm=8.268  263.6s
+2026-11-11 18:02:56,791 INFO posext.train: step 170/500  loss=3.2390  ppl?25.51  grad_norm=19.921  279.9s
+2026-11-11 18:03:13,195 INFO posext.train: step 180/500  loss=3.2230  ppl?25.10  grad_norm=9.367  296.3s
+2026-11-11 18:03:29,525 INFO posext.train: step 190/500  loss=3.4491  ppl?31.47  grad_norm=39.099  312.6s
+2026-11-11 18:03:45,854 INFO posext.train: step 200/500  loss=3.3176  ppl?27.59  grad_norm=23.700  328.9s
+2026-11-11 18:03:45,913 INFO posext.train: Saved checkpoint at step 200 -> outputs/rq1f_learned_freq_shared_lr3e-2
+2026-11-11 18:04:02,232 INFO posext.train: step 210/500  loss=3.3493  ppl?28.48  grad_norm=19.084  345.3s
+2026-11-11 18:04:18,555 INFO posext.train: step 220/500  loss=3.1219  ppl?22.69  grad_norm=24.934  361.6s
+2026-11-11 18:04:34,875 INFO posext.train: step 230/500  loss=3.1498  ppl?23.33  grad_norm=4.855  378.0s
+2026-11-11 18:04:51,200 INFO posext.train: step 240/500  loss=3.1251  ppl?22.76  grad_norm=12.271  394.3s
+2026-11-11 18:05:07,519 INFO posext.train: step 250/500  loss=2.9841  ppl?19.77  grad_norm=9.237  410.6s
+2026-11-11 18:05:23,841 INFO posext.train: step 260/500  loss=3.0034  ppl?20.15  grad_norm=37.561  426.9s
+2026-11-11 18:05:40,161 INFO posext.train: step 270/500  loss=3.0190  ppl?20.47  grad_norm=8.290  443.2s
+2026-11-11 18:05:56,477 INFO posext.train: step 280/500  loss=2.9984  ppl?20.05  grad_norm=6.272  459.6s
+2026-11-11 18:06:12,793 INFO posext.train: step 290/500  loss=3.0927  ppl?22.04  grad_norm=10.680  475.9s
+2026-11-11 18:06:29,113 INFO posext.train: step 300/500  loss=2.9954  ppl?19.99  grad_norm=11.693  492.2s
+2026-11-11 18:06:29,119 INFO posext.train: Saved checkpoint at step 300 -> outputs/rq1f_learned_freq_shared_lr3e-2
+2026-11-11 18:06:45,439 INFO posext.train: step 310/500  loss=2.9724  ppl?19.54  grad_norm=8.808  508.5s
+2026-11-11 18:07:01,827 INFO posext.train: step 320/500  loss=2.9550  ppl?19.20  grad_norm=49.223  524.9s
+2026-11-11 18:07:18,146 INFO posext.train: step 330/500  loss=3.0174  ppl?20.44  grad_norm=3.212  541.2s
+2026-11-11 18:07:34,467 INFO posext.train: step 340/500  loss=2.7737  ppl?16.02  grad_norm=3.840  557.5s
+2026-11-11 18:07:50,781 INFO posext.train: step 350/500  loss=3.0339  ppl?20.78  grad_norm=2.821  573.9s
+2026-11-11 18:08:07,098 INFO posext.train: step 360/500  loss=2.9206  ppl?18.55  grad_norm=8.790  590.2s
+2026-11-11 18:08:23,422 INFO posext.train: step 370/500  loss=3.0266  ppl?20.63  grad_norm=3.800  606.5s
+2026-11-11 18:08:39,737 INFO posext.train: step 380/500  loss=3.0289  ppl?20.68  grad_norm=6.644  622.8s
+2026-11-11 18:08:56,056 INFO posext.train: step 390/500  loss=3.0162  ppl?20.41  grad_norm=5.963  639.1s
+2026-11-11 18:09:12,370 INFO posext.train: step 400/500  loss=2.9423  ppl?18.96  grad_norm=3.718  655.4s
+2026-11-11 18:09:12,377 INFO posext.train: Saved checkpoint at step 400 -> outputs/rq1f_learned_freq_shared_lr3e-2
+2026-11-11 18:09:28,703 INFO posext.train: step 410/500  loss=2.9845  ppl?19.78  grad_norm=5.947  671.8s
+2026-11-11 18:09:45,026 INFO posext.train: step 420/500  loss=2.9830  ppl?19.75  grad_norm=18.861  688.1s
+2026-11-11 18:10:01,354 INFO posext.train: step 430/500  loss=2.8205  ppl?16.79  grad_norm=2.734  704.4s
+2026-11-11 18:10:17,677 INFO posext.train: step 440/500  loss=2.8356  ppl?17.04  grad_norm=5.557  720.8s
+2026-11-11 18:10:33,996 INFO posext.train: step 450/500  loss=2.7648  ppl?15.88  grad_norm=3.975  737.1s
+2026-11-11 18:10:50,318 INFO posext.train: step 460/500  loss=2.9907  ppl?19.90  grad_norm=2.357  753.4s
+2026-11-11 18:11:06,709 INFO posext.train: step 470/500  loss=3.0292  ppl?20.68  grad_norm=4.129  769.8s
+2026-11-11 18:11:23,024 INFO posext.train: step 480/500  loss=2.9162  ppl?18.47  grad_norm=2.640  786.1s
+2026-11-11 18:11:39,351 INFO posext.train: step 490/500  loss=2.9288  ppl?18.70  grad_norm=9.643  802.4s
+2026-11-11 18:11:55,667 INFO posext.train: step 500/500  loss=2.8767  ppl?17.76  grad_norm=2.267  818.7s
+2026-11-11 18:11:55,699 INFO posext.train: Saved checkpoint at step 500 -> outputs/rq1f_learned_freq_shared_lr3e-2

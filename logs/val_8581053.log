@@ -1,0 +1,36 @@
+POSEXT_ROOT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/nnandini/.cache/uv
+HF_HOME=/projectnb/cs599b1/students/nnandini/.cache/huggingface
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/nnandini/posext_data
+/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1202.32it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.73s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.06it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.06s/it]
+2026-11-11 18:19:34,284 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq
+2026-11-11 18:19:39,738 INFO posext.eval.ppl: PPL@4096 (validation): 18.881  (nll=2.9382, 204750 tokens)
+2026-11-11 18:19:50,217 INFO posext.eval.ppl: PPL@8192 (validation): 17.204  (nll=2.8451, 409550 tokens)
+2026-11-11 18:20:13,579 INFO posext.eval.ppl: PPL@16384 (validation): 17.397  (nll=2.8563, 819150 tokens)
+{
+  "split": "validation",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.93815890789032,
+      "ppl": 18.881052535963263,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 2.845137605667114,
+      "ppl": 17.203925863747454,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 2.856309370994568,
+      "ppl": 17.397201692108347,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/rq1f_learned_freq_layer_lr3e-2"
+}
