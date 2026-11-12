@@ -83,11 +83,28 @@ def test_passkey_prompt_lengths() -> None:
         tok = AutoTokenizer.from_pretrained("allenai/OLMo-2-0425-1B", local_files_only=True)
     except Exception:
         pytest.skip("OLMo-2 tokenizer not cached; passkey length test needs it offline")
-    prompts = generate_passkey_prompts(tok, lengths=(128, 256), depths=(0.0, 1.0), n_per_cell=1, seed=0)
-    assert len(prompts) == 4
-    for p in prompts:
+    v1 = generate_passkey_prompts(tok, lengths=(128, 256), depths=(0.0, 1.0), n_per_cell=1, seed=0,
+                                  prompt_version="v1")
+    assert len(v1) == 4
+    for p in v1:
         assert len(p.input_ids) == p.length
         assert len(p.key) == 5 and p.key.isdigit()
+    # v2 (default): standard prompt, `length - answer_room` tokens, same keys/depths as v1 for a seed.
+    v2 = generate_passkey_prompts(tok, lengths=(256, 512), depths=(0.0, 0.5, 1.0), n_per_cell=1, seed=0)
+    v1b = generate_passkey_prompts(tok, lengths=(256, 512), depths=(0.0, 0.5, 1.0), n_per_cell=1, seed=0,
+                                   prompt_version="v1")
+    assert [(p.key, p.depth, p.length) for p in v2] == [(p.key, p.depth, p.length) for p in v1b]
+    for p in v2:
+        assert len(p.input_ids) == p.length - 16
+        text = tok.decode(p.input_ids)
+        assert text.startswith("There is an important info hidden inside a lot of irrelevant text.")
+        assert text.endswith("\nWhat is the pass key? The pass key is")
+        assert f"\nThe pass key is {p.key}. Remember it. {p.key} is the pass key.\n" in text
+        assert "There and back again." in text and "Soft and warm" not in text
+    shallow, deep = v2[3], v2[5]  # 512 tokens: depth 0 vs depth 1
+    assert tok.decode(shallow.input_ids).index("pass key is") < tok.decode(deep.input_ids).index("pass key is")
+    with pytest.raises(ValueError):
+        generate_passkey_prompts(tok, lengths=(256,), depths=(0.0,), n_per_cell=1, prompt_version="v3")
 
 
 def test_passkey_generation_matches_full_forward() -> None:
