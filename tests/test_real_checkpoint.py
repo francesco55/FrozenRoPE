@@ -91,3 +91,37 @@ def test_real_checkpoint_build_and_freeze(posext: dict, expected: int) -> None:
     assert 1.4e9 < counts["total"] < 1.6e9
     del model
     gc.collect()
+
+
+@pytest.mark.parametrize("temp", [{"form": "adascale"}, {"form": "constant"}], ids=["adascale", "constant"])
+@torch.no_grad()
+def test_real_checkpoint_yarn_init_equals_yarn(temp: dict) -> None:
+    """learned_freq_temp + init_from_yarn equals `yarn` mode on the real weights, at positions up
+    to 16k (frequencies and YaRN's attention factor, via the starting temperature).
+
+    Not bit-exact: YaRN scales q and k by f, we scale q by f^2, so rounding differs (~2e-4 on
+    logits of ~25 in float32, like DaRoPE). To show the tolerance still has teeth, YaRN without
+    its attention factor (what init_from_yarn gave before the temperature init) must differ far more.
+    """
+    from posext.models import load_model
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    torch.manual_seed(0)
+    length = 1024 if device == "cuda" else 384
+    ids = torch.randint(0, 100_000, (1, length), device=device)
+    positions = torch.cat([torch.zeros(1), torch.sort(torch.randperm(16_383)[: length - 1] + 1)[0]]).long()[None].to(device)
+    logits = {}
+    for name, pos in {
+        "yarn": {"mode": "yarn"},
+        "init": {"mode": "learned_freq_temp", "granularity": "head", "init_from_yarn": True, "temp": temp},
+        "no_factor": {"mode": "yarn", "yarn": {"attention_factor": 1.0}},
+    }.items():
+        model = load_model(NAME, pos=pos, dtype=torch.float32, attn_implementation="sdpa", device=device).eval()
+        logits[name] = model(ids, position_ids=positions, attention_mask=torch.ones_like(ids)).logits
+        del model
+        gc.collect()
+    assert positions.max() > 4096
+    diff = (logits["yarn"] - logits["init"]).abs().max().item()
+    without_factor = (logits["yarn"] - logits["no_factor"]).abs().max().item()
+    assert diff < 1e-3, diff
+    assert without_factor > 100 * diff, (without_factor, diff)

@@ -1,0 +1,1070 @@
+{
+  "seed": 1,
+  "n": 150,
+  "accuracy": 0.4866666666666667,
+  "by_length": {
+    "4096": 0.68,
+    "8192": 0.78,
+    "16384": 0.0
+  },
+  "by_depth": {
+    "0.0": 0.6666666666666666,
+    "0.25": 0.6333333333333333,
+    "0.5": 0.5333333333333333,
+    "0.75": 0.2,
+    "1.0": 0.4
+  },
+  "details": [
+    {
+      "key": "95845",
+      "length": 4096,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 95845.  What is the question?  The grass is green."
+    },
+    {
+      "key": "76139",
+      "length": 4096,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 76139. What is the pass key? The pass key is 761"
+    },
+    {
+      "key": "70124",
+      "length": 4096,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 70124. 70124 is the pass key. 70124 is"
+    },
+    {
+      "key": "03368",
+      "length": 4096,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 03368. 03368 is the pass key. 03368 is"
+    },
+    {
+      "key": "91263",
+      "length": 4096,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 91263. 91263 is the pass key. 91263 is"
+    },
+    {
+      "key": "90313",
+      "length": 4096,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 90313.  What is the question? The grass is green. The"
+    },
+    {
+      "key": "08491",
+      "length": 4096,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 08491. 08491 is the pass key. 08491 is"
+    },
+    {
+      "key": "46341",
+      "length": 4096,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 46341. What is the key? The key is 46341."
+    },
+    {
+      "key": "11759",
+      "length": 4096,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 11759. 11759 is the pass key. 11759 is"
+    },
+    {
+      "key": "94432",
+      "length": 4096,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 94432. 94432 is the pass key. 94432 is"
+    },
+    {
+      "key": "91248",
+      "length": 4096,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 91248.  The pass key is 912.  The pass key"
+    },
+    {
+      "key": "01249",
+      "length": 4096,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 01249.  What is the meaning of the passage? The meaning of"
+    },
+    {
+      "key": "81516",
+      "length": 4096,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 81516.  What is the meaning of the passage? The meaning of"
+    },
+    {
+      "key": "63943",
+      "length": 4096,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 63943. 63943 is the pass key. 639 is the"
+    },
+    {
+      "key": "72013",
+      "length": 4096,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 72013. 72013 is the pass key. 72013 is"
+    },
+    {
+      "key": "37340",
+      "length": 4096,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 37340.  The pass key is 373.  The pass key"
+    },
+    {
+      "key": "03302",
+      "length": 4096,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 03302.  What is the meaning of the passage? The meaning of"
+    },
+    {
+      "key": "09721",
+      "length": 4096,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 09721. 09721 is the pass key. 09721 is"
+    },
+    {
+      "key": "00242",
+      "length": 4096,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 00242. 00242 is the pass key. 00242 is"
+    },
+    {
+      "key": "77716",
+      "length": 4096,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 77716.  The pass key is 777. 77716 is"
+    },
+    {
+      "key": "26750",
+      "length": 4096,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 26750. 267 is the pass key. 26750 is the"
+    },
+    {
+      "key": "99493",
+      "length": 4096,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 99493. 994 is the pass key. 994 is the pass"
+    },
+    {
+      "key": "95346",
+      "length": 4096,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 95346. 95346 is the pass key. 95346 is"
+    },
+    {
+      "key": "17204",
+      "length": 4096,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 17204. 17204 is the pass key. 17204 is"
+    },
+    {
+      "key": "15723",
+      "length": 4096,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 15723. 157 is the pass key. 157 is the pass"
+    },
+    {
+      "key": "15676",
+      "length": 4096,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 15676. 15676 is the pass key. 15676 is"
+    },
+    {
+      "key": "85674",
+      "length": 4096,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 85674. 85674 is the pass key. 85674 is"
+    },
+    {
+      "key": "26652",
+      "length": 4096,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 26652. 26652 is the pass key. 26652 is"
+    },
+    {
+      "key": "28829",
+      "length": 4096,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 28829. 28829 is the pass key. 28829 is"
+    },
+    {
+      "key": "90254",
+      "length": 4096,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 90254.  The pass key is 90254.  The pass"
+    },
+    {
+      "key": "36018",
+      "length": 4096,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 360. Remember it. 360 is the pass key. 360 is"
+    },
+    {
+      "key": "36996",
+      "length": 4096,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 369. 369 is the pass key. 369 is the pass key"
+    },
+    {
+      "key": "10487",
+      "length": 4096,
+      "depth": 0.75,
+      "ok": true,
+      "generation": " 10487. Remember it. 10487 is the pass key. "
+    },
+    {
+      "key": "79703",
+      "length": 4096,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 797. 797 is the pass key. 797 is the pass key"
+    },
+    {
+      "key": "54537",
+      "length": 4096,
+      "depth": 0.75,
+      "ok": true,
+      "generation": " 54537. Remember it. 54537 is the pass key. "
+    },
+    {
+      "key": "36273",
+      "length": 4096,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 362. 362 is the pass key. 362 is the pass key"
+    },
+    {
+      "key": "57303",
+      "length": 4096,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 573. 573 is the pass key. 573 is the pass key"
+    },
+    {
+      "key": "23166",
+      "length": 4096,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 231. 231 is the pass key. 231 is the pass key"
+    },
+    {
+      "key": "39392",
+      "length": 4096,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 393. 393 is the pass key. 393 is the pass key"
+    },
+    {
+      "key": "56310",
+      "length": 4096,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 563. 563 is the pass key. 563 is the pass key"
+    },
+    {
+      "key": "71725",
+      "length": 4096,
+      "depth": 1.0,
+      "ok": false,
+      "generation": " the pass. What is the pass? The pass is the pass. What is"
+    },
+    {
+      "key": "69929",
+      "length": 4096,
+      "depth": 1.0,
+      "ok": false,
+      "generation": " the pass. What is the pass? The pass is the pass key. What"
+    },
+    {
+      "key": "51785",
+      "length": 4096,
+      "depth": 1.0,
+      "ok": false,
+      "generation": " the key to the pass. The pass is the key to the pass. The"
+    },
+    {
+      "key": "17223",
+      "length": 4096,
+      "depth": 1.0,
+      "ok": false,
+      "generation": " 172. 172 is the pass key. 172 is the pass key"
+    },
+    {
+      "key": "46623",
+      "length": 4096,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 46623. 46623 is the pass key. 46623 is"
+    },
+    {
+      "key": "76445",
+      "length": 4096,
+      "depth": 1.0,
+      "ok": false,
+      "generation": " the pass. What is the pass? The pass is the pass. What is"
+    },
+    {
+      "key": "02998",
+      "length": 4096,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 02998.  What is the pass key? The pass key is "
+    },
+    {
+      "key": "48249",
+      "length": 4096,
+      "depth": 1.0,
+      "ok": false,
+      "generation": " the pass. What is the pass? The pass is the pass. What is"
+    },
+    {
+      "key": "62721",
+      "length": 4096,
+      "depth": 1.0,
+      "ok": false,
+      "generation": " the pass. What is the pass? The pass is the pass. What is"
+    },
+    {
+      "key": "33664",
+      "length": 4096,
+      "depth": 1.0,
+      "ok": false,
+      "generation": " the pass. What is the pass? The pass is the pass. What is"
+    },
+    {
+      "key": "06364",
+      "length": 8192,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 06364. What is the pass key? 06364. What is"
+    },
+    {
+      "key": "58865",
+      "length": 8192,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 58865. What is the pass key? 58865 is the pass"
+    },
+    {
+      "key": "62088",
+      "length": 8192,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 62088. What is the pass key? 62088. What is"
+    },
+    {
+      "key": "19320",
+      "length": 8192,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 19320. 19320 is the pass key. 19320 is"
+    },
+    {
+      "key": "39021",
+      "length": 8192,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 39021. What is the pass key? 39021. What is"
+    },
+    {
+      "key": "40723",
+      "length": 8192,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 40723. What is the pass key? 40723. What is"
+    },
+    {
+      "key": "16111",
+      "length": 8192,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 16111. What is the pass key? 16111. What is"
+    },
+    {
+      "key": "47594",
+      "length": 8192,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 47594. What is the pass key? 47594 is the pass"
+    },
+    {
+      "key": "93337",
+      "length": 8192,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 93337. What is the pass key? The pass key is 933"
+    },
+    {
+      "key": "96008",
+      "length": 8192,
+      "depth": 0.0,
+      "ok": true,
+      "generation": " 96008. What is the pass key? 96008 is the pass"
+    },
+    {
+      "key": "96446",
+      "length": 8192,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 96446. 964 is the pass key. 964 is the pass"
+    },
+    {
+      "key": "96999",
+      "length": 8192,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 96999. 9 9 9 9 9 9"
+    },
+    {
+      "key": "43459",
+      "length": 8192,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 43459.  The pass key is 43459. 43459"
+    },
+    {
+      "key": "32358",
+      "length": 8192,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 32358. 323 is the pass key. 323 is the pass"
+    },
+    {
+      "key": "04213",
+      "length": 8192,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 04213. 04213 is the pass key. 04213 is"
+    },
+    {
+      "key": "15473",
+      "length": 8192,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 15473. 154 is the pass key. 154 is the pass"
+    },
+    {
+      "key": "27481",
+      "length": 8192,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 27481. 274 is the pass key. 274 is the pass"
+    },
+    {
+      "key": "74627",
+      "length": 8192,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 74627. 746 is the pass key. 746 is the pass"
+    },
+    {
+      "key": "89572",
+      "length": 8192,
+      "depth": 0.25,
+      "ok": true,
+      "generation": " 89572. 72 is the pass key. 72 is the pass"
+    },
+    {
+      "key": "49848",
+      "length": 8192,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " 498. 498 is the pass key. 498 is the pass key"
+    },
+    {
+      "key": "29329",
+      "length": 8192,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 29329. 293 is the pass key. 293 is the pass"
+    },
+    {
+      "key": "01323",
+      "length": 8192,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 01323. 013 is the pass key. 013 is the pass"
+    },
+    {
+      "key": "99020",
+      "length": 8192,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " 990. 990 is the pass key. 990 is the pass key"
+    },
+    {
+      "key": "10042",
+      "length": 8192,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 10042. 100 is the pass key. 42 is the pass"
+    },
+    {
+      "key": "89972",
+      "length": 8192,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " 899. 899 is the pass key. 899 is the pass key"
+    },
+    {
+      "key": "40848",
+      "length": 8192,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " 408. 408 is the pass key. 408 is the pass key"
+    },
+    {
+      "key": "47565",
+      "length": 8192,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 47565. What is the pass key? 47565 is the pass"
+    },
+    {
+      "key": "64659",
+      "length": 8192,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 64659. 646 is the pass key. 59 is the pass"
+    },
+    {
+      "key": "45289",
+      "length": 8192,
+      "depth": 0.5,
+      "ok": true,
+      "generation": " 45289. 452 is the pass key. 452 is the pass"
+    },
+    {
+      "key": "88370",
+      "length": 8192,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " 883. 883 is the pass key. 883 is the pass key"
+    },
+    {
+      "key": "26031",
+      "length": 8192,
+      "depth": 0.75,
+      "ok": true,
+      "generation": " 26031. 26031 is the pass key. 26031 is"
+    },
+    {
+      "key": "08832",
+      "length": 8192,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 0883. 88 is the pass key. 3 is the pass"
+    },
+    {
+      "key": "47012",
+      "length": 8192,
+      "depth": 0.75,
+      "ok": true,
+      "generation": " 4702. 47012 is the pass key. 47012 is"
+    },
+    {
+      "key": "27545",
+      "length": 8192,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 2754. 2754 is the pass key. 2754 is"
+    },
+    {
+      "key": "97775",
+      "length": 8192,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 9777. 977 is the pass key. 977 is the pass"
+    },
+    {
+      "key": "33090",
+      "length": 8192,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 3300. 3300 is the pass key. 330 is the"
+    },
+    {
+      "key": "28919",
+      "length": 8192,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 2899. 289 is the pass key. 289 is the pass"
+    },
+    {
+      "key": "17671",
+      "length": 8192,
+      "depth": 0.75,
+      "ok": true,
+      "generation": " 17671. What is the pass key? 17671 is the pass"
+    },
+    {
+      "key": "52346",
+      "length": 8192,
+      "depth": 0.75,
+      "ok": true,
+      "generation": " 52346. 52346 is the pass key. 52346 is"
+    },
+    {
+      "key": "96729",
+      "length": 8192,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " 9679. 9679 is the pass key. 9679 is"
+    },
+    {
+      "key": "88040",
+      "length": 8192,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 88040. What is the pass key? 88040 is the pass"
+    },
+    {
+      "key": "64118",
+      "length": 8192,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 64118. What is the pass key? 64118 is the pass"
+    },
+    {
+      "key": "87977",
+      "length": 8192,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 87977. What is the pass key? 87977 is the pass"
+    },
+    {
+      "key": "56707",
+      "length": 8192,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 56707. What is the pass key? 56707 is the pass"
+    },
+    {
+      "key": "63143",
+      "length": 8192,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 63143. What is the pass key? 63143 is the pass"
+    },
+    {
+      "key": "45342",
+      "length": 8192,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 45342. What is the pass key? 45342 is the pass"
+    },
+    {
+      "key": "85687",
+      "length": 8192,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 85687. What is the pass key? The pass key is 856"
+    },
+    {
+      "key": "07677",
+      "length": 8192,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 07677. What is the pass key? 07677 is the pass"
+    },
+    {
+      "key": "68452",
+      "length": 8192,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 68452. What is the pass key? The pass key is 684"
+    },
+    {
+      "key": "96187",
+      "length": 8192,
+      "depth": 1.0,
+      "ok": true,
+      "generation": " 96187. What is the pass key? 96187 is the pass"
+    },
+    {
+      "key": "80453",
+      "length": 16384,
+      "depth": 0.0,
+      "ok": false,
+      "generation": " blue. Here we go. Here we go. Here we go. Here we"
+    },
+    {
+      "key": "58073",
+      "length": 16384,
+      "depth": 0.0,
+      "ok": false,
+      "generation": " blue. Here we go. Here we go. Here we go. Here we"
+    },
+    {
+      "key": "76403",
+      "length": 16384,
+      "depth": 0.0,
+      "ok": false,
+      "generation": " blue. Here we go. Here we go. Here we go. Here we"
+    },
+    {
+      "key": "89446",
+      "length": 16384,
+      "depth": 0.0,
+      "ok": false,
+      "generation": " blue. Here we go. Here we go. Here we go. Here we"
+    },
+    {
+      "key": "35816",
+      "length": 16384,
+      "depth": 0.0,
+      "ok": false,
+      "generation": " blue. Here we go. Here we go. Here we go. Here we"
+    },
+    {
+      "key": "46016",
+      "length": 16384,
+      "depth": 0.0,
+      "ok": false,
+      "generation": " blue. Here we go. Here we go. Here we go. Here we"
+    },
+    {
+      "key": "14210",
+      "length": 16384,
+      "depth": 0.0,
+      "ok": false,
+      "generation": " blue. Here we go. Here we go. Here we go. Here we"
+    },
+    {
+      "key": "95050",
+      "length": 16384,
+      "depth": 0.0,
+      "ok": false,
+      "generation": " blue. Here we go. Here we go. Here we go. Here we"
+    },
+    {
+      "key": "90647",
+      "length": 16384,
+      "depth": 0.0,
+      "ok": false,
+      "generation": " blue. Here we go. Here we go. Here we go. Here we"
+    },
+    {
+      "key": "32175",
+      "length": 16384,
+      "depth": 0.0,
+      "ok": false,
+      "generation": " blue. Here we go. Here we go. Here we go. Here we"
+    },
+    {
+      "key": "90383",
+      "length": 16384,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " blue. Here. Here we go. Here we go. Here. Here."
+    },
+    {
+      "key": "73655",
+      "length": 16384,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " blue. Here. Here we go. Here we go. Here. Here."
+    },
+    {
+      "key": "16345",
+      "length": 16384,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " blue. Here. Here we go. Here we go. Here. Here."
+    },
+    {
+      "key": "44999",
+      "length": 16384,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " blue. Here. Here we go. Here we go. Here. Here."
+    },
+    {
+      "key": "94419",
+      "length": 16384,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " blue. Here. Here we go. Here we go. Here. Here."
+    },
+    {
+      "key": "89372",
+      "length": 16384,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " blue. Here. Here we go. Here. Here. Here. The sun"
+    },
+    {
+      "key": "48010",
+      "length": 16384,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " blue. Here. Here we go. Here we go. Here. Here."
+    },
+    {
+      "key": "96190",
+      "length": 16384,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " blue. Here. Here we go. Here we go. Here. Here."
+    },
+    {
+      "key": "39278",
+      "length": 16384,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " blue. Here. Here we go. Here we go. Here. Here."
+    },
+    {
+      "key": "03680",
+      "length": 16384,
+      "depth": 0.25,
+      "ok": false,
+      "generation": " blue. Here. Here we go. Here. Here. The sun. Here"
+    },
+    {
+      "key": "23032",
+      "length": 16384,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " blue. The sun. Here. Here. The sun. Here. The sun"
+    },
+    {
+      "key": "43831",
+      "length": 16384,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " blue. The sun. Here. The sun. Here. The sun. Here"
+    },
+    {
+      "key": "56919",
+      "length": 16384,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " blue. The sun. Here. Here. The sun. The sun. Here"
+    },
+    {
+      "key": "53217",
+      "length": 16384,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " blue. The sun. Here. The sun. Here. The sun. Here"
+    },
+    {
+      "key": "25969",
+      "length": 16384,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " blue. The sun. Here. Here. The sun. The sun. Here"
+    },
+    {
+      "key": "74829",
+      "length": 16384,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " blue. The sun. Here. The sun. Here. The sun. Here"
+    },
+    {
+      "key": "86403",
+      "length": 16384,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " blue. The sun. Here. Here. The sun. The sun. Here"
+    },
+    {
+      "key": "61504",
+      "length": 16384,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " blue. The sun. Here. Here. The sun. The sun. Here"
+    },
+    {
+      "key": "48472",
+      "length": 16384,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " blue. The sun. Here. Here. The sun. Here. The sun"
+    },
+    {
+      "key": "33501",
+      "length": 16384,
+      "depth": 0.5,
+      "ok": false,
+      "generation": " blue. The sun. Here. Here. The sun. The sun. Here"
+    },
+    {
+      "key": "57549",
+      "length": 16384,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " blue. Here.  The sun. Here. Here. Here.  The"
+    },
+    {
+      "key": "58406",
+      "length": 16384,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " blue. Here. Here. Here. Here. Here.  The sun."
+    },
+    {
+      "key": "76308",
+      "length": 16384,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " blue. Here. Here. Here.  The sun. Here.  The"
+    },
+    {
+      "key": "49909",
+      "length": 16384,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " blue. Here.  The sun. Here. Here. Here.  The"
+    },
+    {
+      "key": "31878",
+      "length": 16384,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " blue. Here. Here. Here.  The sun. Here.  The"
+    },
+    {
+      "key": "47458",
+      "length": 16384,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " blue. Here.  The sun. Here. Here.  The sun."
+    },
+    {
+      "key": "03596",
+      "length": 16384,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " blue. Here. Here. Here.  The sun. Here.  The"
+    },
+    {
+      "key": "95867",
+      "length": 16384,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " blue. Here.  The sun. Here. Here. Here.  The"
+    },
+    {
+      "key": "34709",
+      "length": 16384,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " blue. Here.  The sun. Here. Here. Here.  The"
+    },
+    {
+      "key": "95019",
+      "length": 16384,
+      "depth": 0.75,
+      "ok": false,
+      "generation": " blue. Here.  The sun. Here. Here. Here.  The"
+    },
+    {
+      "key": "81671",
+      "length": 16384,
+      "depth": 1.0,
+      "ok": false,
+      "generation": ". Here. Here. 7. Here. Here. Here. 7"
+    },
+    {
+      "key": "67597",
+      "length": 16384,
+      "depth": 1.0,
+      "ok": false,
+      "generation": ". Here. Here. 7. Here. Here. Here. 7"
+    },
+    {
+      "key": "49352",
+      "length": 16384,
+      "depth": 1.0,
+      "ok": false,
+      "generation": ". Here. Here. Here. Here. Here. Here. 1."
+    },
+    {
+      "key": "60235",
+      "length": 16384,
+      "depth": 1.0,
+      "ok": false,
+      "generation": ". Here. Here. Here. Here. Here. Here. 3."
+    },
+    {
+      "key": "87340",
+      "length": 16384,
+      "depth": 1.0,
+      "ok": false,
+      "generation": ". Here. Here. 4. 4. Here. 4."
+    },
+    {
+      "key": "94379",
+      "length": 16384,
+      "depth": 1.0,
+      "ok": false,
+      "generation": ". Here. Here.  The sun. Here we go. 1."
+    },
+    {
+      "key": "19188",
+      "length": 16384,
+      "depth": 1.0,
+      "ok": false,
+      "generation": ". Here. Here. 1. 1. Here. Here. "
+    },
+    {
+      "key": "12414",
+      "length": 16384,
+      "depth": 1.0,
+      "ok": false,
+      "generation": ". Here. Here. 1. 1. Here. 1."
+    },
+    {
+      "key": "08996",
+      "length": 16384,
+      "depth": 1.0,
+      "ok": false,
+      "generation": ". Here. Here.  The sun. Here we go.  The sun"
+    },
+    {
+      "key": "16455",
+      "length": 16384,
+      "depth": 1.0,
+      "ok": false,
+      "generation": ". Here. Here.  The sun. Here we go. 1."
+    }
+  ],
+  "source": "outputs/sweeps/temp_head_init0/runs/rq1_learned_freq_temp_head__lr3e-2"
+}

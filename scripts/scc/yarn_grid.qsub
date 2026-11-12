@@ -3,7 +3,9 @@
 #$ -N posext_yarn_grid
 #$ -l h_rt=24:00:00
 #$ -l gpus=1
-#$ -l gpu_type=A100
+#$ -l gpu_c=8.0
+# gpu_c=8.0 (Ampere+): bf16 and flash attention. Any >=40 GB card qualifies (A100, A40, A6000, L40S, H200...).
+# For final test-split numbers, pin one type for all methods (e.g. -l gpu_type=L40S) or record it.
 #$ -l gpu_memory=40G
 #$ -pe omp 8
 #$ -j y
@@ -11,7 +13,7 @@
 
 set -euo pipefail
 
-POSEXT_ROOT="${POSEXT_ROOT:-/projectnb/cs599b1/students/adithyad/FrozenRoPE}"
+POSEXT_ROOT="${POSEXT_ROOT:-/projectnb/cs599b1/students/${USER:-$(id -un)}/FrozenRoPE}"
 cd "$POSEXT_ROOT"
 # shellcheck disable=SC1091
 source "${POSEXT_ROOT}/scripts/scc/env.sh"

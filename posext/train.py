@@ -284,6 +284,11 @@ def train(cfg: ExperimentConfig, *, device: torch.device, no_wandb: bool = False
         "parameter_counts": counts,
         "output_dir": str(out_dir),
         "seconds": time.time() - t0,
+        # Peak GPU memory of this process (None on CPU/MPS), to check headroom on 40-48 GB cards.
+        "peak_gpu_memory_gb": (
+            round(torch.cuda.max_memory_allocated(device) / 2**30, 2) if device.type == "cuda" else None
+        ),
+        "gpu_name": torch.cuda.get_device_name(device) if device.type == "cuda" else None,
     }
     (out_dir / "train_summary.json").write_text(json.dumps(results, indent=2))
     if wb is not None:

@@ -24,6 +24,9 @@ wandb/
 data_cache/
 .cache/
 
+# External checkouts (NVIDIA RULER: `python -m posext.eval.ruler setup`)
+third_party/
+
 # SGE job logs
 *.o[0-9]*
 *.e[0-9]*

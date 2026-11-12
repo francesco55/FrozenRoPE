@@ -21,6 +21,9 @@ dependencies = [
 # Short-context benchmarks (eval/shortctx.py) and RQ4 LoRA (stub).
 eval = ["lm-eval>=0.4.9"]
 lora = ["peft>=0.18"]
+# NVIDIA RULER data generation (eval/ruler.py runs RULER's own scripts with this venv).
+# nltk/wonderwords/tenacity: scripts/data; html2text/bs4: the Paul Graham essay download.
+ruler = ["nltk>=3.9", "wonderwords>=2.2", "tenacity>=8", "html2text>=2024.2", "beautifulsoup4>=4.12", "tqdm"]
 
 [dependency-groups]
 dev = ["pytest>=8", "ruff"]

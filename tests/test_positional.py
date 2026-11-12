@@ -77,13 +77,40 @@ def test_pi_matches_stock_linear(stock: Olmo2ForCausalLM, factor: float) -> None
 
 @torch.no_grad()
 def test_init_from_yarn_equals_yarn_frequencies(stock: Olmo2ForCausalLM) -> None:
-    """init_from_yarn starts learned frequencies at YaRN's (without YaRN's attention factor)."""
+    """learned_freq (no temperature) + init_from_yarn: YaRN's frequencies, no attention factor."""
     yarn = YARN_SETTINGS[0]
     ref = make_stock({"rope_type": "yarn", **yarn, "attention_factor": 1.0})
     ref.load_state_dict(stock.state_dict())
     model = make_posext({"mode": "learned_freq", "init_from_yarn": True, "yarn": yarn}, stock.state_dict())
     ids = random_ids()
     assert max_diff(model(ids).logits, ref(ids).logits) < 1e-5
+
+
+@pytest.mark.parametrize("granularity", ["shared", "layer", "head"])
+@pytest.mark.parametrize("temp", [{"form": "constant"}, {"form": "adascale"},
+                                  {"form": "adascale", "length_source": "positions"}])
+@pytest.mark.parametrize("yarn", YARN_SETTINGS[:2])
+@torch.no_grad()
+def test_init_from_yarn_with_temperature_equals_yarn(
+    stock: Olmo2ForCausalLM, granularity: str, temp: dict, yarn: dict
+) -> None:
+    """learned_freq_temp + init_from_yarn equals `yarn` mode exactly (frequencies AND attention
+    factor), also beyond the native length where AdaScale would grow if gamma were not 0."""
+    ref = make_posext({"mode": "yarn", "yarn": yarn}, stock.state_dict())
+    model = make_posext({"mode": "learned_freq_temp", "granularity": granularity, "init_from_yarn": True,
+                         "temp": temp, "yarn": yarn}, stock.state_dict())
+    ids = random_ids(batch=1, length=3 * NATIVE_LEN)
+    assert max_diff(model(ids).logits, ref(ids).logits) < 1e-5
+
+
+def test_init_from_yarn_temperature_values() -> None:
+    """The stored temperature is YaRN's logit scale f^2 (f = 0.1 ln 4 + 1 by default)."""
+    f2 = (0.1 * math.log(4.0) + 1.0) ** 2
+    model = make_posext({"mode": "learned_freq_temp", "init_from_yarn": True, "temp": {"form": "constant"}})
+    assert torch.allclose(model.model.posext.log_tau.exp(), torch.full_like(model.model.posext.log_tau, f2))
+    model = make_posext({"mode": "learned_freq_temp", "init_from_yarn": True, "temp": {"form": "adascale"}})
+    pe = model.model.posext
+    assert torch.allclose(pe.tau, torch.full_like(pe.tau, 1 / f2)) and (pe.gamma == 0).all()
 
 
 # ---- configuration -------------------------------------------------------------------

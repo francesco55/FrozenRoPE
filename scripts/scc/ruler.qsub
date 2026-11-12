@@ -1,0 +1,55 @@
+#!/bin/bash -l
+#$ -P cs599b1
+#$ -N posext_ruler
+#$ -l h_rt=12:00:00
+#$ -l gpus=1
+#$ -l gpu_c=8.0
+# gpu_c=8.0 (Ampere+): bf16 and flash attention. Any >=40 GB card qualifies (A100, A40, A6000, L40S, H200...).
+# For final test-split numbers, pin one type for all methods (e.g. -l gpu_type=L40S) or record it.
+#$ -l gpu_memory=40G
+#$ -pe omp 8
+#$ -j y
+#$ -o logs/ruler_$JOB_ID.log
+
+# GPU: RULER inference + scoring (data from ruler_prepare.qsub). Resumable: if the job hits its
+# wall time, submit the same command again and it continues where it stopped.
+#
+# Usage:
+#   qsub -v RUN_DIR=outputs/rq1_learned_freq_head,SPLIT=validation scripts/scc/ruler.qsub
+#   qsub -v POS_MODE=none,SPLIT=validation scripts/scc/ruler.qsub
+#   qsub -v POS_MODE=yarn,FACTOR=4,BETA_FAST=32,BETA_SLOW=1,ATTN_FACTOR=1.1,TAG=yarn_tuned,SPLIT=test scripts/scc/ruler.qsub
+# Optional: TASKS=niah_single_1,... LENGTHS=4096,8192 MAX_SAMPLES=20 (debug)
+# Output: results/ruler_<tag>_<split>.json, predictions in outputs/ruler/<tag>/<split>/
+
+set -euo pipefail
+
+POSEXT_ROOT="${POSEXT_ROOT:-/projectnb/cs599b1/students/${USER:-$(id -un)}/FrozenRoPE}"
+cd "$POSEXT_ROOT"
+# shellcheck disable=SC1091
+source "${POSEXT_ROOT}/scripts/scc/env.sh"
+export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
+
+if command -v uv >/dev/null 2>&1; then
+  PY=(uv run python)
+elif [[ -x "${UV_PROJECT_ENVIRONMENT}/bin/python" ]]; then
+  PY=("${UV_PROJECT_ENVIRONMENT}/bin/python")
+else
+  echo "No uv and no venv at $UV_PROJECT_ENVIRONMENT — run scripts/scc/setup.sh first" >&2
+  exit 1
+fi
+
+ARGS=(--split "${SPLIT:-validation}" --device cuda)
+if [[ -n "${RUN_DIR:-}" ]]; then
+  ARGS+=(--run "$RUN_DIR")
+else
+  ARGS+=(--pos-mode "${POS_MODE:-none}" --factor "${FACTOR:-4}")
+  [[ -n "${BETA_FAST:-}" ]] && ARGS+=(--beta-fast "$BETA_FAST")
+  [[ -n "${BETA_SLOW:-}" ]] && ARGS+=(--beta-slow "$BETA_SLOW")
+  [[ -n "${ATTN_FACTOR:-}" ]] && ARGS+=(--attention-factor "$ATTN_FACTOR")
+fi
+[[ -n "${TAG:-}" ]] && ARGS+=(--tag "$TAG")
+[[ -n "${TASKS:-}" ]] && ARGS+=(--tasks "$TASKS")
+[[ -n "${LENGTHS:-}" ]] && ARGS+=(--lengths "$LENGTHS")
+[[ -n "${MAX_SAMPLES:-}" ]] && ARGS+=(--max-samples "$MAX_SAMPLES")
+
+"${PY[@]}" -m posext.eval.ruler run "${ARGS[@]}"

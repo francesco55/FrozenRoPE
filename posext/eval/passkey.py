@@ -17,6 +17,7 @@ from typing import Any
 import torch
 from transformers import AutoTokenizer
 
+from posext.eval.common import greedy_generate
 from posext.models import load_model, load_trained
 from posext.models.build import DEFAULT_MODEL
 from posext.models.positional import PosConfig
@@ -89,21 +90,9 @@ def generate_passkey_prompts(
 @torch.no_grad()
 def answer_passkey(model, tokenizer, prompt: PasskeyPrompt, *, max_new_tokens: int = 16) -> str:
     """Greedy-generate a short continuation and return the decoded text."""
-    device = next(model.parameters()).device
-    input_ids = torch.tensor([prompt.input_ids], device=device)
-    attention_mask = torch.ones_like(input_ids)
-    # No explicit position_ids: generate() never extends a passed tensor, so every new token
-    # would reuse the last prompt position. Without it, positions come from the attention mask
-    # and keep counting (0..L-1 for the prompt, then L, L+1, ...).
-    out = model.generate(
-        input_ids=input_ids,
-        attention_mask=attention_mask,
-        max_new_tokens=max_new_tokens,
-        do_sample=False,
-        use_cache=True,
-        pad_token_id=tokenizer.eos_token_id,
+    new_tokens = greedy_generate(
+        model, prompt.input_ids, max_new_tokens=max_new_tokens, pad_token_id=tokenizer.eos_token_id
     )
-    new_tokens = out[0, input_ids.shape[1] :]
     return tokenizer.decode(new_tokens, skip_special_tokens=True)
 
 

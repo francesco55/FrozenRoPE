@@ -334,7 +334,11 @@ class PositionalEncoding(nn.Module):
 
     @torch.no_grad()
     def reset_parameters(self) -> None:
-        """Initialize so that the model equals the stock model (or YaRN, if init_from_yarn)."""
+        """Initialize so that the model equals the stock model (or YaRN, if init_from_yarn).
+
+        For `learned_freq` (no temperature parameters) init_from_yarn sets the frequencies only;
+        YaRN's attention factor cannot be represented there.
+        """
         if self.pos.learns_freq:
             if self.pos.init_from_yarn:
                 # a = log(theta_yarn / theta), so exp(a) * theta reproduces YaRN's frequencies.
@@ -342,10 +346,14 @@ class PositionalEncoding(nn.Module):
             else:
                 self.a.zero_()
         if self.pos.mode == "learned_freq_temp":
+            # init_from_yarn also starts at YaRN's attention scaling, so the model equals `yarn`
+            # mode at step 0: YaRN multiplies cos/sin by f (queries and keys), i.e. logits by f^2,
+            # which a query-only scale of f^2 reproduces exactly. Otherwise the scale is 1 (stock).
+            scale = yarn_attention_factor(self.pos.yarn) ** 2 if self.pos.init_from_yarn else 1.0
             if self.pos.temp.form == "constant":
-                self.log_tau.zero_()  # scale exp(0) = 1
+                self.log_tau.fill_(math.log(scale))  # scale exp(log_tau) = f^2 (or 1)
             else:
-                self.tau.fill_(1.0)  # with gamma = 0, lambda = 1 at every length
+                self.tau.fill_(1.0 / scale)  # with gamma = 0, lambda = 1 / tau at every length
                 self.gamma.zero_()
         if self.pos.mode == "darope":
             self.w.zero_()  # no content term
