@@ -1,0 +1,17 @@
+# Training-free Position Interpolation - evaluate only.
+#   uv run python -m posext.eval.ppl --pos-mode pi --factor 4
+name: rq1_pi
+pos:
+  mode: pi
+  pi_factor: 4.0
+data:
+  regime: long
+  split: test
+  seq_len: 16384
+  target_len: 16384
+  max_sequences: 50
+train:
+  steps: 0
+output_dir: outputs/rq1_pi
+wandb:
+  enabled: false

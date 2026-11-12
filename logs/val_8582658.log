@@ -1,0 +1,36 @@
+POSEXT_ROOT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/nnandini/.cache/uv
+HF_HOME=/projectnb/cs599b1/students/nnandini/.cache/huggingface
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/nnandini/posext_data
+/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1055.04it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.15s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.70it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.49it/s]
+2026-11-11 19:14:07,120 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq
+2026-11-11 19:14:12,066 INFO posext.eval.ppl: PPL@4096 (test): 20.745  (nll=3.0323, 204750 tokens)
+2026-11-11 19:14:21,854 INFO posext.eval.ppl: PPL@8192 (test): 21.770  (nll=3.0805, 409550 tokens)
+2026-11-11 19:14:43,642 INFO posext.eval.ppl: PPL@16384 (test): 19.725  (nll=2.9819, 819150 tokens)
+{
+  "split": "test",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 3.032303981781006,
+      "ppl": 20.74497361229743,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 3.0805326795578,
+      "ppl": 21.769995739858377,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 2.981903419494629,
+      "ppl": 19.725326505946356,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/rq1f_learned_freq_head_lr3e-2"
+}

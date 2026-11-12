@@ -1,0 +1,40 @@
+POSEXT_ROOT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/nnandini/.cache/uv
+HF_HOME=/projectnb/cs599b1/students/nnandini/.cache/huggingface
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/nnandini/posext_data
+/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1159.13it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:14<00:14, 14.69s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  7.70s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  8.75s/it]
+2026-11-11 19:07:36,612 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 225.10 examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 207.70 examples/s]
+2026-11-11 19:07:44,088 INFO posext.data.pg19: Cached 50 PG-19 test chunks of length 4096 at /projectnb/cs599b1/students/nnandini/posext_data/pg19_test_4096_f44f5a5deec2.pt
+2026-11-11 19:07:51,271 INFO posext.eval.ppl: PPL@4096 (test): 21.820  (nll=3.0828, 204750 tokens)
+2026-11-11 19:07:52,819 INFO posext.data.pg19: Cached 50 PG-19 test chunks of length 8192 at /projectnb/cs599b1/students/nnandini/posext_data/pg19_test_8192_db3af57a6a1e.pt
+2026-11-11 19:08:02,377 INFO posext.eval.ppl: PPL@8192 (test): 23.869  (nll=3.1726, 409550 tokens)
+2026-11-11 19:08:05,127 INFO posext.data.pg19: Cached 50 PG-19 test chunks of length 16384 at /projectnb/cs599b1/students/nnandini/posext_data/pg19_test_16384_8dc2fba98c61.pt
+2026-11-11 19:08:26,396 INFO posext.eval.ppl: PPL@16384 (test): 22.518  (nll=3.1143, 819150 tokens)
+{
+  "split": "test",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 3.0828080940246583,
+      "ppl": 21.81958790307411,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 3.172572498321533,
+      "ppl": 23.868807913530716,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 3.1142946434020997,
+      "ppl": 22.517541853909233,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/rq1f_learned_freq_shared_lr3e-2"
+}

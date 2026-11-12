@@ -1,0 +1,15 @@
+# Untouched model - evaluate only; expected to fail beyond 4k.
+name: rq1_none
+pos:
+  mode: none
+data:
+  regime: long
+  split: test
+  seq_len: 16384
+  target_len: 16384
+  max_sequences: 50
+train:
+  steps: 0
+output_dir: outputs/rq1_none
+wandb:
+  enabled: false

@@ -1,0 +1,40 @@
+POSEXT_ROOT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/nnandini/.cache/uv
+HF_HOME=/projectnb/cs599b1/students/nnandini/.cache/huggingface
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/nnandini/posext_data
+/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1445.31it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.51s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.30it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.13it/s]
+2026-11-11 16:28:11,028 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq
+Generating validation split:   0%|          | 0/50 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 50/50 [00:00<00:00, 374.51 examples/s]Generating validation split: 100%|██████████| 50/50 [00:00<00:00, 279.71 examples/s]
+2026-11-11 16:28:17,149 INFO posext.data.pg19: Cached 50 PG-19 validation chunks of length 4096 at /projectnb/cs599b1/students/nnandini/posext_data/pg19_validation_4096_1f3e3cb9e8d2.pt
+2026-11-11 16:28:22,125 INFO posext.eval.ppl: PPL@4096 (validation): 18.376  (nll=2.9110, 204750 tokens)
+2026-11-11 16:28:23,941 INFO posext.data.pg19: Cached 50 PG-19 validation chunks of length 8192 at /projectnb/cs599b1/students/nnandini/posext_data/pg19_validation_8192_ce7c9407ae67.pt
+2026-11-11 16:28:33,827 INFO posext.eval.ppl: PPL@8192 (validation): 17.534  (nll=2.8641, 409550 tokens)
+2026-11-11 16:28:36,334 INFO posext.data.pg19: Cached 50 PG-19 validation chunks of length 16384 at /projectnb/cs599b1/students/nnandini/posext_data/pg19_validation_16384_c2fc7c521ed7.pt
+2026-11-11 16:28:58,261 INFO posext.eval.ppl: PPL@16384 (validation): 20.638  (nll=3.0271, 819150 tokens)
+{
+  "split": "validation",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.9110321950912477,
+      "ppl": 18.37575614666699,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 2.8641370964050292,
+      "ppl": 17.5339165951446,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 3.0271104764938355,
+      "ppl": 20.637513770326713,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/rq1f_learned_freq_head_lr1e-2"
+}

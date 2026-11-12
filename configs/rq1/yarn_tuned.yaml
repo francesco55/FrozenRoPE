@@ -1,0 +1,22 @@
+# Best YaRN from validation grid (outputs/yarn_grid/best.json), 2026-11-10.
+# factor=4, beta_fast=64, beta_slow=2, attention_factor=1.2
+# val PPL@16k ≈ 20.1, passkey ≈ 91.7% (4k: 100%, 16k: 83%)
+name: rq1_yarn_tuned
+pos:
+  mode: yarn
+  yarn:
+    factor: 4.0
+    beta_fast: 64.0
+    beta_slow: 2.0
+    attention_factor: 1.2
+data:
+  regime: long
+  split: validation
+  seq_len: 16384
+  target_len: 16384
+  max_sequences: 50
+train:
+  steps: 0
+output_dir: outputs/rq1_yarn_tuned
+wandb:
+  enabled: false
