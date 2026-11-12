@@ -1,0 +1,104 @@
+\documentclass[11pt]{article}
+\usepackage[preprint]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{array}
+\setlist{nosep,leftmargin=*}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+
+\title{How Much of Context Extension Is Positional?\\Learning RoPE Parameters on a Frozen Language Model}
+
+\author{Adithya Darshan Nayak \quad Nandini Narvekar \quad Francesco Zeolla \\
+  Boston University \\
+  \texttt{\{adithyad, nnandini, fdzeolla\}@bu.edu}}
+
+\begin{document}
+\maketitle
+
+\section{Problem}
+
+Nearly every open-weight language model encodes position with rotary embeddings (RoPE; \citealp{su2021roformer}), and nearly every one degrades sharply once its input exceeds the length $L$ it was pretrained on \citep{chen2023pi, peng2024yarn}. Pretraining at longer lengths is costly, so inexpensive context extension of existing models is a practical, widely shared problem.
+
+\smallskip
+RoPE divides each head's query and key vectors into $d/2$ two-dimensional \emph{bands} and rotates band $j$ of the token at position $m$ by angle $m\theta_j$, where $\theta_j = b^{-2j/d}$. Because only the difference in angle survives the dot product, the attention logit depends on relative distance alone:
+\begin{equation}
+s_{mn} = \textstyle\sum_{j} \mathrm{Re}\big[\,q_{m,j}\,\overline{k_{n,j}}\,e^{\,i(m-n)\theta_j}\big].
+\end{equation}
+Fast bands cycle many times within $L$ and encode local order. \emph{Slow bands}, whose wavelength $2\pi/\theta_j$ exceeds $L$, never complete a rotation in training; beyond $L$ they take on angles the model has never encountered, which is the failure that context extension must fix.
+
+\paragraph{Task.} We treat context extension as a parameter-efficient learning problem. Given a frozen pretrained model with weights $W$ and native length $L$, we seek a small set of positional parameters $\phi$, with $|\phi| \ll |W|$, that lets the model operate at $L' = 4L$:
+\begin{equation}
+\min_{\phi}\; \mathbb{E}_{x\sim\mathcal{D}_{L'}}\big[-\log p_{W,\phi}(x)\big],
+\end{equation}
+while preserving its behavior at lengths up to $L$. Our base parameterization rescales each frequency, $\hat\theta_{h,j} = e^{a_{h,j}}\theta_j$. At $a=0$ the model is exactly the original, so any change is learned rather than imposed.
+
+\section{Relevant Prior Work}
+
+\textbf{Training-free context extension.} Position Interpolation \citep{chen2023pi} compresses every position into the trained range, while YaRN \citep{peng2024yarn} interpolates only the slow bands and sharpens attention with a temperature. Both apply one hand-designed rule to every head.
+
+\textbf{Short-data training.} PoSE \citep{zhu2024pose} shows that skipping position IDs lets a model learn long distances from short sequences, but it fine-tunes all model weights rather than only positional parameters.
+
+\textbf{Learned frequencies.} LeRoPE \citep{karypis2026lerope} learns per-band frequency scales, shared across heads, during pretraining, and finds that per-head scales bring no benefit in that setting. AdaRoPE \citep{wang2026adarope} reaches the opposite conclusion for extension: learning per-head log-frequencies and length-aware temperatures on a frozen backbone extends SmolLM2-1.7B and Llama-3-8B from 8k to 64k with only 100 PG-19 sequences at the target length, and sharing frequencies across heads hurts.
+
+\textbf{Position-free channels.} DaRoPE \citep{levy2026darope} replaces slow-band positions with bounded coordinates computed from token content, but only when training from scratch. HoPE \citep{chen2025hope} removes slow-band rotation altogether. \citet{kazemnejad2023nope} find that decoders with no positional encoding (NoPE) still generalize to longer inputs on small tasks, though DaRoPE reports that removing position entirely hurts language modeling at scale.
+
+\section{Research Questions}
+
+\paragraph{RQ1 (setup): Starting from a pre-trained LLM, what does learning per-head RoPE parameters on a frozen backbone add beyond YaRN?}
+We learn frequency scales $a_{h,j}$ and a per-head temperature on a frozen OLMo-2-1B at three granularities (shared, per-layer and per-head) and compare each with a grid-tuned YaRN. \emph{It differs from current work as follows:}
+\begin{itemize}
+  \item \emph{From LeRoPE:} the parameters are learned after pretraining, on a frozen model, and judged beyond $L$ rather than within it.
+ \item \emph{From AdaRoPE,} in three ways. (i)~AdaRoPE starts its learned frequencies at YaRN's values; we start at the original model's ($a=0$), so any gain over YaRN must come from learning rather than from YaRN's starting point. (ii)~AdaRoPE compares shared and per-head frequencies against standard YaRN; we add a per-layer level and compare all three against YaRN with tuned settings. (iii)~We test whether its results transfer beyond SmolLM2 and Llama-3 to a different model family, OLMo-2-1B.
+\end{itemize}
+\paragraph{After RQ1.} Its outcome determines which direction is most informative:\vspace{2pt}
+
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.42\columnwidth}>{\raggedright\arraybackslash}p{0.54\columnwidth}@{}}
+\toprule
+\textbf{RQ1 outcome} & \textbf{Next question} \\
+\midrule
+Learned $>$ tuned YaRN & RQ2: can it be learned cheaply? \\
+Learned $\approx$ tuned YaRN & RQ3: is frequency the wrong thing to learn? \\
+Both plateau below full fine-tuning & RQ4: which weights must also change? \\
+\bottomrule
+\end{tabular}
+
+\paragraph{RQ2 (data): Can these parameters be learned without ever seeing a sequence longer than $L$?}
+We train only on 4k sequences with PoSE position skipping, which exposes relative distances up to 16k. \emph{Hypothesis:} frequency scales can be learned this way but temperatures cannot, because short sequences never reveal the dilution of a softmax spread over 16k keys, the very effect a temperature exists to correct. No prior method tests this combination: PoSE trains on short sequences but fine-tunes the whole model, while AdaRoPE trains only positional parameters but on long sequences.
+
+\paragraph{RQ3 (parameterization): Should slow bands learn \emph{where} a token sits, or \emph{how fast} to rotate?}
+We retrofit DaRoPE onto the frozen model, replacing position $m$ on slow bands only with
+\begin{equation}
+c_h(x_m) = L\,\sigma\!\big(w_h^\top x_m + \alpha_h\,\mathrm{logit}\tfrac{m+0.5}{L}\big),
+\end{equation}
+where $x_m$ is the token's hidden state. With $w_h=0$ and $\alpha_h=1$ the model is unchanged within $L$, so training starts from the original model. \emph{Hypothesis:} a content coordinate, which can bring related tokens close however far apart they sit in the text, outperforms learned frequencies on retrieval with distractors and matches them on perplexity. DaRoPE has never been applied to a pretrained model.
+
+\paragraph{RQ4 (stretch): How far can positional parameters go on their own?}
+If learned positional parameters still fall short of full fine-tuning, the remaining gain must come from changing the model's weights. We locate it by unfreezing weights in stages: first LoRA adapters \citep{hu2022lora} on the query and key projections $W_Q, W_K$, then the full model. For each stage we report the fraction of the gap between tuned YaRN and full fine-tuning that it closes. \emph{Hypothesis:} positional parameters close most of the perplexity gap, but retrieval needs query/key adaptation, since remapping positions cannot teach a head to pick one key out of 16k.
+
+\section{Project Outline}
+
+\textbf{Model.} OLMo-2-0425-1B \citep{olmo2024olmo2}, extended from 4k to 16k.
+\textbf{Data.} PG-19 \citep{rae2020pg19} for training and perplexity; synthetic passkey retrieval \citep{mohtashami2023landmark} and RULER \citep{hsieh2024ruler} for retrieval.
+\textbf{Software.} Hugging Face \texttt{transformers} \citep{wolf2020transformers}
+with a patched rotary module implementing learned scales, per-head temperatures,
+DaRoPE coordinates and PoSE position IDs, plus \texttt{peft}, \texttt{lm-evaluation-harness} and the RULER codebase.
+\textbf{Scale.} With the backbone frozen, per-head frequencies add ${\sim}$16k trainable parameters (16 layers $\times$ 16 heads $\times$ 64 bands) and DaRoPE ${\sim}$525k ($w_h\in\mathbb{R}^{2048}$ per head), so every run fits on BU SCC GPUs.
+
+\section{Experimental Design}
+
+\textbf{Metrics.} We measure PG-19 perplexity at 4k, 8k and 16k; passkey accuracy and RULER averaged over 4k--16k; and, for RQ3, key--value recall with distractors. HellaSwag, ARC-Easy and PIQA guard against short-context regression.
+
+\textbf{Baselines.} The unmodified model is the simple baseline and should fail beyond 4k. We also compare against Position Interpolation, YaRN with default and grid-tuned settings, and, for RQ3, DaRoPE at initialization with no training.
+
+\textbf{Success and scope.} A learned method succeeds if it beats tuned YaRN on 16k RULER and passkey while losing at most one point of short-context accuracy. RQ1 is the minimum deliverable, RQ2 and RQ3 the main contribution, and RQ4 a stretch goal.
+
+\bibliography{custom}
+
+\end{document}

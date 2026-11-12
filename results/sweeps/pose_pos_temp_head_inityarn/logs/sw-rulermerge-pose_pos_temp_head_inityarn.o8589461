@@ -1,0 +1,19 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-ge4  JOB_ID=8589461  TASK=undefined  STAGE=ruler_merge  SWEEP_DIR=outputs/sweeps/pose_pos_temp_head_inityarn
+2026-11-12 16:26:47,608 INFO posext.pipeline: RULER avg 34.41 {'4096': 59.09, '8192': 43.09, '16384': 1.05} -> results/sweeps/pose_pos_temp_head_inityarn/test_ruler_rq1_learned_freq_temp_head__lr1e-2.json
+Sweep pose_pos_temp_head_inityarn  (submitted 2026-11-12 08:54:24, jobs {'train': '8589457', 'select': '8589458', 'test': '8589459', 'ruler': '8589460', 'ruler_merge': '8589461'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_head__lr1e-2                               yes      14.867    0.633  <- selected
+rq1_learned_freq_temp_head__lr3e-2                               yes      15.531    0.640
+
+Test results for rq1_learned_freq_temp_head__lr1e-2:
+  ppl      PPL@4096=17.112  PPL@8192=17.632  PPL@16384=16.512   (results/sweeps/pose_pos_temp_head_inityarn/test_ppl_rq1_learned_freq_temp_head__lr1e-2.json)
+  passkey  acc=0.633  by length {'4096': 0.94, '8192': 0.96, '16384': 0.0}   (results/sweeps/pose_pos_temp_head_inityarn/test_passkey_rq1_learned_freq_temp_head__lr1e-2.json)
+  ruler    avg=34.41  by length {'4096': 59.09, '8192': 43.09, '16384': 1.05}  complete=True   (results/sweeps/pose_pos_temp_head_inityarn/test_ruler_rq1_learned_freq_temp_head__lr1e-2.json)
+  passkey n50: acc=0.617  (n=750)  by length {'4096': 0.872, '8192': 0.98, '16384': 0.0}

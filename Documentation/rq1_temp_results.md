@@ -5,31 +5,47 @@ temperature). 3 granularities (shared / layer / head) × start (`a = 0` or YaRN,
 attention scaling) × lr {1e-2, 3e-2} = 12 runs: 500 steps, one 16k PG-19 sequence per step
 (100 sequences), AdamW, constant lr, seed 0. Each sweep's lr picked by **validation PPL at 16k**;
 winners and 4 training-free baselines evaluated on test.
-Test sets: PG-19 test PPL (50 sequences per length), passkey (750 prompts, seed 1), RULER
+Test sets: PG-19 test PPL (50 sequences per length), passkey (750 prompts, standard prompt, seed 1), RULER
 (8 NIAH tasks, 500 samples per task and length). Run with `scripts/scc/pipeline.sh`.
 
 ## Test results
 
 | Model | LR | PPL 4k / 8k / 16k | Passkey all (16k)* | RULER avg (4k / 8k / 16k) |
 |---|---|---|---|---|
-| head, YaRN init | 1e-2 | 17.01 / **17.41** / **15.09** | 0.72 (0.18) | **61.95** (69.8 / **62.9** / **53.1**) |
-| layer, YaRN init | 1e-2 | 17.19 / 17.65 / 15.31 | 0.70 (0.18) | 48.09 (58.6 / 50.1 / 35.6) |
-| shared, YaRN init | 1e-2 | 17.32 / 17.76 / 15.43 | 0.89 (0.72) | 48.86 (61.4 / 49.0 / 36.2) |
-| layer, init 0 | 3e-2 | 17.90 / 18.43 / 16.05 | 0.62 (0.00) | 45.65 (59.9 / 43.7 / 33.3) |
-| shared, init 0 | 3e-2 | 18.10 / 18.68 / 16.23 | **0.94 (0.96)** | 48.96 (61.0 / 49.1 / 36.8) |
-| head, init 0 | 3e-2 | 18.73 / 19.40 / 17.20 | 0.47 (0.00) | 17.25 (24.5 / 21.3 / 5.9) |
-| YaRN, tuned | — | 19.95 / 22.87 / 21.38 | 0.72 (0.56) | 35.01 (45.7 / 35.4 / 24.0) |
-| YaRN, default | — | 27.11 / 40.14 / 41.67 | 0.35 (0.01) | 5.39 (8.3 / 6.6 / 1.2) |
+| head, YaRN init | 1e-2 | 17.01 / **17.41** / **15.09** | 0.67 (0.00) | **61.95** (69.8 / **62.9** / **53.1**) |
+| layer, YaRN init | 1e-2 | 17.19 / 17.65 / 15.31 | 0.68 (0.04) | 48.09 (58.6 / 50.1 / 35.6) |
+| shared, YaRN init | 1e-2 | 17.32 / 17.76 / 15.43 | **0.93** (0.80) | 48.86 (61.4 / 49.0 / 36.2) |
+| layer, init 0 | 3e-2 | 17.90 / 18.43 / 16.05 | 0.60 (0.01) | 45.65 (59.9 / 43.7 / 33.3) |
+| shared, init 0 | 3e-2 | 18.10 / 18.68 / 16.23 | 0.92 (**0.81**) | 48.96 (61.0 / 49.1 / 36.8) |
+| head, init 0 | 3e-2 | 18.73 / 19.40 / 17.20 | 0.53 (0.00) | 17.25 (24.5 / 21.3 / 5.9) |
+| YaRN, tuned | — | 19.95 / 22.87 / 21.38 | 0.83 (0.80) | 35.01 (45.7 / 35.4 / 24.0) |
+| YaRN, default | — | 27.11 / 40.14 / 41.67 | 0.27 (0.01) | 5.39 (8.3 / 6.6 / 1.2) |
 | PI ×4 | — | 109.1 / 118.6 / 110.9 | 0.00 (0.00) | 0.00 (0.0 / 0.0 / 0.0) |
 | stock OLMo-2 | — | **16.41** / 124.6 / 430.3 | 0.33 (0.00) | 24.28 (**72.8** / 0.0 / 0.0) |
 
-*Passkey: 750 prompts (3 lengths × 5 depths × 50, seed 1), in `test_passkey_n50_*.json`. The
-first 150-prompt run (`test_passkey_*.json`) agreed within about 0.1; the largest change was tuned
-YaRN at 16k (0.46 → 0.56).
+*Passkey: standard prompt (Landmark Attention's task description and filler; answer generated
+within the length), 750 prompts (3 lengths × 5 depths × 50, seed 1), in `test_passkey_v2_n50_*.json`.
+Our original prompt had no task description, a different filler and no room for the answer
+(`test_passkey_n50_*.json`, 750 prompts; first run `test_passkey_*.json`, 150 prompts). Same keys
+and depths in both versions:
+
+| Model | Original prompt: all (16k) | Standard prompt: all (16k) |
+|---|---|---|
+| head, YaRN init | 0.72 (0.18) | 0.67 (0.00) |
+| layer, YaRN init | 0.70 (0.18) | 0.68 (0.04) |
+| shared, YaRN init | 0.89 (0.72) | 0.93 (0.80) |
+| layer, init 0 | 0.62 (0.00) | 0.60 (0.01) |
+| shared, init 0 | 0.94 (0.96) | 0.92 (0.81) |
+| head, init 0 | 0.47 (0.00) | 0.53 (0.00) |
+| YaRN, tuned | 0.72 (0.56) | 0.83 (0.80) |
+| YaRN, default | 0.35 (0.01) | 0.27 (0.01) |
+| PI ×4 | 0.00 (0.00) | 0.00 (0.00) |
+| stock OLMo-2 | 0.33 (0.00) | 0.33 (0.00) |
 
 ## Train and validation (all 12 runs)
 
-Train loss = mean of the last 50 steps (nats). Validation = PG-19 validation PPL, passkey (150 prompts, seed 0).
+Train loss = mean of the last 50 steps (nats). Validation = PG-19 validation PPL, passkey (150 prompts,
+seed 0, original prompt; not used for selection).
 
 | Granularity | Start | LR | Train loss | Val PPL 4k / 8k / 16k | Val passkey | Selected |
 |---|---|---|---|---|---|---|
@@ -60,9 +76,10 @@ Train loss = mean of the last 50 steps (nats). Validation = PG-19 validation PPL
 - **Per-head from YaRN is the best model overall:** RULER 62 (53 at 16k vs 24 for tuned YaRN) and
   69.8 at 4k, close to the stock model's 72.8.
 - **Per-head from 0 is the weak cell** (RULER 17): 16k parameters may need more steps from scratch.
-- **Passkey disagrees with RULER** (e.g. shared-from-0: 96% passkey at 16k, RULER 36.8; head
-  from YaRN: 18% passkey at 16k, RULER 53.1). Passkey is a single easy needle; confirmed with
-  750 prompts, so this is not sampling noise.
+- **Passkey disagrees with RULER** (standard prompt, 750 prompts): shared models and tuned YaRN
+  retrieve the 16k passkey (0.80–0.81), per-head from YaRN does not (0.00) although it is best on
+  RULER (53.1 at 16k). Per-head misses needles far back in the context (on RULER too, tuned YaRN
+  wins mainly on needles near the start); it is stronger at exact copying (UUIDs, multi-value).
 - Cost at native length: test PPL at 4k is 17.0–18.7 vs 16.4 for the stock model.
 
 ## Caveats and next

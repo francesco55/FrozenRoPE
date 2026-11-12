@@ -1,0 +1,18 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-gf3  JOB_ID=8589431  TASK=undefined  STAGE=select  SWEEP_DIR=outputs/sweeps/pose_pos_temp_shared_init0
+2026-11-12 09:26:15,003 INFO posext.pipeline: Selected rq1_learned_freq_temp_shared__lr1e-2 (score -2.920, val PPL@16384 18.534, passkey 0.580)
+Sweep pose_pos_temp_shared_init0  (submitted 2026-11-12 08:53:42, jobs {'train': '8589430', 'select': '8589431', 'test': '8589432', 'ruler': '8589433', 'ruler_merge': '8589434'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_shared__lr1e-2                             yes      18.534    0.580  <- selected
+rq1_learned_freq_temp_shared__lr3e-2                             yes      21.984    0.613
+
+Test results for rq1_learned_freq_temp_shared__lr1e-2:
+  ppl      pending   (results/sweeps/pose_pos_temp_shared_init0/test_ppl_rq1_learned_freq_temp_shared__lr1e-2.json)
+  passkey  pending   (results/sweeps/pose_pos_temp_shared_init0/test_passkey_rq1_learned_freq_temp_shared__lr1e-2.json)
+  ruler    pending   (results/sweeps/pose_pos_temp_shared_init0/test_ruler_rq1_learned_freq_temp_shared__lr1e-2.json)

@@ -1,0 +1,17 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-ge4  JOB_ID=8587835  TASK=undefined  STAGE=select  SWEEP_DIR=outputs/sweeps/rq1_pi
+2026-11-12 01:58:45,078 INFO posext.pipeline: Selected rq1_pi (score 0.000, val PPL@16384 97.541, passkey 0.000)
+Sweep rq1_pi  (submitted 2026-11-12 01:14:30, jobs {'train': '8587834', 'select': '8587835', 'test': '8587836', 'ruler': '8587837', 'ruler_merge': '8587838'})
+variant                                                      trained valPPL@16384  passkey
+rq1_pi                                                             -      97.541    0.000  <- selected
+
+Test results for rq1_pi:
+  ppl      pending   (results/sweeps/rq1_pi/test_ppl_rq1_pi.json)
+  passkey  pending   (results/sweeps/rq1_pi/test_passkey_rq1_pi.json)
+  ruler    pending   (results/sweeps/rq1_pi/test_ruler_rq1_pi.json)

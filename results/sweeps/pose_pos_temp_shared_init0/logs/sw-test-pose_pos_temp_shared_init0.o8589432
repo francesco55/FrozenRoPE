@@ -1,0 +1,119 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-510  JOB_ID=8589432  TASK=undefined  STAGE=test  SWEEP_DIR=outputs/sweeps/pose_pos_temp_shared_init0
+Thu Nov 12 09:28:59 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA L40S                    On  |   00000000:4A:00.0 Off |                    0 |
+| N/A   56C    P0            200W /  350W |   31901MiB /  46068MiB |     38%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA L40S                    On  |   00000000:61:00.0 Off |                    0 |
+| N/A   32C    P8             34W /  350W |       0MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA L40S                    On  |   00000000:CA:00.0 Off |                    0 |
+| N/A   63C    P0            255W /  350W |   34063MiB /  46068MiB |     96%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA L40S                    On  |   00000000:E1:00.0 Off |                    0 |
+| N/A   34C    P8             32W /  350W |       0MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A          245678      C   python                                31892MiB |
+|    2   N/A  N/A          322088      C   ...envs/ec523-roadseg/bin/python      34054MiB |
++-----------------------------------------------------------------------------------------+
+2026-11-12 09:29:06,212 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.ppl --run outputs/sweeps/pose_pos_temp_shared_init0/runs/rq1_learned_freq_temp_shared__lr1e-2 --split test --lengths 4096,8192,16384 --max-sequences 50 --device cuda --out results/sweeps/pose_pos_temp_shared_init0/test_ppl_rq1_learned_freq_temp_shared__lr1e-2.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 814.82it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.02s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.89it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.65it/s]
+2026-11-12 09:29:11,702 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+2026-11-12 09:29:16,473 INFO posext.eval.ppl: PPL@4096 (test): 17.334  (nll=2.8526, 204750 tokens)
+2026-11-12 09:29:27,653 INFO posext.eval.ppl: PPL@8192 (test): 17.991  (nll=2.8899, 409550 tokens)
+2026-11-12 09:29:55,205 INFO posext.eval.ppl: PPL@16384 (test): 20.446  (nll=3.0178, 819150 tokens)
+{
+  "split": "test",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.8526459407806395,
+      "ppl": 17.333584856858486,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 2.8898827171325685,
+      "ppl": 17.99119941835225,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 3.0178093767166136,
+      "ppl": 20.446452114756752,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/sweeps/pose_pos_temp_shared_init0/runs/rq1_learned_freq_temp_shared__lr1e-2"
+}
+2026-11-12 09:29:55,960 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.passkey --run outputs/sweeps/pose_pos_temp_shared_init0/runs/rq1_learned_freq_temp_shared__lr1e-2 --seed 1 --n-per-cell 10 --device cuda --out results/sweeps/pose_pos_temp_shared_init0/test_passkey_rq1_learned_freq_temp_shared__lr1e-2.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.passkey' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.passkey'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 762.32it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.04s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.85it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.62it/s]
+2026-11-12 09:30:02,951 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+This is a friendly reminder - the current text generation call has exceeded the model's predefined maximum length (4096). Depending on the model, you may observe exceptions, performance degradation, or nothing at all.
+2026-11-12 09:30:05,427 INFO posext.eval.passkey: passkey 10/150  running acc=1.00
+2026-11-12 09:30:07,655 INFO posext.eval.passkey: passkey 20/150  running acc=1.00
+2026-11-12 09:30:09,888 INFO posext.eval.passkey: passkey 30/150  running acc=0.93
+2026-11-12 09:30:12,114 INFO posext.eval.passkey: passkey 40/150  running acc=0.95
+2026-11-12 09:30:14,332 INFO posext.eval.passkey: passkey 50/150  running acc=0.96
+2026-11-12 09:30:17,883 INFO posext.eval.passkey: passkey 60/150  running acc=0.97
+2026-11-12 09:30:21,431 INFO posext.eval.passkey: passkey 70/150  running acc=0.97
+2026-11-12 09:30:24,982 INFO posext.eval.passkey: passkey 80/150  running acc=0.97
+2026-11-12 09:30:28,539 INFO posext.eval.passkey: passkey 90/150  running acc=0.93
+2026-11-12 09:30:32,093 INFO posext.eval.passkey: passkey 100/150  running acc=0.94
+2026-11-12 09:30:39,435 INFO posext.eval.passkey: passkey 110/150  running acc=0.85
+2026-11-12 09:30:44,584 INFO posext.eval.passkey: passkey 120/150  running acc=0.78
+2026-11-12 09:30:50,055 INFO posext.eval.passkey: passkey 130/150  running acc=0.72
+2026-11-12 09:30:55,527 INFO posext.eval.passkey: passkey 140/150  running acc=0.67
+2026-11-12 09:31:00,749 INFO posext.eval.passkey: passkey 150/150  running acc=0.63
+{
+  "seed": 1,
+  "n": 150,
+  "accuracy": 0.6266666666666667,
+  "by_length": {
+    "4096": 0.96,
+    "8192": 0.92,
+    "16384": 0.0
+  },
+  "by_depth": {
+    "0.0": 0.6666666666666666,
+    "0.25": 0.6666666666666666,
+    "0.5": 0.6,
+    "0.75": 0.5333333333333333,
+    "1.0": 0.6666666666666666
+  },
+  "source": "outputs/sweeps/pose_pos_temp_shared_init0/runs/rq1_learned_freq_temp_shared__lr1e-2"
+}
+Sweep pose_pos_temp_shared_init0  (submitted 2026-11-12 08:53:42, jobs {'train': '8589430', 'select': '8589431', 'test': '8589432', 'ruler': '8589433', 'ruler_merge': '8589434'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_shared__lr1e-2                             yes      18.534    0.580  <- selected
+rq1_learned_freq_temp_shared__lr3e-2                             yes      21.984    0.613
+
+Test results for rq1_learned_freq_temp_shared__lr1e-2:
+  ppl      PPL@4096=17.334  PPL@8192=17.991  PPL@16384=20.446   (results/sweeps/pose_pos_temp_shared_init0/test_ppl_rq1_learned_freq_temp_shared__lr1e-2.json)
+  passkey  acc=0.627  by length {'4096': 0.96, '8192': 0.92, '16384': 0.0}   (results/sweeps/pose_pos_temp_shared_init0/test_passkey_rq1_learned_freq_temp_shared__lr1e-2.json)
+  ruler    pending   (results/sweeps/pose_pos_temp_shared_init0/test_ruler_rq1_learned_freq_temp_shared__lr1e-2.json)

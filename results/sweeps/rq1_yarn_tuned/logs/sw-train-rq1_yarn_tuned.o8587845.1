@@ -1,0 +1,138 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-607  JOB_ID=8587845  TASK=1  STAGE=variant  SWEEP_DIR=outputs/sweeps/rq1_yarn_tuned
+Thu Nov 12 05:58:18 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX A6000               On  |   00000000:01:00.0 Off |                    0 |
+| 51%   77C    P2            298W /  300W |    7924MiB /  46068MiB |     97%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX A6000               On  |   00000000:21:00.0 Off |                    0 |
+| 30%   36C    P8             27W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX A6000               On  |   00000000:41:00.0 Off |                  Off |
+| 30%   40C    P3             51W /  300W |    2625MiB /  49140MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX A6000               On  |   00000000:61:00.0 Off |                    0 |
+| 30%   34C    P8             21W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX A6000               On  |   00000000:81:00.0 Off |                    0 |
+| 30%   34C    P8             15W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX A6000               On  |   00000000:A1:00.0 Off |                    0 |
+| 30%   32C    P8             16W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX A6000               On  |   00000000:C1:00.0 Off |                    0 |
+| 30%   48C    P2             92W /  300W |    2016MiB /  46068MiB |      8%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX A6000               On  |   00000000:E1:00.0 Off |                    0 |
+| 30%   33C    P8             21W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A         2703844      C   ...a/FrozenRoPE/.venv/bin/python       7914MiB |
+|    2   N/A  N/A         2659208    C+G   ...s/vlaeval-robotwin/bin/python       2602MiB |
+|    6   N/A  N/A         2659208      C   ...s/vlaeval-robotwin/bin/python       2006MiB |
++-----------------------------------------------------------------------------------------+
+2026-11-12 05:58:26,128 INFO posext.pipeline: Variant 1/1: rq1_yarn_tuned
+2026-11-12 05:58:26,128 INFO posext.pipeline: Training-free (--model allenai/OLMo-2-0425-1B --pos-mode yarn --factor 4.0 --beta-fast 64.0 --beta-slow 2.0 --attention-factor 1.2): no training
+2026-11-12 05:58:26,130 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.ppl --model allenai/OLMo-2-0425-1B --pos-mode yarn --factor 4.0 --beta-fast 64.0 --beta-slow 2.0 --attention-factor 1.2 --split validation --lengths 4096,8192,16384 --max-sequences 50 --device cuda --out outputs/sweeps/rq1_yarn_tuned/runs/rq1_yarn_tuned/val_ppl.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1862.48it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.08it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  2.11it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.85it/s]
+2026-11-12 05:58:31,914 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=yarn
+2026-11-12 05:58:41,409 INFO posext.eval.ppl: PPL@4096 (validation): 18.450  (nll=2.9151, 204750 tokens)
+2026-11-12 05:59:00,767 INFO posext.eval.ppl: PPL@8192 (validation): 18.027  (nll=2.8918, 409550 tokens)
+2026-11-12 05:59:43,061 INFO posext.eval.ppl: PPL@16384 (validation): 18.917  (nll=2.9401, 819150 tokens)
+{
+  "split": "validation",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.915058078765869,
+      "ppl": 18.44988391811887,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 2.8918455123901365,
+      "ppl": 18.026547138068583,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 2.9400593852996826,
+      "ppl": 18.916969668812147,
+      "tokens": 819150.0
+    }
+  },
+  "source": {
+    "pos_mode": "yarn"
+  }
+}
+2026-11-12 05:59:44,003 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.passkey --model allenai/OLMo-2-0425-1B --pos-mode yarn --factor 4.0 --beta-fast 64.0 --beta-slow 2.0 --attention-factor 1.2 --seed 0 --n-per-cell 10 --device cuda --out outputs/sweeps/rq1_yarn_tuned/runs/rq1_yarn_tuned/val_passkey.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.passkey' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.passkey'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 920.81it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.04s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.88it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.65it/s]
+2026-11-12 05:59:54,329 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=yarn
+This is a friendly reminder - the current text generation call has exceeded the model's predefined maximum length (4096). Depending on the model, you may observe exceptions, performance degradation, or nothing at all.
+2026-11-12 05:59:58,060 INFO posext.eval.passkey: passkey 10/150  running acc=1.00
+2026-11-12 06:00:01,533 INFO posext.eval.passkey: passkey 20/150  running acc=1.00
+2026-11-12 06:00:05,024 INFO posext.eval.passkey: passkey 30/150  running acc=1.00
+2026-11-12 06:00:08,505 INFO posext.eval.passkey: passkey 40/150  running acc=1.00
+2026-11-12 06:00:11,985 INFO posext.eval.passkey: passkey 50/150  running acc=1.00
+2026-11-12 06:00:17,468 INFO posext.eval.passkey: passkey 60/150  running acc=1.00
+2026-11-12 06:00:22,946 INFO posext.eval.passkey: passkey 70/150  running acc=1.00
+2026-11-12 06:00:28,422 INFO posext.eval.passkey: passkey 80/150  running acc=0.93
+2026-11-12 06:00:33,896 INFO posext.eval.passkey: passkey 90/150  running acc=0.88
+2026-11-12 06:00:39,373 INFO posext.eval.passkey: passkey 100/150  running acc=0.79
+2026-11-12 06:00:49,808 INFO posext.eval.passkey: passkey 110/150  running acc=0.79
+2026-11-12 06:01:00,252 INFO posext.eval.passkey: passkey 120/150  running acc=0.77
+2026-11-12 06:01:10,696 INFO posext.eval.passkey: passkey 130/150  running acc=0.73
+2026-11-12 06:01:21,139 INFO posext.eval.passkey: passkey 140/150  running acc=0.73
+2026-11-12 06:01:31,584 INFO posext.eval.passkey: passkey 150/150  running acc=0.73
+{
+  "seed": 0,
+  "n": 150,
+  "accuracy": 0.7266666666666667,
+  "by_length": {
+    "4096": 1.0,
+    "8192": 0.58,
+    "16384": 0.6
+  },
+  "by_depth": {
+    "0.0": 0.9333333333333333,
+    "0.25": 0.8333333333333334,
+    "0.5": 0.5666666666666667,
+    "0.75": 0.7333333333333333,
+    "1.0": 0.5666666666666667
+  },
+  "source": {
+    "pos_mode": "yarn"
+  }
+}
+Sweep rq1_yarn_tuned  (submitted 2026-11-12 01:14:47, jobs {'train': '8587845', 'select': '8587846', 'test': '8587847', 'ruler': '8587848', 'ruler_merge': '8587849'})
+variant                                                      trained valPPL@16384  passkey
+rq1_yarn_tuned                                                     -      18.917    0.727
+
+Not selected yet.

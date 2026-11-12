@@ -1,0 +1,120 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-212  JOB_ID=8589442  TASK=undefined  STAGE=test  SWEEP_DIR=outputs/sweeps/pose_pos_temp_layer_init0
+Thu Nov 12 10:10:33 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100 80GB PCIe          On  |   00000000:17:00.0 Off |                    0 |
+| N/A   60C    P0            235W /  300W |    2601MiB /  81920MiB |    100%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100 80GB PCIe          On  |   00000000:65:00.0 Off |                    0 |
+| N/A   56C    P0            173W /  300W |   15267MiB /  81920MiB |     99%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A100 80GB PCIe          On  |   00000000:CA:00.0 Off |                    0 |
+| N/A   42C    P0             45W /  300W |       0MiB /  81920MiB |      0%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A100 80GB PCIe          On  |   00000000:E3:00.0 Off |                    0 |
+| N/A   69C    P0            247W /  300W |    3779MiB /  81920MiB |    100%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A          143231      C   python                                 2592MiB |
+|    1   N/A  N/A         3046356      C   python                                15258MiB |
+|    3   N/A  N/A          140985      C   python                                 3770MiB |
++-----------------------------------------------------------------------------------------+
+2026-11-12 10:10:40,789 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.ppl --run outputs/sweeps/pose_pos_temp_layer_init0/runs/rq1_learned_freq_temp_layer__lr3e-2 --split test --lengths 4096,8192,16384 --max-sequences 50 --device cuda --out results/sweeps/pose_pos_temp_layer_init0/test_ppl_rq1_learned_freq_temp_layer__lr3e-2.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1351.48it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.11s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.74it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.53it/s]
+2026-11-12 10:10:46,873 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+2026-11-12 10:10:51,842 INFO posext.eval.ppl: PPL@4096 (test): 18.333  (nll=2.9087, 204750 tokens)
+2026-11-12 10:11:01,596 INFO posext.eval.ppl: PPL@8192 (test): 19.021  (nll=2.9456, 409550 tokens)
+2026-11-12 10:11:23,200 INFO posext.eval.ppl: PPL@16384 (test): 21.498  (nll=3.0679, 819150 tokens)
+{
+  "split": "test",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.908717112541199,
+      "ppl": 18.33326395970661,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 2.9455668544769287,
+      "ppl": 19.02144172041981,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 3.0679427671432493,
+      "ppl": 21.4976315186749,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/sweeps/pose_pos_temp_layer_init0/runs/rq1_learned_freq_temp_layer__lr3e-2"
+}
+2026-11-12 10:11:24,167 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.passkey --run outputs/sweeps/pose_pos_temp_layer_init0/runs/rq1_learned_freq_temp_layer__lr3e-2 --seed 1 --n-per-cell 10 --device cuda --out results/sweeps/pose_pos_temp_layer_init0/test_passkey_rq1_learned_freq_temp_layer__lr3e-2.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.passkey' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.passkey'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 777.23it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.04it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.94it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.71it/s]
+2026-11-12 10:11:32,178 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+This is a friendly reminder - the current text generation call has exceeded the model's predefined maximum length (4096). Depending on the model, you may observe exceptions, performance degradation, or nothing at all.
+2026-11-12 10:11:35,904 INFO posext.eval.passkey: passkey 10/150  running acc=1.00
+2026-11-12 10:11:39,290 INFO posext.eval.passkey: passkey 20/150  running acc=1.00
+2026-11-12 10:11:42,675 INFO posext.eval.passkey: passkey 30/150  running acc=0.83
+2026-11-12 10:11:46,054 INFO posext.eval.passkey: passkey 40/150  running acc=0.78
+2026-11-12 10:11:49,429 INFO posext.eval.passkey: passkey 50/150  running acc=0.82
+2026-11-12 10:11:53,703 INFO posext.eval.passkey: passkey 60/150  running acc=0.85
+2026-11-12 10:11:57,883 INFO posext.eval.passkey: passkey 70/150  running acc=0.87
+2026-11-12 10:12:02,215 INFO posext.eval.passkey: passkey 80/150  running acc=0.89
+2026-11-12 10:12:06,553 INFO posext.eval.passkey: passkey 90/150  running acc=0.87
+2026-11-12 10:12:10,853 INFO posext.eval.passkey: passkey 100/150  running acc=0.88
+2026-11-12 10:12:17,350 INFO posext.eval.passkey: passkey 110/150  running acc=0.80
+2026-11-12 10:12:23,852 INFO posext.eval.passkey: passkey 120/150  running acc=0.73
+2026-11-12 10:12:30,356 INFO posext.eval.passkey: passkey 130/150  running acc=0.68
+2026-11-12 10:12:36,863 INFO posext.eval.passkey: passkey 140/150  running acc=0.63
+2026-11-12 10:12:43,374 INFO posext.eval.passkey: passkey 150/150  running acc=0.59
+{
+  "seed": 1,
+  "n": 150,
+  "accuracy": 0.5866666666666667,
+  "by_length": {
+    "4096": 0.82,
+    "8192": 0.94,
+    "16384": 0.0
+  },
+  "by_depth": {
+    "0.0": 0.6666666666666666,
+    "0.25": 0.6666666666666666,
+    "0.5": 0.5,
+    "0.75": 0.43333333333333335,
+    "1.0": 0.6666666666666666
+  },
+  "source": "outputs/sweeps/pose_pos_temp_layer_init0/runs/rq1_learned_freq_temp_layer__lr3e-2"
+}
+Sweep pose_pos_temp_layer_init0  (submitted 2026-11-12 08:53:58, jobs {'train': '8589440', 'select': '8589441', 'test': '8589442', 'ruler': '8589443', 'ruler_merge': '8589444'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_layer__lr1e-2                              yes      21.423    0.653
+rq1_learned_freq_temp_layer__lr3e-2                              yes      19.315    0.613  <- selected
+
+Test results for rq1_learned_freq_temp_layer__lr3e-2:
+  ppl      PPL@4096=18.333  PPL@8192=19.021  PPL@16384=21.498   (results/sweeps/pose_pos_temp_layer_init0/test_ppl_rq1_learned_freq_temp_layer__lr3e-2.json)
+  passkey  acc=0.587  by length {'4096': 0.82, '8192': 0.94, '16384': 0.0}   (results/sweeps/pose_pos_temp_layer_init0/test_passkey_rq1_learned_freq_temp_layer__lr3e-2.json)
+  ruler    pending   (results/sweeps/pose_pos_temp_layer_init0/test_ruler_rq1_learned_freq_temp_layer__lr3e-2.json)

@@ -1,0 +1,17 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-ge2  JOB_ID=8587840  TASK=undefined  STAGE=select  SWEEP_DIR=outputs/sweeps/rq1_yarn_default
+2026-11-12 05:58:33,934 INFO posext.pipeline: Selected rq1_yarn_default (score 0.000, val PPL@16384 35.759, passkey 0.360)
+Sweep rq1_yarn_default  (submitted 2026-11-12 01:14:39, jobs {'train': '8587839', 'select': '8587840', 'test': '8587841', 'ruler': '8587842', 'ruler_merge': '8587843'})
+variant                                                      trained valPPL@16384  passkey
+rq1_yarn_default                                                   -      35.759    0.360  <- selected
+
+Test results for rq1_yarn_default:
+  ppl      pending   (results/sweeps/rq1_yarn_default/test_ppl_rq1_yarn_default.json)
+  passkey  pending   (results/sweeps/rq1_yarn_default/test_passkey_rq1_yarn_default.json)
+  ruler    pending   (results/sweeps/rq1_yarn_default/test_ruler_rq1_yarn_default.json)

@@ -1,0 +1,19 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-gf4  JOB_ID=8589451  TASK=undefined  STAGE=ruler_merge  SWEEP_DIR=outputs/sweeps/pose_pos_temp_layer_inityarn
+2026-11-12 14:19:47,243 INFO posext.pipeline: RULER avg 37.79 {'4096': 65.83, '8192': 47.54, '16384': 0.0} -> results/sweeps/pose_pos_temp_layer_inityarn/test_ruler_rq1_learned_freq_temp_layer__lr1e-2.json
+Sweep pose_pos_temp_layer_inityarn  (submitted 2026-11-12 08:54:07, jobs {'train': '8589447', 'select': '8589448', 'test': '8589449', 'ruler': '8589450', 'ruler_merge': '8589451'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_layer__lr1e-2                              yes      16.713    0.667  <- selected
+rq1_learned_freq_temp_layer__lr3e-2                              yes      17.721    0.627
+
+Test results for rq1_learned_freq_temp_layer__lr1e-2:
+  ppl      PPL@4096=17.257  PPL@8192=17.814  PPL@16384=18.565   (results/sweeps/pose_pos_temp_layer_inityarn/test_ppl_rq1_learned_freq_temp_layer__lr1e-2.json)
+  passkey  acc=0.667  by length {'4096': 1.0, '8192': 1.0, '16384': 0.0}   (results/sweeps/pose_pos_temp_layer_inityarn/test_passkey_rq1_learned_freq_temp_layer__lr1e-2.json)
+  ruler    avg=37.79  by length {'4096': 65.83, '8192': 47.54, '16384': 0.0}  complete=True   (results/sweeps/pose_pos_temp_layer_inityarn/test_ruler_rq1_learned_freq_temp_layer__lr1e-2.json)
+  passkey n50: acc=0.661  (n=750)  by length {'4096': 0.984, '8192': 1.0, '16384': 0.0}

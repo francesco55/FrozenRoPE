@@ -1,0 +1,110 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-j10  JOB_ID=8587816  TASK=undefined  STAGE=test  SWEEP_DIR=outputs/sweeps/temp_layer_inityarn
+Thu Nov 12 03:13:15 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA L40S                    On  |   00000000:0D:00.0 Off |                    0 |
+| N/A   59C    P0            259W /  350W |    8359MiB /  46068MiB |     96%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA L40S                    On  |   00000000:B5:00.0 Off |                    0 |
+| N/A   37C    P8             36W /  350W |       0MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A         1297584      C   ...a/FrozenRoPE/.venv/bin/python       8350MiB |
++-----------------------------------------------------------------------------------------+
+2026-11-12 03:13:20,658 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.ppl --run outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2 --split test --lengths 4096,8192,16384 --max-sequences 50 --device cuda --out results/sweeps/temp_layer_inityarn/test_ppl_rq1_learned_freq_temp_layer__lr1e-2.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1310.31it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.15it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  2.23it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.96it/s]
+2026-11-12 03:13:25,693 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+2026-11-12 03:13:30,430 INFO posext.eval.ppl: PPL@4096 (test): 17.187  (nll=2.8441, 204750 tokens)
+2026-11-12 03:13:41,638 INFO posext.eval.ppl: PPL@8192 (test): 17.648  (nll=2.8706, 409550 tokens)
+2026-11-12 03:14:09,328 INFO posext.eval.ppl: PPL@16384 (test): 15.314  (nll=2.7288, 819150 tokens)
+{
+  "split": "test",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.8441394186019897,
+      "ppl": 17.186761695431468,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 2.8706159687042234,
+      "ppl": 17.647885397667523,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 2.7287999391555786,
+      "ppl": 15.314497658945637,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2"
+}
+2026-11-12 03:14:10,038 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.passkey --run outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2 --seed 1 --n-per-cell 10 --device cuda --out results/sweeps/temp_layer_inityarn/test_passkey_rq1_learned_freq_temp_layer__lr1e-2.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.passkey' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.passkey'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 980.78it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.15it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  2.21it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.94it/s]
+2026-11-12 03:14:15,421 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+This is a friendly reminder - the current text generation call has exceeded the model's predefined maximum length (4096). Depending on the model, you may observe exceptions, performance degradation, or nothing at all.
+2026-11-12 03:14:17,883 INFO posext.eval.passkey: passkey 10/150  running acc=0.90
+2026-11-12 03:14:20,120 INFO posext.eval.passkey: passkey 20/150  running acc=0.95
+2026-11-12 03:14:22,359 INFO posext.eval.passkey: passkey 30/150  running acc=0.97
+2026-11-12 03:14:24,587 INFO posext.eval.passkey: passkey 40/150  running acc=0.97
+2026-11-12 03:14:26,804 INFO posext.eval.passkey: passkey 50/150  running acc=0.98
+2026-11-12 03:14:30,354 INFO posext.eval.passkey: passkey 60/150  running acc=0.98
+2026-11-12 03:14:33,905 INFO posext.eval.passkey: passkey 70/150  running acc=0.99
+2026-11-12 03:14:37,455 INFO posext.eval.passkey: passkey 80/150  running acc=0.97
+2026-11-12 03:14:41,008 INFO posext.eval.passkey: passkey 90/150  running acc=0.98
+2026-11-12 03:14:44,563 INFO posext.eval.passkey: passkey 100/150  running acc=0.98
+2026-11-12 03:14:51,919 INFO posext.eval.passkey: passkey 110/150  running acc=0.89
+2026-11-12 03:14:59,280 INFO posext.eval.passkey: passkey 120/150  running acc=0.82
+2026-11-12 03:15:06,645 INFO posext.eval.passkey: passkey 130/150  running acc=0.75
+2026-11-12 03:15:14,015 INFO posext.eval.passkey: passkey 140/150  running acc=0.70
+2026-11-12 03:15:21,384 INFO posext.eval.passkey: passkey 150/150  running acc=0.68
+{
+  "seed": 1,
+  "n": 150,
+  "accuracy": 0.68,
+  "by_length": {
+    "4096": 0.98,
+    "8192": 0.98,
+    "16384": 0.08
+  },
+  "by_depth": {
+    "0.0": 0.6333333333333333,
+    "0.25": 0.6666666666666666,
+    "0.5": 0.6333333333333333,
+    "0.75": 0.6666666666666666,
+    "1.0": 0.8
+  },
+  "source": "outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2"
+}
+Sweep temp_layer_inityarn  (submitted 2026-11-12 01:13:55, jobs {'train': '8587814', 'select': '8587815', 'test': '8587816', 'ruler': '8587817', 'ruler_merge': '8587818'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_layer__lr1e-2                              yes      13.866    0.733  <- selected
+rq1_learned_freq_temp_layer__lr3e-2                              yes      14.335    0.827
+
+Test results for rq1_learned_freq_temp_layer__lr1e-2:
+  ppl      PPL@4096=17.187  PPL@8192=17.648  PPL@16384=15.314   (results/sweeps/temp_layer_inityarn/test_ppl_rq1_learned_freq_temp_layer__lr1e-2.json)
+  passkey  acc=0.680  by length {'4096': 0.98, '8192': 0.98, '16384': 0.08}   (results/sweeps/temp_layer_inityarn/test_passkey_rq1_learned_freq_temp_layer__lr1e-2.json)
+  ruler    pending   (results/sweeps/temp_layer_inityarn/test_ruler_rq1_learned_freq_temp_layer__lr1e-2.json)

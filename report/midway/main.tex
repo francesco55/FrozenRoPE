@@ -1,0 +1,75 @@
+% CS599 B1 midway report (due 2026-11-12): 2-4 pages in ACL format, references excluded.
+% Build: latexmk -pdf main.tex   (clean: latexmk -C)
+% Style files acl.sty / acl_natbib.bst copied from github.com/acl-org/acl-style-files
+% (commit d5adc823ff0f80f98c80405ca0ab66c68e684409).
+\documentclass[11pt]{article}
+
+% "final" shows author names; "review" anonymizes and adds line numbers;
+% "preprint" adds names and page numbers.
+\usepackage[final]{acl}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+
+% Title and authors as in the proposal (report/Project Proposal Latex/).
+\title{How Much of Context Extension Is Positional?\\Learning RoPE Parameters on a Frozen Language Model}
+
+\author{Adithya Darshan Nayak \quad Nandini Narvekar \quad Francesco Zeolla \\
+  Boston University \\
+  \texttt{\{adithyad, nnandini, fdzeolla\}@bu.edu}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+% < 250 words. Problem + main findings so far. Write last.
+TODO.
+\end{abstract}
+
+\section{Introduction}
+% - Problem area, a specific example, and a technical definition of the task
+%   (frozen OLMo-2-0425-1B, L = 4096 -> L' = 16384, train only positional parameters).
+% - Why it is interesting/important.
+% - Why it is hard and how obvious solutions fail (stock RoPE beyond L; PI / YaRN baselines).
+% - Research questions RQ1-RQ4.
+TODO.
+
+\section{Related Work}
+% Brief: RoPE \citep{su2021roformer}; PI \citep{chen2023pi}; YaRN \citep{peng2024yarn};
+% PoSE \citep{zhu2024pose}; LeRoPE \citep{karypis2026lerope}; AdaRoPE \citep{wang2026adarope};
+% DaRoPE \citep{levy2026darope}; HoPE \citep{chen2025hope}; NoPE \citep{kazemnejad2023nope}.
+TODO.
+
+\section{Methods}
+% Enough detail to reimplement: positional modes (none / pi / yarn / learned_freq /
+% learned_freq_temp / darope), parameterization (theta_hat = exp(a) theta; granularities;
+% AdaScale temperature), frozen backbone, per-layer rotation from position_ids, PoSE.
+TODO.
+
+\section{Experiments}
+% Datasets with citations: PG-19 \citep{rae2020pg19}; passkey \citep{mohtashami2023landmark};
+% RULER \citep{hsieh2024ruler}. Model \citep{olmo2024olmo2}; software \citep{wolf2020transformers}.
+% Metrics, key hyperparameters, training time, compute (BU SCC).
+TODO.
+
+\section{Results}
+% Tables/plots only, no numbers in the main text. Expected vs. observed; error analysis.
+TODO.
+
+\section{Project Plan}
+% Concrete list of remaining experiments/analyses until the final report (Dec 17);
+% note changes from the proposal and why. RQ4 uses LoRA \citep{hu2022lora}.
+TODO.
+
+% TODO: remove \nocite{*} once the text cites the papers (it lists every .bib entry).
+\nocite{*}
+\bibliography{references}
+
+\end{document}
