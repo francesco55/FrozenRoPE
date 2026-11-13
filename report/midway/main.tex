@@ -57,24 +57,35 @@ while preserving its behavior up to $L$. Our base parameterization rescales each
 \paragraph{Questions and progress.}
 RQ1 asks what learning RoPE parameters per model, layer or head on a frozen backbone adds beyond tuned YaRN; RQ2 whether they can be learned from 4k sequences alone with PoSE position skipping \citep{zhu2024pose}; RQ3 whether slow bands should instead learn a content-dependent coordinate, as in DaRoPE \citep{levy2026darope}; and RQ4 which backbone weights must change to close what remains. RQ1 is complete on test data: every learned configuration beats tuned YaRN on 16k perplexity while training at most ${\sim}$17k parameters, and the best one, per-head and started from YaRN, also leads on RULER at 16k at a small cost at 4k. Passkey retrieval disagrees for this model, which we analyze in \S\ref{sec:results}. RQ2 is running.
 
-\section{Related Work}
-% Brief: RoPE \citep{su2021roformer}; PI \citep{chen2023pi}; YaRN \citep{peng2024yarn};
-% PoSE \citep{zhu2024pose}; LeRoPE \citep{karypis2026lerope}; AdaRoPE \citep{wang2026adarope};
-% DaRoPE \citep{levy2026darope}; HoPE \citep{chen2025hope}; NoPE \citep{kazemnejad2023nope}.
-TODO.
-
-\section{Methods}
-% Enough detail to reimplement: positional modes (none / pi / yarn / learned_freq /
-% learned_freq_temp / darope), parameterization (theta_hat = exp(a) theta; granularities;
-% AdaScale temperature), frozen backbone, per-layer rotation from position_ids, PoSE.
-TODO.
-
 \section{Experiments}
+% "Description of progress" in the midway outline: Methods, Data, Metrics, Training; then Results (Sec. 3).
+
+\subsection{Methods}
+% Not covered here yet: DaRoPE (RQ3) \citep{levy2026darope}.
+
+\paragraph{Model.} We extend OLMo-2-0425-1B \citep{olmo2024olmo2}: 16 layers of 16 heads (no grouped-query attention), head dimension 128 (64 bands), RoPE base $b = 5\times10^5$, $L = 4096$.
+
+\paragraph{Implementation.} We patch the Hugging Face OLMo-2 code \citep{wolf2020transformers}: instead of one rotation table shared by all layers, each attention layer rotates its queries and keys with its own parameters, where stock RoPE is applied. All positional parameters $\phi$ sit in one float32 module, and the backbone is frozen. PI and YaRN are fixed settings of this module; every learned mode starts as the stock model, with identical logits (unit-tested).
+
+\paragraph{Learned frequencies.} Following LeRoPE \citep{karypis2026lerope} and AdaRoPE \citep{wang2026adarope}, each band's frequency gets a learned log-scale,
+\begin{equation}
+\hat\theta_{g,j} = e^{a_{g,j}}\,\theta_j,
+\end{equation}
+where $g$ sets the granularity: one vector for the model (\emph{shared}, as in LeRoPE; 64 parameters), one per layer (1{,}024), or one per head (16{,}384, as in AdaRoPE), started at $a = 0$ (stock RoPE) or at YaRN's frequencies.
+
+\paragraph{Learned temperature.} Against dilution, each head multiplies its queries, and so its logits, by AdaRoPE's
+length-dependent scale
+\begin{equation}
+\lambda_h(i) = \frac{1}{\tau_h}\Big[\ln\Big(1 + \frac{\max(i+1,\,L)}{L}\Big)\Big]^{\gamma_h},
+\end{equation}
+with $\tau_h, \gamma_h$ learned per head (512 parameters) and $i+1$ the number of keys query $i$ sees. With $\tau_h$ alone, the temperature is constant: sharpening that helps at 16k changes the model equally at 4k. The bracket is constant up to $L$ and grows beyond it, so $\gamma_h$ sets how much a head sharpens on long contexts, separately from $\tau_h$. Initialization: $\tau_h = 1, \gamma_h = 0$ ($\lambda_h = 1$), or $\tau_h = 1/f^2$ for the YaRN start ($f$: YaRN's attention factor).
+
+\paragraph{PoSE.} To learn $\phi$ without long sequences, PoSE \citep{zhu2024pose} trains on 4k-token sequences whose position ids skip ahead: the sequence is split into two pieces at a random point, and the second piece's positions are shifted by a random offset, so relative distances span up to $L'$ while the model only ever sees 4k tokens. Unlike the original, which fine-tunes all weights and takes the second piece's text from later in the document, we train only $\phi$ and keep the text contiguous, skipping positions only. We use it for RQ2 (\S\ref{sec:future}).
 
 \subsection{Data}
 \label{sec:data}
 
-Training and perplexity evaluation use \textbf{PG-19}~\cite{rae2020pg19},
+Training and perplexity evaluation use \textbf{PG-19} \citep{rae2020pg19},
 a corpus of long English books (\texttt{emozilla/pg19} mirror; OLMo-2 tokenizer;
 non-overlapping token chunks, tails dropped).
 Split usage follows standard practice:
@@ -86,10 +97,10 @@ Split usage follows standard practice:
 \end{itemize}
 Retrieval objectives are never used for training.
 For long-context retrieval we use two synthetic benchmarks.
-\textbf{Passkey}~\cite{mohtashami2023landmark} inserts a random five-digit key into
+\textbf{Passkey} \citep{mohtashami2023landmark} inserts a random five-digit key into
 repeated filler at a controlled depth; we score exact key recovery
 (test: $750$ prompts, seed~$1$; validation: $150$, seed~$0$).
-\textbf{RULER}~\cite{hsieh2024ruler}: we evaluate the eight NIAH task variants
+\textbf{RULER} \citep{hsieh2024ruler}: we evaluate the eight NIAH task variants
 at $4$k / $8$k / $16$k (validation: $100$ samples per task and length, seed~$1234$;
 test: $500$, seed~$42$), with prompts from RULER's scripts and official string-match
 scoring under greedy decoding.
@@ -113,15 +124,14 @@ temperatures) with next-token cross-entropy on the $16$k PG-19 chunks
 (batch size~$1$, $500$ steps, AdamW, no weight decay, grad clip~$1.0$, bf16).
 We sweep LR $\in\{10^{-2},3{\times}10^{-2}\}$ (and earlier $10^{-3}$) and select
 the LR by validation PPL at $16$k.
-Baselines include stock RoPE, Position Interpolation~\cite{chen2023pi} (factor~$4$),
-default YaRN~\cite{peng2024yarn}, and grid-tuned YaRN
+Baselines include stock RoPE, Position Interpolation \citep{chen2023pi} (factor~$4$),
+default YaRN \citep{peng2024yarn}, and grid-tuned YaRN
 (factor~$4$, $\beta_{\mathrm{fast}}{=}64$, $\beta_{\mathrm{slow}}{=}2$,
 attention factor~$1.2$).
 Each training run takes about \textbf{$12$--$15$ minutes} on one $40$--$80$\,GB GPU
-(A100 / L40S-class) on BU's SCC; the $144$-setting YaRN grid about \textbf{$50$ minutes}.
+(A100 / L40S-class) on a university cluster; the $144$-setting YaRN grid about \textbf{$50$ minutes}.
 Full test evaluation (PPL, $750$-prompt passkey, and RULER) is dominated by RULER
 and typically takes from tens of minutes to a few GPU-hours per checkpoint.
-
 
 \section{Results}
 \label{sec:results}
@@ -155,8 +165,9 @@ Learned, head & YaRN & 16{,}896 & 17.01 & \textbf{17.41} & \textbf{15.09} & 0.00
 \label{tab:main}
 \end{table*}
 
-\section{Project Plan}
-% Concrete list of remaining experiments/analyses until the final report (Dec 17);
+\section{Future Work}
+\label{sec:future}
+% Midway outline item 4, "Project plan". Concrete list of remaining experiments/analyses until the final report (Dec 17);
 % note changes from the proposal and why. RQ4 uses LoRA \citep{hu2022lora}.
 TODO.
 
