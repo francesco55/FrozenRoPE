@@ -127,7 +127,7 @@ A training run takes 12--15 minutes on one A100 / L40S-class GPU, the YaRN grid 
 \label{sec:future}
 \label{sec:plan}
 % Midway outline item 4, "Project plan". Source: report/midway_project_plan.tex.
-% Still to mention: RQ4 (LoRA \citep{hu2022lora}, full fine-tuning) and short-context benchmarks.
+% Still to mention: short-context benchmarks.
 
 Our remaining work follows the proposal's RQ2--RQ4 path and tightens evaluation.
 
@@ -160,6 +160,11 @@ where $\tilde x_m$ is the RMS-normalized hidden state. The coordinate stays in $
 \paragraph{Analysis.}
 To explain retrieval wins/losses, we will compare attention weights on
 needle tokens for strong vs.\ weak configurations.
+
+\paragraph{RQ4 (stretch).}
+If learned positions still fall short, is the rest of the problem in the backbone weights?
+To find out, we will unfreeze them step by step, first with LoRA \citep{hu2022lora} on the
+query and key projections, then with full fine-tuning, and measure how much each step adds.
 
 \clearpage
 \bibliography{references}
