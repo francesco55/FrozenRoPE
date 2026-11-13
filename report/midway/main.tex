@@ -70,10 +70,58 @@ TODO.
 TODO.
 
 \section{Experiments}
-% Datasets with citations: PG-19 \citep{rae2020pg19}; passkey \citep{mohtashami2023landmark};
-% RULER \citep{hsieh2024ruler}. Model \citep{olmo2024olmo2}; software \citep{wolf2020transformers}.
-% Metrics, key hyperparameters, training time, compute (BU SCC).
-TODO.
+
+\subsection{Data}
+\label{sec:data}
+
+Training and perplexity evaluation use \textbf{PG-19}~\cite{rae2020pg19},
+a corpus of long English books (\texttt{emozilla/pg19} mirror; OLMo-2 tokenizer;
+non-overlapping token chunks, tails dropped).
+Split usage follows standard practice:
+\begin{itemize}
+    \item \textbf{Train:} 100 chunks of length $16{,}384$ (at most one per book; seed~$0$).
+    \item \textbf{Validation:} learning-rate selection and the YaRN grid
+    (50 chunks per length for perplexity).
+    \item \textbf{Test:} final perplexity (50 chunks at each of $4$k / $8$k / $16$k).
+\end{itemize}
+Retrieval objectives are never used for training.
+For long-context retrieval we use two synthetic benchmarks.
+\textbf{Passkey}~\cite{mohtashami2023landmark} inserts a random five-digit key into
+repeated filler at a controlled depth; we score exact key recovery
+(test: $750$ prompts, seed~$1$; validation: $150$, seed~$0$).
+\textbf{RULER}~\cite{hsieh2024ruler}: we evaluate the eight NIAH task variants
+at $4$k / $8$k / $16$k (validation: $100$ samples per task and length, seed~$1234$;
+test: $500$, seed~$42$), with prompts from RULER's scripts and official string-match
+scoring under greedy decoding.
+
+\subsection{Metrics}
+\label{sec:metrics}
+
+We report (i)~\textbf{perplexity} on PG-19 at $4$k / $8$k / $16$k
+(lower is better; $4$k also checks short-context regression);
+(ii)~\textbf{passkey accuracy} (overall and by length);
+(iii)~mean \textbf{RULER} NIAH score (\%).
+We treat a method as successful if it improves long-context PPL and retrieval over
+strong training-free positional baselines while losing at most about one point of
+$4$k PPL relative to the unmodified model.
+
+\subsection{Training details and compute}
+\label{sec:train-details}
+
+We train only positional parameters (frequency scales and, when used, AdaScale
+temperatures) with next-token cross-entropy on the $16$k PG-19 chunks
+(batch size~$1$, $500$ steps, AdamW, no weight decay, grad clip~$1.0$, bf16).
+We sweep LR $\in\{10^{-2},3{\times}10^{-2}\}$ (and earlier $10^{-3}$) and select
+the LR by validation PPL at $16$k.
+Baselines include stock RoPE, Position Interpolation~\cite{chen2023pi} (factor~$4$),
+default YaRN~\cite{peng2024yarn}, and grid-tuned YaRN
+(factor~$4$, $\beta_{\mathrm{fast}}{=}64$, $\beta_{\mathrm{slow}}{=}2$,
+attention factor~$1.2$).
+Each training run takes about \textbf{$12$--$15$ minutes} on one $40$--$80$\,GB GPU
+(A100 / L40S-class) on BU's SCC; the $144$-setting YaRN grid about \textbf{$50$ minutes}.
+Full test evaluation (PPL, $750$-prompt passkey, and RULER) is dominated by RULER
+and typically takes from tens of minutes to a few GPU-hours per checkpoint.
+
 
 \section{Results}
 \label{sec:results}
