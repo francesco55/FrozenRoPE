@@ -66,6 +66,10 @@ RQ1 asks what learning RoPE parameters per model, layer or head on a frozen back
 
 \paragraph{Implementation.} We patch the Hugging Face OLMo-2 code \citep{wolf2020transformers}: instead of one rotation table shared by all layers, each attention layer rotates its queries and keys with its own parameters, where stock RoPE is applied. All positional parameters $\phi$ sit in one float32 module, and the backbone is frozen. PI and YaRN are fixed settings of this module; every learned mode starts as the stock model, with identical logits (unit-tested).
 
+% Table 1 is defined here (not in Results) so the full-width table lands on the
+% Results page; defining it at a section break garbles the review line numbers.
+\input{results_table}
+
 \paragraph{Learned frequencies.} Following LeRoPE \citep{karypis2026lerope} and AdaRoPE \citep{wang2026adarope}, each band's frequency gets a learned log-scale,
 \begin{equation}
 \hat\theta_{g,j} = e^{a_{g,j}}\,\theta_j,
@@ -132,37 +136,8 @@ Each training run takes about $12$--$15$ minutes on one $40$--$80$\,GB GPU
 Full test evaluation (PPL, $750$-prompt passkey, and RULER) is dominated by RULER
 and typically takes from tens of minutes to a few GPU-hours per checkpoint.
 
-\section{Results}
-\label{sec:results}
-% Tables/plots only, no numbers in the main text. Expected vs. observed; error analysis.
-TODO.
-
-% Source: Documentation/rq1_temp_results.md (test split, seed 0, one run per cell).
-\begin{table*}[t]
-\centering
-\small
-\begin{tabular}{@{}llrrrrrrrr@{}}
-\toprule
-& & & \multicolumn{3}{c}{PG-19 test PPL $\downarrow$} & & \multicolumn{3}{c}{RULER NIAH $\uparrow$} \\
-\cmidrule(lr){4-6}\cmidrule(lr){8-10}
-Method & Start & Trainable & 4k & 8k & 16k & Passkey@16k $\uparrow$ & 4k & 8k & 16k \\
-\midrule
-Stock OLMo-2 & -- & 0 & \textbf{16.41} & 124.6 & 430.3 & 0.00 & \textbf{72.8} & 0.0 & 0.0 \\
-PI ($\times 4$) & -- & 0 & 109.1 & 118.6 & 110.9 & 0.00 & 0.0 & 0.0 & 0.0 \\
-YaRN, default & -- & 0 & 27.11 & 40.14 & 41.67 & 0.01 & 8.3 & 6.6 & 1.2 \\
-YaRN, tuned & -- & 0 & 19.95 & 22.87 & 21.38 & 0.80 & 45.7 & 35.4 & 24.0 \\
-\midrule
-Learned, shared & $a=0$ & 576 & 18.10 & 18.68 & 16.23 & \textbf{0.81} & 61.0 & 49.1 & 36.8 \\
-Learned, layer & $a=0$ & 1{,}536 & 17.90 & 18.43 & 16.05 & 0.01 & 59.9 & 43.7 & 33.3 \\
-Learned, head & $a=0$ & 16{,}896 & 18.73 & 19.40 & 17.20 & 0.00 & 24.5 & 21.3 & 5.9 \\
-Learned, shared & YaRN & 576 & 17.32 & 17.76 & 15.43 & 0.80 & 61.4 & 49.0 & 36.2 \\
-Learned, layer & YaRN & 1{,}536 & 17.19 & 17.65 & 15.31 & 0.04 & 58.6 & 50.1 & 35.6 \\
-Learned, head & YaRN & 16{,}896 & 17.01 & \textbf{17.41} & \textbf{15.09} & 0.00 & 69.8 & \textbf{62.9} & \textbf{53.1} \\
-\bottomrule
-\end{tabular}
-\caption{RQ1 test results on frozen OLMo-2-1B extended from 4k to 16k. Learned rows train frequency scales plus a per-head AdaScale temperature (512 parameters) for 500 steps; learning rate chosen by validation PPL at 16k. Passkey: accuracy over 250 prompts at 16k (5 depths). RULER: average over the 8 needle-in-a-haystack tasks, 500 samples each. One seed.}
-\label{tab:main}
-\end{table*}
+% Results (Nandini, from feat/rq1-wo-temp-ruler); results_draft.tex holds an alternative draft.
+\input{results}
 
 \section{Future Work}
 \label{sec:future}
@@ -206,5 +181,10 @@ needle tokens for strong vs.\ weak configurations.
 % TODO: remove \nocite{*} once the text cites the papers (it lists every .bib entry).
 \nocite{*}
 \bibliography{references}
+
+\clearpage
+\appendix
+\section{Additional results}
+\input{results_appendix}
 
 \end{document}

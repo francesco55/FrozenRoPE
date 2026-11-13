@@ -10,8 +10,9 @@
 %   results/sweeps/*/test_passkey_v2_n50_*.json, results/passkey_n50/test_passkey_v2_n50_*.json
 % ---------------------------------------------------------------------------
 
-% Figures are found from report/midway/ (main paper) and from Documentation/report/.
-\graphicspath{{../../Documentation/figures/results/}{../../Documentation/figures/rq1_temp/}{../figures/results/}{../figures/rq1_temp/}{../../figures/results/}{../../figures/rq1_temp/}}
+% Figures are copied into report/midway/figures/ (from Documentation/figures/) so the
+% folder compiles on its own, e.g. on Overleaf.
+\graphicspath{{figures/}}
 
 \section{Results}
 \label{sec:results}
@@ -42,9 +43,9 @@ perplexity, and the shared and per-layer models also beat it on 16k RULER.
 Per head does not: its many independent parameters need a good starting
 point under our short training budget.
 \emph{Starting from YaRN's values} (frequencies and temperature) is better
-still. At every granularity it beats both tuned YaRN and the matching
-$a{=}0$ model on 16k perplexity and RULER, by a wide margin for per head and
-about evenly for shared. It also trains far faster: these runs begin close to
+still. At every granularity it beats tuned YaRN on 16k perplexity and RULER,
+and the matching $a{=}0$ model on 16k perplexity; on 16k RULER it wins by a
+wide margin for per head and is on par for shared. It also trains far faster: these runs begin close to
 their final loss, while runs from $a{=}0$ need hundreds of steps (Appendix,
 Figure~\ref{fig:loss}).
 
