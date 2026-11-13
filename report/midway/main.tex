@@ -130,21 +130,34 @@ A training run takes 12--15 minutes on one A100 / L40S-class GPU, the YaRN grid 
 % Midway outline item 4, "Project plan". Source: report/midway_project_plan.tex.
 % Still to mention: RQ4 (LoRA \citep{hu2022lora}, full fine-tuning) and short-context benchmarks.
 
+Our remaining work follows the proposal's RQ2--RQ4 path and tightens evaluation.
+
 \paragraph{Evaluation.}
-We will broaden RULER beyond the eight NIAH tasks, report per-task scores, and extend the
-per-depth breakdown of Table~\ref{tab:depth} to NIAH.
+We will broaden RULER beyond our current eight NIAH tasks and compare more closely
+to the official evaluation stack.
+The reference pipeline depends on vLLM, which cannot run our patched attention, so we
+will keep our HF loaders for inference while aligning data generation, prompts, and
+scoring with RULER's scripts where possible.
+We will also break results down per task (not only averages) and plot
+accuracy by needle depth/position for passkey and NIAH-style probes.
 
 \paragraph{PoSE (RQ2).}
-We will move closer to the original recipe by deleting the skipped text, so skipped
-positions match skipped content (our contiguous variant becomes an ablation), and try
-multiple gaps and random gap sizes.
+We will reimplement PoSE \citep{zhu2024pose} closer to the original recipe:
+short contiguous chunks with deleted middle text (or multiple gaps), so skipped
+position IDs correspond to skipped content.
+Our current variant only inserts a gap in contiguous text (pushes neighboring tokens
+apart without removing content); we will treat that as an ablation against true PoSE.
+As an extra idea, we will try random/uniform gap sizes and ask whether gap
+length should be chosen in an informed way (e.g., matching target relative distances)
+without defeating PoSE's goal of cheaper short-sequence training.
+We will log validation loss alongside training for these runs.
 
 \paragraph{DaRoPE (RQ3).}
-Learned slow-band angles still grow without bound beyond $L$. Following DaRoPE \citep{levy2026darope}, each head will replace position $m$ on the slow bands with a learned, content-dependent coordinate
+Learned frequencies still tie slow-band angles to position, so they grow without bound beyond $L$. Following DaRoPE \citep{levy2026darope}, each head will replace position $m$ on the slow bands with a learned, content-dependent coordinate
 \begin{equation}
 c_h(x_m) = L\,\sigma\!\Big(w_h^\top \tilde x_m + \alpha_h\,\mathrm{logit}\tfrac{m+0.5}{L}\Big),
 \end{equation}
-where $\tilde x_m$ is the RMS-normalized hidden state. The coordinate stays in $[0, L]$, so angles never leave the pretraining range, and content can bring related tokens close regardless of distance. Initialized at $c_h(x_m) = m + 0.5$ (${\sim}$525k parameters), it starts from the original model; we test retrofitting it, so far only trained from scratch, onto a frozen one.
+where $\tilde x_m$ is the RMS-normalized hidden state. The coordinate stays in $[0, L]$, so angles never leave the pretraining range, and content can bring related tokens close regardless of distance. At $w_h = 0$, $\alpha_h = 1$, $c_h(x_m) = m + 0.5$ for $m < L$, so training starts from the original model (${\sim}$525k parameters). DaRoPE has only been trained from scratch; we test retrofitting it onto a frozen model.
 
 \paragraph{Analysis.}
 To explain retrieval wins/losses, we will compare attention weights on
