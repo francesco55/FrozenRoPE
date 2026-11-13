@@ -44,13 +44,20 @@ Language models that use rotary position embeddings (RoPE) fail beyond their pre
 Nearly every open-weight language model encodes position with rotary embeddings (RoPE; \citealp{su2021roformer}), and nearly every one degrades sharply once its input exceeds the length $L$ it was pretrained on \citep{chen2023pi, peng2024yarn}. OLMo-2-1B \citep{olmo2024olmo2}, for example, is trained with $L = 4096$. Given a 16k-token book, its perplexity explodes, and it fails every RULER retrieval task \citep{hsieh2024ruler} at 8k and 16k, although the whole input fits in memory (Table~\ref{tab:main}). Pretraining at longer lengths is costly, since attention compute grows quadratically with length (16 times more at 16k than at 4k), so cheap extension of existing models is a practical, widely shared problem.
 
 \paragraph{Why it is hard.}
-RoPE divides each head's query and key vectors into $d/2$ two-dimensional \emph{bands} and rotates band $j$ of the token at position $m$ by angle $m\theta_j$, where $\theta_j = b^{-2j/d}$. Only the angle difference survives the dot product, so attention logits depend on relative distance $m-n$ alone. Fast bands cycle many times within $L$ and encode local order. \emph{Slow bands}, whose wavelength $2\pi/\theta_j$ exceeds $L$, never complete a rotation in training; beyond $L$ they take angles the model has never seen. A second problem remains even when the angles are fixed: with four times as many keys, each softmax spreads its mass more thinly, so attention becomes flatter than the model was trained on.
+RoPE divides each head's query and key vectors into $d/2$ two-dimensional \emph{bands} and rotates band $j$ of the token at position $m$ by angle $m\theta_j$, where $\theta_j = b^{-2j/d}$. Only the difference in angle survives the dot product, so the attention logit depends on relative distance alone:
+\begin{equation}
+s_{mn} = \textstyle\sum_{j} \mathrm{Re}\big[\,q_{m,j}\,\overline{k_{n,j}}\,e^{\,i(m-n)\theta_j}\big].
+\end{equation} Fast bands cycle many times within $L$ and encode local order. \emph{Slow bands}, whose wavelength $2\pi/\theta_j$ exceeds $L$, never complete a rotation in training; beyond $L$ they take angles the model has never seen. A second problem remains even when the angles are fixed: with four times as many keys, each softmax spreads its mass more thinly, so attention becomes flatter than the model was trained on.
 
 \paragraph{How obvious solutions fail.}
 Position Interpolation (PI; \citealp{chen2023pi}) divides every position by $L'/L$, which keeps slow-band angles in range but also compresses the fast bands; it harms the model even at 4k. YaRN \citep{peng2024yarn} interpolates only the slow bands and sharpens attention with a temperature, but it applies one hand-designed rule to every head, and its default settings fall far short of settings found by a grid search on validation data (Table~\ref{tab:main}).
 
 \paragraph{Task.}
-We treat context extension as a parameter-efficient learning problem. Given a pretrained model with frozen \emph{backbone weights} $W$ (all of its original parameters) and native length $L$, we seek a small set of \emph{positional parameters} $\phi$, $|\phi| \ll |W|$, that change only how positions are encoded, trained with the language-modeling loss on text of length $L' = 4L$, while preserving the model's behavior up to $L$. We learn a scale for each RoPE frequency and a per-head temperature (\S\ref{sec:method}), starting from exactly the original model. Beyond the practical goal, this asks a scientific question: \emph{how much of context extension is positional?} If training $\phi$ alone closes most of the gap to fine-tuning $W$, the length limit lies in how positions are encoded, not in the backbone weights.
+We treat context extension as a parameter-efficient learning problem. Given a pretrained model with frozen \emph{backbone weights} $W$ (all of its original parameters) and native length $L$, we seek a small set of \emph{positional parameters} $\phi$, $|\phi| \ll |W|$, that change only how positions are encoded and let the model operate at $L' = 4L$:
+\begin{equation}
+\min_{\phi}\; \mathbb{E}_{x\sim\mathcal{D}_{L'}}\big[-\log p_{W,\phi}(x)\big],
+\end{equation}
+while preserving its behavior up to $L$. We learn a scale for each RoPE frequency and a per-head temperature (\S\ref{sec:method}), starting from exactly the original model. Beyond the practical goal, this asks a scientific question: \emph{how much of context extension is positional?} If training $\phi$ alone closes most of the gap to fine-tuning $W$, the length limit lies in how positions are encoded, not in the backbone weights.
 
 \paragraph{Questions and progress.}
 RQ1 asks what learning RoPE parameters per model, layer or head on a frozen backbone adds beyond tuned YaRN; RQ2 whether they can be learned from 4k sequences alone with PoSE position skipping \citep{zhu2024pose}; RQ3 whether slow bands should instead learn a content-dependent coordinate, as in DaRoPE \citep{levy2026darope}; and RQ4 which backbone weights must change to close what remains. RQ1 is complete on test data: every configuration with a learned temperature beats tuned YaRN on 16k perplexity, and the best one also on RULER (\S\ref{sec:results}). For RQ2, models trained on 4k text match long-data training up to 8k but fail to retrieve at 16k.
@@ -71,7 +78,7 @@ RQ1 asks what learning RoPE parameters per model, layer or head on a frozen back
 
 \paragraph{Learned frequencies.} Following LeRoPE \citep{karypis2026lerope} and AdaRoPE \citep{wang2026adarope}, each band's frequency gets a learned log-scale, $\hat\theta_{g,j} = e^{a_{g,j}}\theta_j$, where $g$ sets the granularity: one vector for the model (\emph{shared}, as in LeRoPE; 64 parameters), one per layer (1{,}024), or one per head (16{,}384, as in AdaRoPE), started at $a = 0$ (stock RoPE) or at YaRN's frequencies.
 
-\paragraph{Learned temperature.} Against dilution, each head multiplies its queries, and so its logits, by AdaRoPE's
+\paragraph{Learned temperature.} Against flatter attention, each head multiplies its queries, and so its logits, by AdaRoPE's
 length-dependent scale
 \begin{equation}
 \lambda_h(i) = \frac{1}{\tau_h}\Big[\ln\Big(1 + \frac{\max(i+1,\,L)}{L}\Big)\Big]^{\gamma_h},
@@ -124,9 +131,8 @@ A training run takes 12--15 minutes on one A100 / L40S-class GPU, the YaRN grid 
 % Still to mention: RQ4 (LoRA \citep{hu2022lora}, full fine-tuning) and short-context benchmarks.
 
 \paragraph{Evaluation.}
-We will broaden RULER beyond the eight NIAH tasks, report per-task scores, extend the
-per-depth breakdown of Table~\ref{tab:depth} to NIAH, and compare attention on needle
-tokens between strong and weak configurations.
+We will broaden RULER beyond the eight NIAH tasks, report per-task scores, and extend the
+per-depth breakdown of Table~\ref{tab:depth} to NIAH.
 
 \paragraph{PoSE (RQ2).}
 We will move closer to the original recipe by deleting the skipped text, so skipped
@@ -138,14 +144,15 @@ Learned slow-band angles still grow without bound beyond $L$. Following DaRoPE \
 \begin{equation}
 c_h(x_m) = L\,\sigma\!\Big(w_h^\top \tilde x_m + \alpha_h\,\mathrm{logit}\tfrac{m+0.5}{L}\Big),
 \end{equation}
-where $\tilde x_m$ is the RMS-normalized hidden state. The coordinate stays in $[0, L]$, so angles never leave the pretraining range, and content can bring related tokens close regardless of distance. At $w_h = 0$, $\alpha_h = 1$, $c_h(x_m) = m + 0.5$ for $m < L$, so training starts from the original model (${\sim}$525k parameters). DaRoPE has only been trained from scratch; we test retrofitting it onto a frozen model.
+where $\tilde x_m$ is the RMS-normalized hidden state. The coordinate stays in $[0, L]$, so angles never leave the pretraining range, and content can bring related tokens close regardless of distance. Initialized at $c_h(x_m) = m + 0.5$ (${\sim}$525k parameters), it starts from the original model; we test retrofitting it, so far only trained from scratch, onto a frozen one.
 
-\paragraph{Backbone (RQ4).}
-We will add LoRA \citep{hu2022lora} on $W_Q$/$W_K$, then full fine-tuning, to measure
-how much of the remaining gap needs the backbone weights.
+\paragraph{Analysis.}
+To explain retrieval wins/losses, we will compare attention weights on
+needle tokens for strong vs.\ weak configurations.
 
 \bibliography{references}
 
+\clearpage
 \appendix
 \section{Additional results}
 \input{results_appendix}
