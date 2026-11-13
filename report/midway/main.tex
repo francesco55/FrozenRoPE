@@ -60,7 +60,7 @@ We treat context extension as a parameter-efficient learning problem. Given a pr
 while preserving its behavior up to $L$. We learn a scale for each RoPE frequency and a per-head temperature (\S\ref{sec:method}), starting from exactly the original model. Beyond the practical goal, this asks a scientific question: \emph{how much of context extension is positional?} If training $\phi$ alone closes most of the gap to fine-tuning $W$, the length limit lies in how positions are encoded, not in the backbone weights.
 
 \paragraph{Research questions and progress.}
-RQ1 asks what learning RoPE parameters per model, layer or head on a frozen backbone adds beyond tuned YaRN; RQ2 whether they can be learned from 4k sequences alone with PoSE position skipping \citep{zhu2024pose}; RQ3 whether slow bands should instead learn a content-dependent coordinate, as in DaRoPE \citep{levy2026darope}; and RQ4 which backbone weights must change to close what remains. RQ1 is complete on test data: every configuration with a learned temperature beats tuned YaRN on 16k perplexity, and the best one also on RULER (\S\ref{sec:results}). For RQ2, models trained on 4k text match long-data training up to 8k but fail to retrieve at 16k.
+RQ1 asks what learning RoPE parameters per model, layer or head on a frozen backbone adds beyond tuned YaRN; RQ2 whether they can be learned from 4k sequences alone with PoSE position skipping \citep{zhu2024pose}; RQ3 whether slow bands should instead learn a content-dependent coordinate, as in DaRoPE \citep{levy2026darope}; and RQ4 which backbone weights must change to close what remains.
 
 \section{Experiments}
 % "Description of progress" in the midway outline: Methods, Data, Metrics, Training; then Results (Sec. 3).
@@ -72,8 +72,7 @@ RQ1 asks what learning RoPE parameters per model, layer or head on a frozen back
 
 \paragraph{Implementation.} We patch the Hugging Face OLMo-2 code \citep{wolf2020transformers} so that each attention layer rotates its queries and keys with its own parameters. All of $\phi$ sits in one float32 module (PI and YaRN are fixed settings of it), and every learned mode starts with logits identical to the stock model (unit-tested).
 
-% Table 1 is defined here (not in Results) so the full-width table lands on the
-% Results page; defining it at a section break garbles the review line numbers.
+% Table 1 (single column). Defining a float at a section break garbles the review line numbers.
 \input{results_table}
 
 \paragraph{Learned frequencies.} Following LeRoPE \citep{karypis2026lerope} and AdaRoPE \citep{wang2026adarope}, each band's frequency gets a learned log-scale, $\hat\theta_{g,j} = e^{a_{g,j}}\theta_j$, where $g$ sets the granularity: one vector for the model (\emph{shared}, as in LeRoPE; 64 parameters), one per layer (1{,}024), or one per head (16{,}384, as in AdaRoPE), started at $a = 0$ (stock RoPE) or at YaRN's frequencies.
@@ -162,6 +161,7 @@ where $\tilde x_m$ is the RMS-normalized hidden state. The coordinate stays in $
 To explain retrieval wins/losses, we will compare attention weights on
 needle tokens for strong vs.\ weak configurations.
 
+\clearpage
 \bibliography{references}
 
 \clearpage
