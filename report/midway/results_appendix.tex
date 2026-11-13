@@ -11,7 +11,24 @@
 %   \input{results_appendix}
 % Figure paths are set by \graphicspath in results.tex.
 
-\begin{figure}[!h]
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig_ruler_length.pdf}
+  \caption{RULER score vs.\ input length for a representative model of each family. Frequencies only (blue) and PoSE (yellow) fall to zero at 16k; the models with a learned temperature shown here stay above tuned YaRN (dashed).}
+  \label{fig:ruler-length}
+\end{figure}
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=0.85\textwidth]{loss.png}
+  \caption{Training loss of the frequencies + temperature runs for each
+  granularity and starting point, at two learning rates (bold: chosen on
+  validation). Runs started at YaRN begin near their final loss; runs from
+  $a{=}0$ need hundreds of steps.}
+  \label{fig:loss}
+\end{figure*}
+
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=\columnwidth]{fig_ablation_16k.pdf}
   \caption{RULER at 16k per granularity. Blue vs.\ orange differ only in the
@@ -20,7 +37,7 @@
   \label{fig:ablation}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=\columnwidth]{fig_learned_a.pdf}
   \caption{Learned log frequency scales $a$ of the per-layer, frequencies-only
@@ -30,7 +47,7 @@
   \label{fig:learned-a}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=\columnwidth]{fig_ppl_vs_ruler.pdf}
   \caption{PG-19 test perplexity vs.\ RULER score at 16k. Each marker is one
@@ -39,12 +56,3 @@
   \label{fig:ppl-ruler}
 \end{figure}
 
-\begin{figure*}[!t]
-  \centering
-  \includegraphics[width=\textwidth]{loss.png}
-  \caption{Training loss of the frequencies + temperature runs for each
-  granularity and starting point, at two learning rates (bold: chosen on
-  validation). Runs started at YaRN begin near their final loss; runs from
-  $a{=}0$ need hundreds of steps.}
-  \label{fig:loss}
-\end{figure*}
