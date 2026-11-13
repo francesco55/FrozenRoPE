@@ -61,7 +61,6 @@ RQ1 asks what learning RoPE parameters per model, layer or head on a frozen back
 % "Description of progress" in the midway outline: Methods, Data, Metrics, Training; then Results (Sec. 3).
 
 \subsection{Methods}
-% Not covered here yet: DaRoPE (RQ3) \citep{levy2026darope}.
 
 \paragraph{Model.} We extend OLMo-2-0425-1B \citep{olmo2024olmo2}: 16 layers of 16 heads (no grouped-query attention), head dimension 128 (64 bands), RoPE base $b = 5\times10^5$, $L = 4096$.
 
@@ -85,7 +84,7 @@ with $\tau_h, \gamma_h$ learned per head (512 parameters) and $i+1$ the number o
 \subsection{Data}
 \label{sec:data}
 
-Training and perplexity evaluation use \textbf{PG-19} \citep{rae2020pg19},
+Training and perplexity evaluation use PG-19 \citep{rae2020pg19},
 a corpus of long English books (\texttt{emozilla/pg19} mirror; OLMo-2 tokenizer;
 non-overlapping token chunks, tails dropped).
 Split usage follows standard practice:
@@ -97,10 +96,10 @@ Split usage follows standard practice:
 \end{itemize}
 Retrieval objectives are never used for training.
 For long-context retrieval we use two synthetic benchmarks.
-\textbf{Passkey} \citep{mohtashami2023landmark} inserts a random five-digit key into
+Passkey \citep{mohtashami2023landmark} inserts a random five-digit key into
 repeated filler at a controlled depth; we score exact key recovery
 (test: $750$ prompts, seed~$1$; validation: $150$, seed~$0$).
-\textbf{RULER} \citep{hsieh2024ruler}: we evaluate the eight NIAH task variants
+RULER \citep{hsieh2024ruler}: we evaluate the eight NIAH task variants
 at $4$k / $8$k / $16$k (validation: $100$ samples per task and length, seed~$1234$;
 test: $500$, seed~$42$), with prompts from RULER's scripts and official string-match
 scoring under greedy decoding.
@@ -108,10 +107,10 @@ scoring under greedy decoding.
 \subsection{Metrics}
 \label{sec:metrics}
 
-We report (i)~\textbf{perplexity} on PG-19 at $4$k / $8$k / $16$k
+We report (i)~perplexity on PG-19 at $4$k / $8$k / $16$k
 (lower is better; $4$k also checks short-context regression);
-(ii)~\textbf{passkey accuracy} (overall and by length);
-(iii)~mean \textbf{RULER} NIAH score (\%).
+(ii)~passkey accuracy (overall and by length);
+(iii)~mean RULER NIAH score (\%).
 We treat a method as successful if it improves long-context PPL and retrieval over
 strong training-free positional baselines while losing at most about one point of
 $4$k PPL relative to the unmodified model.
@@ -128,8 +127,8 @@ Baselines include stock RoPE, Position Interpolation \citep{chen2023pi} (factor~
 default YaRN \citep{peng2024yarn}, and grid-tuned YaRN
 (factor~$4$, $\beta_{\mathrm{fast}}{=}64$, $\beta_{\mathrm{slow}}{=}2$,
 attention factor~$1.2$).
-Each training run takes about \textbf{$12$--$15$ minutes} on one $40$--$80$\,GB GPU
-(A100 / L40S-class) on a university cluster; the $144$-setting YaRN grid about \textbf{$50$ minutes}.
+Each training run takes about $12$--$15$ minutes on one $40$--$80$\,GB GPU
+(A100 / L40S-class) on a university cluster; the $144$-setting YaRN grid about $50$ minutes.
 Full test evaluation (PPL, $750$-prompt passkey, and RULER) is dominated by RULER
 and typically takes from tens of minutes to a few GPU-hours per checkpoint.
 
@@ -173,32 +172,36 @@ Learned, head & YaRN & 16{,}896 & 17.01 & \textbf{17.41} & \textbf{15.09} & 0.00
 
 Our remaining work follows the proposal's RQ2--RQ4 path and tightens evaluation.
 
-\paragraph{RULER.}
+\paragraph{Evaluation.}
 We will broaden RULER beyond our current eight NIAH tasks and compare more closely
 to the official evaluation stack.
 The reference pipeline depends on vLLM, which cannot run our patched attention, so we
 will keep our HF loaders for inference while aligning data generation, prompts, and
 scoring with RULER's scripts where possible.
-We will also break results down \textbf{per task} (not only averages) and plot
-\textbf{accuracy by needle depth/position} for passkey and NIAH-style probes.
+We will also break results down per task (not only averages) and plot
+accuracy by needle depth/position for passkey and NIAH-style probes.
 
 \paragraph{PoSE (RQ2).}
-We will reimplement \textbf{PoSE} \citep{zhu2024pose} closer to the original recipe:
-short contiguous chunks with \textbf{deleted middle text} (or multiple gaps), so skipped
+We will reimplement PoSE \citep{zhu2024pose} closer to the original recipe:
+short contiguous chunks with deleted middle text (or multiple gaps), so skipped
 position IDs correspond to skipped content.
 Our current variant only inserts a gap in contiguous text (pushes neighboring tokens
 apart without removing content); we will treat that as an ablation against true PoSE.
-As an extra idea, we will try \textbf{random/uniform gap sizes} and ask whether gap
+As an extra idea, we will try random/uniform gap sizes and ask whether gap
 length should be chosen in an informed way (e.g., matching target relative distances)
 without defeating PoSE's goal of cheaper short-sequence training.
-We will log \textbf{validation loss alongside training} for these runs.
+We will log validation loss alongside training for these runs.
 
-\paragraph{Analysis and stretch goals.}
-To explain retrieval wins/losses, we will compare \textbf{attention weights} on
+\paragraph{DaRoPE (RQ3).}
+Learned frequencies still tie slow-band angles to position, so they grow without bound beyond $L$. Following DaRoPE \citep{levy2026darope}, each head will replace position $m$ on the slow bands with a learned, content-dependent coordinate
+\begin{equation}
+c_h(x_m) = L\,\sigma\!\Big(w_h^\top \tilde x_m + \alpha_h\,\mathrm{logit}\tfrac{m+0.5}{L}\Big),
+\end{equation}
+where $\tilde x_m$ is the RMS-normalized hidden state. The coordinate stays in $[0, L]$, so angles never leave the pretraining range, and content can bring related tokens close regardless of distance. At $w_h = 0$, $\alpha_h = 1$, $c_h(x_m) = m + 0.5$ for $m < L$, so training starts from the original model (${\sim}$525k parameters). DaRoPE has only been trained from scratch; we test retrofitting it onto a frozen model.
+
+\paragraph{Analysis.}
+To explain retrieval wins/losses, we will compare attention weights on
 needle tokens for strong vs.\ weak configurations.
-As a stretch (RQ3), we will retrofit \textbf{DaRoPE}-style \citep{levy2026darope}
-slow-band coordinates onto the frozen backbone and compare them to learned frequencies
-on perplexity and retrieval.
 
 % TODO: remove \nocite{*} once the text cites the papers (it lists every .bib entry).
 \nocite{*}
