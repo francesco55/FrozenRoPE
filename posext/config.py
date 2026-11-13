@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 from dataclasses import asdict, dataclass, field, fields
 from pathlib import Path
 from typing import Any
@@ -120,12 +121,24 @@ class ExperimentConfig:
         }
 
 
-def load_config(path: str | Path) -> ExperimentConfig:
-    """Load an experiment YAML; unknown top-level keys are rejected."""
+def config_from_dict(raw: dict[str, Any], *, default_name: str | None = None) -> ExperimentConfig:
+    """Validate a raw config mapping (as loaded from YAML); unknown keys are rejected."""
+    raw = copy.deepcopy(raw)
+    if "name" not in raw and default_name is not None:
+        raw["name"] = default_name
+    return _from_dict(ExperimentConfig, raw)
+
+
+def load_raw_config(path: str | Path) -> dict[str, Any]:
+    """The YAML mapping of an experiment config, unvalidated."""
     path = Path(path)
     raw = yaml.safe_load(path.read_text())
     if not isinstance(raw, dict):
-        raise ValueError(f"Config {path} must be a mapping, got {type(raw)}")
-    if "name" not in raw:
-        raw["name"] = path.stem
-    return _from_dict(ExperimentConfig, raw)
+        raise ValueError(f"Config {path} must be a mapping, got {type(raw)}")  # noqa: TRY004
+    return raw
+
+
+def load_config(path: str | Path) -> ExperimentConfig:
+    """Load an experiment YAML; unknown top-level keys are rejected."""
+    path = Path(path)
+    return config_from_dict(load_raw_config(path), default_name=path.stem)

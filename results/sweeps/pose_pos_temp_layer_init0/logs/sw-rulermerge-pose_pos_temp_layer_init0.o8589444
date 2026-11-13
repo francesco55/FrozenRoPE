@@ -1,0 +1,19 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-ge2  JOB_ID=8589444  TASK=undefined  STAGE=ruler_merge  SWEEP_DIR=outputs/sweeps/pose_pos_temp_layer_init0
+2026-11-12 13:26:40,856 INFO posext.pipeline: RULER avg 27.02 {'4096': 44.26, '8192': 36.8, '16384': 0.0} -> results/sweeps/pose_pos_temp_layer_init0/test_ruler_rq1_learned_freq_temp_layer__lr3e-2.json
+Sweep pose_pos_temp_layer_init0  (submitted 2026-11-12 08:53:58, jobs {'train': '8589440', 'select': '8589441', 'test': '8589442', 'ruler': '8589443', 'ruler_merge': '8589444'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_layer__lr1e-2                              yes      21.423    0.653
+rq1_learned_freq_temp_layer__lr3e-2                              yes      19.315    0.613  <- selected
+
+Test results for rq1_learned_freq_temp_layer__lr3e-2:
+  ppl      PPL@4096=18.333  PPL@8192=19.021  PPL@16384=21.498   (results/sweeps/pose_pos_temp_layer_init0/test_ppl_rq1_learned_freq_temp_layer__lr3e-2.json)
+  passkey  acc=0.587  by length {'4096': 0.82, '8192': 0.94, '16384': 0.0}   (results/sweeps/pose_pos_temp_layer_init0/test_passkey_rq1_learned_freq_temp_layer__lr3e-2.json)
+  ruler    avg=27.02  by length {'4096': 44.26, '8192': 36.8, '16384': 0.0}  complete=True   (results/sweeps/pose_pos_temp_layer_init0/test_ruler_rq1_learned_freq_temp_layer__lr3e-2.json)
+  passkey n50: acc=0.581  (n=750)  by length {'4096': 0.776, '8192': 0.968, '16384': 0.0}

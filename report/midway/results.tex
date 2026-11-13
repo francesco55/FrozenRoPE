@@ -1,0 +1,91 @@
+% !TEX root = main.tex
+% chktex-file 3
+% chktex-file 8
+% chktex-file 12
+% chktex-file 13
+% chktex-file 21
+% chktex-file 24
+% chktex-file 46
+% Results section. Used in main.tex as \input{results} (Table 1 is \input{results_table},
+% appendix figures are in results_appendix.tex). Requires booktabs and graphicx.
+% Numbers appear only in tables and figures. Sources: results/**/*.json (test split) and the
+% learned tau/gamma in outputs/sweeps/*/runs/<selected lr>/positional.safetensors.
+% Passkey: standard (Landmark-Attention) prompt, results/sweeps/*/test_passkey_v2_n50_*.json and
+% results/passkey_n50/test_passkey_v2_n50_*.json.
+% Figures are copied into report/midway/figures/ so the folder compiles on its own (Overleaf).
+% To verify before submission: RULER's niah_single_1 uses a repeated-sentence ("noise")
+% haystack (RULER scripts/synthetic.yaml); the passkey paragraph relies on it.
+
+\graphicspath{{figures/}}
+
+\section{Results}
+\label{sec:results}
+
+All models extend the frozen OLMo-2-1B from 4k to 16k tokens. Table~\ref{tab:main} gives test results for the baselines and three families of learned models: frequencies only, frequencies with a learned temperature (from $a = 0$ or from YaRN), and the latter trained with PoSE on 4k text only.
+
+\paragraph{Learned frequencies need a learned temperature.}
+From $a = 0$, frequencies alone beat tuned YaRN on 16k perplexity only per layer and per head; they are worse at 4k and fail at retrieval at 16k (Appendix, Figure~\ref{fig:ruler-length}). Adding a learned temperature, with everything else unchanged, restores 16k retrieval for the shared and per-layer models (Appendix, Figure~\ref{fig:ablation}). Every granularity then beats tuned YaRN on perplexity at all lengths, and shared and per-layer models also beat it on RULER at 16k. Per head from zero does not: with 16k parameters and 500 steps, it is likely under-trained.
+\paragraph{The learned temperature is mostly a constant sharpening.}
+From both starts, $\tau_h$ converges to similar values that sharpen attention by about the same factor at every length, while $\gamma_h$ stays near zero for most heads, so attention grows only slightly sharper from 4k to 16k (Table~\ref{tab:temp}). The temperature thus acts more like YaRN's fixed attention factor than like length-dependent scaling: it helps, but we cannot yet say it corrects flatter attention as such. A constant-$\tau$ run will test this. The median scale already exceeds 1 below $L$ ($\lambda_{\le 4k}$ in Table~\ref{tab:temp}), which may account for part of the 4k cost.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Run & Start & $\lambda_{\le 4\mathrm{k}}$ & Growth & Flat & RULER \\
+\midrule
+Long, shared & $a{=}0$ & 1.18 & 1.02 (0.33--2.06) & 1 & 36.8 \\
+Long, layer  & $a{=}0$ & 1.16 & 1.04 (0.24--2.51) & 1 & 33.3 \\
+Long, head   & $a{=}0$ & 1.15 & 1.11 (0.06--2.04) & 5 & 5.9 \\
+Long, shared & YaRN & 1.15 & 1.02 (0.70--1.64) & 0 & 36.2 \\
+Long, layer  & YaRN & 1.14 & 1.04 (0.70--1.46) & 0 & 35.6 \\
+Long, head   & YaRN & 1.14 & 1.03 (0.77--1.37) & 0 & 53.1 \\
+\midrule
+PoSE, shared & $a{=}0$ & 1.13 & 1.04 (0.10--2.42) & 21 & 0.0 \\
+PoSE, layer  & $a{=}0$ & 1.12 & 1.06 (0.09--3.30) & 14 & 0.0 \\
+PoSE, head   & $a{=}0$ & 1.15 & 1.06 (0.03--2.12) & 8 & 0.1 \\
+PoSE, shared & YaRN & 1.11 & 1.03 (0.17--2.13) & 7 & 0.1 \\
+PoSE, layer  & YaRN & 1.11 & 1.07 (0.12--1.71) & 6 & 0.0 \\
+PoSE, head   & YaRN & 1.11 & 1.05 (0.16--1.49) & 5 & 1.1 \\
+\bottomrule
+\end{tabular}
+\caption{Learned temperatures over all 256 heads. $\lambda_{\le 4\mathrm{k}} = (\ln 2)^{\gamma_h}/\tau_h$: median query scale up to 4k (the YaRN start begins at 1.30, from zero at 1). Growth: $\lambda_h(16\mathrm{k})/\lambda_h(4\mathrm{k}) = (\ln 5/\ln 2)^{\gamma_h}$, median (min--max); ${>}1$ is sharper at 16k. Flat: heads at least $2\times$ flatter at 16k. RULER: test average at 16k.}
+\label{tab:temp}
+\end{table}
+
+\paragraph{Why frequency-only models fail at 16k.}
+Not because the key is too far away: at 16k they fail even when the key sits just before the question, while at 8k they succeed at every depth (Table~\ref{tab:depth}). Instead of answering, they continue the filler text, with either prompt format we tried. One untested explanation is that some slow bands learned to rotate faster than in pretraining (Appendix, Figure~\ref{fig:learned-a}), so distant tokens can look close.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{ll rrrrr}
+\toprule
+& & \multicolumn{5}{c}{Depth of key} \\
+\cmidrule(lr){3-7}
+Model & Length & 0 & .25 & .5 & .75 & 1 \\
+\midrule
+Freq.\ only, layer & 8k  & 100 & 100 & 98 & 100 & 100 \\
+                   & 16k & 0 & 0 & 0 & 0 & 0 \\
+YaRN, tuned        & 16k & 88 & 90 & 76 & 52 & 96 \\
++ temp., shared    & 16k & 10 & 100 & 100 & 100 & 96 \\
+\bottomrule
+\end{tabular}
+\caption{Passkey accuracy (\%) by key depth (0: start of input, 1: just before the question), 50 prompts per cell; models from $a{=}0$.}
+\label{tab:depth}
+\end{table}
+
+\paragraph{YaRN is a good starting point.}
+Starting from YaRN's frequencies and temperature beats tuned YaRN on 16k perplexity and RULER at every granularity, and beats the matching $a = 0$ model on 16k perplexity; on 16k RULER it wins by a wide margin per head and is on par for shared. Only models started from YaRN stay within one point of the original model's 4k perplexity, and they recover much of the 4k RULER score that tuned YaRN loses.
+
+\paragraph{PoSE works up to 8k but fails to retrieve at 16k.}
+Trained only on 4k text, PoSE models beat tuned YaRN on perplexity and match long-data training on RULER up to 8k, but at 16k their retrieval collapses. Table~\ref{tab:temp} suggests why: they learn more heads with strongly negative $\gamma_h$, whose attention becomes flatter at 16k, which supports our hypothesis that temperatures are hard to learn from short text alone.
+
+\paragraph{Perplexity does not predict retrieval.}
+The frequency-only and PoSE failures above come with perplexity similar to or better than tuned YaRN (Appendix, Figure~\ref{fig:ppl-ruler}): perplexity mostly rewards using the last few sentences, while retrieval needs text far back. The two retrieval tests also disagree. The per-head model started from YaRN is best on RULER but fails passkey at 16k, while the shared models pass it as often as tuned YaRN. The haystack does not explain this: the same model does well on RULER's repeated-sentence haystack. We take RULER, which averages eight tasks with 500 samples each, as the main measure and leave the passkey gap to future analysis (\S\ref{sec:future}).
+
+\paragraph{Summary and caveats.}
+Our best model, per head and started from YaRN, meets the success criterion on perplexity and RULER. The results suggest selecting models by retrieval rather than perplexity, and not learning the temperature from short text alone. Two attributions remain open: gains over training-free tuned YaRN credit training as much as the parameterization (an ablation learning only the temperature on YaRN frequencies is next), and the YaRN start's gain may come from its temperature initialization rather than its frequencies. Each configuration was run with one seed, many perplexity gaps are only 1--2 points, each test length uses few books, and learning rates were selected on validation perplexity only.

@@ -1,0 +1,49 @@
+#!/bin/bash -l
+#$ -P cs599b1
+#$ -N posext_ruler_prepare
+#$ -l h_rt=6:00:00
+#$ -pe omp 4
+#$ -j y
+#$ -o logs/ruler_prepare_$JOB_ID.log
+
+# CPU-only: generate RULER data with RULER's own scripts (no GPU, no internet needed).
+# Run scripts/scc/ruler_setup.sh on a login node first.
+#
+# Usage:
+#   qsub -v SPLIT=validation scripts/scc/ruler_prepare.qsub       # 100 samples/task/length
+#   qsub -v SPLIT=test scripts/scc/ruler_prepare.qsub             # 500 samples/task/length
+#   qsub -v SPLIT=validation,TASKS=niah_single_1,LENGTHS=4096 scripts/scc/ruler_prepare.qsub
+#   qsub -v SPLIT=test,TASKS=niah_single_1:niah_single_2,LENGTHS=4096:8192 scripts/scc/ruler_prepare.qsub
+# Re-running is cheap: files that already match (commit, seed, samples, tokenizer) are skipped.
+
+set -euo pipefail
+
+POSEXT_ROOT="${POSEXT_ROOT:-/projectnb/cs599b1/students/${USER:-$(id -un)}/FrozenRoPE}"
+cd "$POSEXT_ROOT"
+# shellcheck disable=SC1091
+source "${POSEXT_ROOT}/scripts/scc/env.sh"
+# Everything was downloaded by ruler_setup.sh; don't let compute nodes try the network.
+export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
+
+if command -v uv >/dev/null 2>&1; then
+  PY=(uv run --extra ruler python)
+elif [[ -x "${UV_PROJECT_ENVIRONMENT}/bin/python" ]]; then
+  PY=("${UV_PROJECT_ENVIRONMENT}/bin/python")
+else
+  echo "No uv and no venv at $UV_PROJECT_ENVIRONMENT — run scripts/scc/setup.sh first" >&2
+  exit 1
+fi
+
+ARGS=(--split "${SPLIT:-validation}")
+# Lists may use ':' instead of ',' (qsub -v itself splits on commas): TASKS=niah_single_1:niah_single_2
+[[ -n "${TASKS:-}" ]] && ARGS+=(--tasks "${TASKS//:/,}")
+[[ -n "${LENGTHS:-}" ]] && ARGS+=(--lengths "${LENGTHS//:/,}")
+[[ -n "${NUM_SAMPLES:-}" ]] && ARGS+=(--num-samples "$NUM_SAMPLES")
+
+# One prepare per split at a time (e.g. two sweep pipelines submitted the same night): the second
+# waits, then finds the files ready and skips them.
+LOCK_DIR="${POSEXT_DATA_CACHE}/ruler"
+mkdir -p "$LOCK_DIR"
+exec 9>"${LOCK_DIR}/.prepare_${SPLIT:-validation}.lock"
+flock 9
+"${PY[@]}" -m posext.eval.ruler prepare "${ARGS[@]}"

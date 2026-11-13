@@ -2,9 +2,12 @@ version = 1
 revision = 3
 requires-python = "==3.11.*"
 resolution-markers = [
-    "sys_platform == 'win32'",
-    "sys_platform == 'emscripten'",
-    "sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version >= '3.11.5' and sys_platform == 'win32'",
+    "python_full_version < '3.11.5' and sys_platform == 'win32'",
+    "python_full_version >= '3.11.5' and sys_platform == 'emscripten'",
+    "python_full_version < '3.11.5' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.11.5' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.11.5' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 
 [[package]]
@@ -122,6 +125,20 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/9a/8e/82a0fe20a541c03148528be8cac2408564a6c9a0cc7e9171802bc1d26985/attrs-26.1.0.tar.gz", hash = "sha256:d03ceb89cb322a8fd706d4fb91940737b6642aa36998fe130a9bc96c985eff32", size = 952055, upload-time = "2026-03-19T14:22:25.026Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/64/b4/17d4b0b2a2dc85a6df63d1157e028ed19f90d4cd97c36717afef2bc2f395/attrs-26.1.0-py3-none-any.whl", hash = "sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309", size = 67548, upload-time = "2026-03-19T14:22:23.645Z" },
+]
+
+[[package]]
+name = "beautifulsoup4"
+version = "4.15.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "soupsieve", version = "2.10", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11.5'" },
+    { name = "soupsieve", version = "4.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11.5'" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/43/65/318323f98dbee45d42dff61d8f047181bc6f2268a9068cfad035a46be5af/beautifulsoup4-4.15.0.tar.gz", hash = "sha256:288e3ca7d54b06f2ac191970bc275c1939cb46d450b255bf6718b04aa37ab4f7", size = 632571, upload-time = "2026-06-07T16:44:20.453Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/88/c6/92fcd42f1ba33e1184263f25bfabf3d27c383410470f169e4b8163bf9c17/beautifulsoup4-4.15.0-py3-none-any.whl", hash = "sha256:d6f88de62e1d4e38ecb1077eb9724cd0eff29d2a08ca16a401e9b9e93f117cf9", size = 109924, upload-time = "2026-06-07T16:44:21.566Z" },
 ]
 
 [[package]]
@@ -397,6 +414,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/48/77/886f09e91a5eadb054ce03b8855323cd2a72f20db76ab4119e0ecda65eef/hf_xet-1.8.0-cp38-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:1ebaf248c9bef8bb0c9d1d8d71db1fdf0cac14f922cc7a936a81adbf12eb5f01", size = 4500689, upload-time = "2026-10-30T10:04:28.394Z" },
     { url = "https://files.pythonhosted.org/packages/97/4d/2c76a992b370ff77d0b5219275779f8c9a7dabb8ee649deb265dfed84d0f/hf_xet-1.8.0-cp38-abi3-win_amd64.whl", hash = "sha256:92188598dedc1e1f5609bd718d4db8687a6c89915553912571e2f587892eecec", size = 3911559, upload-time = "2026-10-30T10:04:30.165Z" },
     { url = "https://files.pythonhosted.org/packages/87/91/fdb1454a43eff8011047d176ada2f0fb4926cf3d74b87357ff35793f6d98/hf_xet-1.8.0-cp38-abi3-win_arm64.whl", hash = "sha256:42b66fdc688eaa4ff3eb77dc9275e5a0f1258ecc9fdd083ddaf43bb49bec925b", size = 3738458, upload-time = "2026-10-30T10:04:31.882Z" },
+]
+
+[[package]]
+name = "html2text"
+version = "2025.4.15"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f8/27/e158d86ba1e82967cc2f790b0cb02030d4a8bef58e0c79a8590e9678107f/html2text-2025.4.15.tar.gz", hash = "sha256:948a645f8f0bc3abe7fd587019a2197a12436cd73d0d4908af95bfc8da337588", size = 64316, upload-time = "2025-04-15T04:02:30.045Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1d/84/1a0f9555fd5f2b1c924ff932d99b40a0f8a6b12f6dd625e2a47f415b00ea/html2text-2025.4.15-py3-none-any.whl", hash = "sha256:00569167ffdab3d7767a4cdf589b7f57e777a5ed28d12907d8c58769ec734acc", size = 34656, upload-time = "2025-04-15T04:02:28.44Z" },
 ]
 
 [[package]]
@@ -1056,6 +1082,14 @@ eval = [
 lora = [
     { name = "peft" },
 ]
+ruler = [
+    { name = "beautifulsoup4" },
+    { name = "html2text" },
+    { name = "nltk" },
+    { name = "tenacity" },
+    { name = "tqdm" },
+    { name = "wonderwords" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -1066,16 +1100,22 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "accelerate", specifier = ">=1.11" },
+    { name = "beautifulsoup4", marker = "extra == 'ruler'", specifier = ">=4.12" },
     { name = "datasets", specifier = ">=4.2,<5" },
+    { name = "html2text", marker = "extra == 'ruler'", specifier = ">=2024.2" },
     { name = "lm-eval", marker = "extra == 'eval'", specifier = ">=0.4.9" },
+    { name = "nltk", marker = "extra == 'ruler'", specifier = ">=3.9" },
     { name = "numpy" },
     { name = "peft", marker = "extra == 'lora'", specifier = ">=0.18" },
     { name = "pyyaml" },
+    { name = "tenacity", marker = "extra == 'ruler'", specifier = ">=8" },
     { name = "torch", specifier = "==2.9.1" },
+    { name = "tqdm", marker = "extra == 'ruler'" },
     { name = "transformers", specifier = "==4.57.1" },
     { name = "wandb" },
+    { name = "wonderwords", marker = "extra == 'ruler'", specifier = ">=2.2" },
 ]
-provides-extras = ["eval", "lora"]
+provides-extras = ["eval", "lora", "ruler"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -1477,6 +1517,34 @@ wheels = [
 ]
 
 [[package]]
+name = "soupsieve"
+version = "2.10"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.11.5' and sys_platform == 'win32'",
+    "python_full_version < '3.11.5' and sys_platform == 'emscripten'",
+    "python_full_version < '3.11.5' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
+sdist = { url = "https://files.pythonhosted.org/packages/71/c3/1b817965ac12dc002d7c9cd7dfffdd7d4fbf9b45763ef2ffe7b86ee94670/soupsieve-2.10.tar.gz", hash = "sha256:49e9380d7d2905463583bafe285e818c7366a9ed7b3aee221c1ac79c905d8bc0", size = 124337, upload-time = "2026-09-24T02:36:35.048Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/66/87/5ed59e1d0290564e2027ed066c52b059892c4637741337fc0967183c8d4d/soupsieve-2.10-py3-none-any.whl", hash = "sha256:8596eb8967d744174820280fa62b4542a2e955bfaccca73ed8a13c6eb8e9b502", size = 38019, upload-time = "2026-09-24T02:36:33.709Z" },
+]
+
+[[package]]
+name = "soupsieve"
+version = "4.1"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.11.5' and sys_platform == 'win32'",
+    "python_full_version >= '3.11.5' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.11.5' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
+sdist = { url = "https://files.pythonhosted.org/packages/95/48/21a393ff731b8f928fa4f8176f9a7ceba2252ee60a5149f25b45c292aa5c/soupsieve-4.1.tar.gz", hash = "sha256:ca9abf7126667010d8f6e9b39bfc1bc3b23c8aed9bcb0f54a754dde969bb8aab", size = 161955, upload-time = "2026-11-10T01:59:50.399Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/88/73/6a2087c72975cfc07394623bca8d17654342ea4055ae368deafe5a81a542/soupsieve-4.1-py3-none-any.whl", hash = "sha256:e4d667b3974ce6e038e7390486b8093369854a1d345ffdd4c121dfc4a782e809", size = 52302, upload-time = "2026-11-10T01:59:48.571Z" },
+]
+
+[[package]]
 name = "sqlitedict"
 version = "2.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1523,6 +1591,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/80/cc/44f2d81d8f9093aad81c3467a5bf5718d2b5f786e887b6e4adcfc17ec6b9/tcolorpy-0.1.7.tar.gz", hash = "sha256:0fbf6bf238890bbc2e32662aa25736769a29bf6d880328f310c910a327632614", size = 299437, upload-time = "2024-12-29T15:24:23.847Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/05/a2/ed023f2edd1e011b4d99b6727bce8253842d66c3fbf9ed0a26fc09a92571/tcolorpy-0.1.7-py3-none-any.whl", hash = "sha256:26a59d52027e175a37e0aba72efc99dda43f074db71f55b316d3de37d3251378", size = 8096, upload-time = "2024-12-29T15:24:21.33Z" },
+]
+
+[[package]]
+name = "tenacity"
+version = "9.2.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/82/9e/497c1c8ebe5a5b5d1d4a7511aea22c0bb1a97e3170d98abdef0e1b34265a/tenacity-9.2.1.tar.gz", hash = "sha256:a606b5c808d0cded4a359d5b9932d867ff2a6a6b64d37350260fd01bbdf83839", size = 58261, upload-time = "2026-10-07T12:13:01.633Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d6/26/1ff2b0721ac66a3ec5b1402b333110b352ab0a8724052ac279a7b82d40c4/tenacity-9.2.1-py3-none-any.whl", hash = "sha256:9e56f17539296baab7beabb08b92f6ee3d7be92d8be72d763360677c2ad6580e", size = 32310, upload-time = "2026-10-07T12:13:00.102Z" },
 ]
 
 [[package]]
@@ -1723,6 +1800,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/b6/0a/278fdc0edd079d01d52f4bb7cf9620ca6ec86c5b80d22fb41a8421d6bc05/wandb-0.31.0-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:df16a46cd6468e6580783b02560c79991c181f63a4691949020fff1b4ac87072", size = 20520389, upload-time = "2026-10-16T18:56:07.402Z" },
     { url = "https://files.pythonhosted.org/packages/90/7a/aaee2e55d1aa6f855d01e702263e2e0ef733da45583ecd9836d68ea3d67d/wandb-0.31.0-py3-none-win_amd64.whl", hash = "sha256:488f8ef63cae217ba220e6d8c163ee8c5b98320ee1866ce774c4da0847235f02", size = 19596112, upload-time = "2026-10-16T18:56:09.473Z" },
     { url = "https://files.pythonhosted.org/packages/75/d8/03efc83dccada300944fce5ac0bac650835855fdfed9654833c9e7c29f81/wandb-0.31.0-py3-none-win_arm64.whl", hash = "sha256:d155662ab444ab0cd12afa87943a147193e9b9301134b0b34e8c97c68a4bbba5", size = 17972736, upload-time = "2026-10-16T18:56:11.488Z" },
+]
+
+[[package]]
+name = "wonderwords"
+version = "3.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ff/23/e144fc3dfabb845dc1d94c45315d97b308cf75a664e3db3a89aeb1cb505d/wonderwords-3.0.1.tar.gz", hash = "sha256:5ee43ab6f13823a857a7c3d58c7b4db6a1350bd3aa5f914ed379ad49042a1c36", size = 73339, upload-time = "2025-10-30T17:30:44.231Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a4/75/855c2062d28b8e9247939f8262fb2f4ff3b12a49e4bab9fd1ba16cc5df82/wonderwords-3.0.1-py3-none-any.whl", hash = "sha256:4dd66deb6a76ca9e0b0422d1d3e111f9b910d7c16922d42de733ee8def98f8d0", size = 51658, upload-time = "2025-10-30T17:30:42.785Z" },
 ]
 
 [[package]]

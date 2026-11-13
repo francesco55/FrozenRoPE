@@ -24,8 +24,15 @@ wandb/
 data_cache/
 .cache/
 
+# External checkouts (NVIDIA RULER: `python -m posext.eval.ruler setup`)
+third_party/
+
 # SGE job logs
 *.o[0-9]*
 *.e[0-9]*
 *.po[0-9]*
 *.pe[0-9]*
+
+# Job logs of pipeline sweeps, kept next to their results (copied from outputs/sweeps/*/logs)
+!results/sweeps/*/logs/
+!results/sweeps/*/logs/*

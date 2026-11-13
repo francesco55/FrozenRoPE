@@ -1,0 +1,146 @@
+{
+  "benchmark": "ruler",
+  "ruler_commit": "db43f92ff634bbce1c33d1fb15858aec4bba509a",
+  "split": "test",
+  "seed": [
+    42
+  ],
+  "tokenizer": [
+    "allenai/OLMo-2-0425-1B"
+  ],
+  "tasks": [
+    "niah_single_1",
+    "niah_single_2",
+    "niah_single_3",
+    "niah_multikey_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "niah_multivalue",
+    "niah_multiquery"
+  ],
+  "lengths": [
+    4096,
+    8192,
+    16384
+  ],
+  "scores": {
+    "4096": {
+      "niah_single_1": 94.6,
+      "niah_single_2": 59.2,
+      "niah_single_3": 51.6,
+      "niah_multikey_1": 38.2,
+      "niah_multikey_2": 24.8,
+      "niah_multikey_3": 0.2,
+      "niah_multivalue": 59.65,
+      "niah_multiquery": 37.0
+    },
+    "8192": {
+      "niah_single_1": 64.8,
+      "niah_single_2": 78.4,
+      "niah_single_3": 18.4,
+      "niah_multikey_1": 51.0,
+      "niah_multikey_2": 9.0,
+      "niah_multikey_3": 0.0,
+      "niah_multivalue": 35.35,
+      "niah_multiquery": 26.0
+    },
+    "16384": {
+      "niah_single_1": 50.4,
+      "niah_single_2": 58.6,
+      "niah_single_3": 11.8,
+      "niah_multikey_1": 29.4,
+      "niah_multikey_2": 0.4,
+      "niah_multikey_3": 0.0,
+      "niah_multivalue": 19.45,
+      "niah_multiquery": 21.85
+    }
+  },
+  "avg_by_length": {
+    "4096": 45.66,
+    "8192": 35.37,
+    "16384": 23.99
+  },
+  "avg": 35.01,
+  "n": {
+    "4096": {
+      "niah_single_1": 500,
+      "niah_single_2": 500,
+      "niah_single_3": 500,
+      "niah_multikey_1": 500,
+      "niah_multikey_2": 500,
+      "niah_multikey_3": 500,
+      "niah_multivalue": 500,
+      "niah_multiquery": 500
+    },
+    "8192": {
+      "niah_single_1": 500,
+      "niah_single_2": 500,
+      "niah_single_3": 500,
+      "niah_multikey_1": 500,
+      "niah_multikey_2": 500,
+      "niah_multikey_3": 500,
+      "niah_multivalue": 500,
+      "niah_multiquery": 500
+    },
+    "16384": {
+      "niah_single_1": 500,
+      "niah_single_2": 500,
+      "niah_single_3": 500,
+      "niah_multikey_1": 500,
+      "niah_multikey_2": 500,
+      "niah_multikey_3": 500,
+      "niah_multivalue": 500,
+      "niah_multiquery": 500
+    }
+  },
+  "nulls": {
+    "4096": {
+      "niah_single_1": 0,
+      "niah_single_2": 0,
+      "niah_single_3": 0,
+      "niah_multikey_1": 0,
+      "niah_multikey_2": 0,
+      "niah_multikey_3": 0,
+      "niah_multivalue": 0,
+      "niah_multiquery": 0
+    },
+    "8192": {
+      "niah_single_1": 0,
+      "niah_single_2": 0,
+      "niah_single_3": 0,
+      "niah_multikey_1": 0,
+      "niah_multikey_2": 0,
+      "niah_multikey_3": 0,
+      "niah_multivalue": 0,
+      "niah_multiquery": 0
+    },
+    "16384": {
+      "niah_single_1": 0,
+      "niah_single_2": 0,
+      "niah_single_3": 0,
+      "niah_multikey_1": 0,
+      "niah_multikey_2": 0,
+      "niah_multikey_3": 0,
+      "niah_multivalue": 0,
+      "niah_multiquery": 0
+    }
+  },
+  "complete": true,
+  "tag": "rq1_yarn_tuned",
+  "source": [
+    "--model",
+    "allenai/OLMo-2-0425-1B",
+    "--pos-mode",
+    "yarn",
+    "--factor",
+    "4.0",
+    "--beta-fast",
+    "64.0",
+    "--beta-slow",
+    "2.0",
+    "--attention-factor",
+    "1.2"
+  ],
+  "pred_dir": "outputs/sweeps/rq1_yarn_tuned/ruler_test/rq1_yarn_tuned",
+  "max_samples": null
+}

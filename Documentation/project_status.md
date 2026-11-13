@@ -28,7 +28,7 @@ RQ1 compares `learned_freq` (shared, layer, head) with and without temperature a
 | `train.py` + YAML configs (chunked CE, per-group clipping, resume) | 6 | done (`posext/train.py`, `configs/rq1/`) |
 | Full-model export for RULER and `lm-eval` | 6 | done (`posext/export.py`) |
 | Perplexity at 4k/8k/16k and passkey retrieval | 7 | done |
-| RULER wrapper (16k RULER is part of the success criterion) | 7 | stub (`posext/eval/ruler.py`) — still need vendor checkout + wiring |
+| RULER (16k RULER is part of the success criterion) | 7 | done (`posext/eval/ruler.py`: 8 NIAH tasks, RULER data + scoring, our inference); no SCC numbers yet |
 | HellaSwag/ARC-Easy/PIQA via `lm-eval` | 7 | done (`posext/eval/shortctx.py`) |
 | YaRN grid search on validation | 8 | done (`posext/baselines/yarn_grid.py`) |
 | SCC job templates; FA2 + PoSE GPU check | 9 | templates done; FA2 GPU check still open |

@@ -1,0 +1,22 @@
+{
+  "split": "test",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.8956808757781984,
+      "ppl": 18.095818252007337,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 2.927308020591736,
+      "ppl": 18.67728389741864,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 2.786755142211914,
+      "ppl": 16.228275827513347,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/sweeps/temp_shared_init0/runs/rq1_learned_freq_temp_shared__lr3e-2"
+}

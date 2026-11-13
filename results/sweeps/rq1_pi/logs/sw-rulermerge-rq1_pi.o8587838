@@ -1,0 +1,17 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-gf4  JOB_ID=8587838  TASK=undefined  STAGE=ruler_merge  SWEEP_DIR=outputs/sweeps/rq1_pi
+2026-11-12 09:13:23,973 INFO posext.pipeline: RULER avg 0.00 {'4096': 0.0, '8192': 0.0, '16384': 0.0} -> results/sweeps/rq1_pi/test_ruler_rq1_pi.json
+Sweep rq1_pi  (submitted 2026-11-12 01:14:30, jobs {'train': '8587834', 'select': '8587835', 'test': '8587836', 'ruler': '8587837', 'ruler_merge': '8587838'})
+variant                                                      trained valPPL@16384  passkey
+rq1_pi                                                             -      97.541    0.000  <- selected
+
+Test results for rq1_pi:
+  ppl      PPL@4096=109.106  PPL@8192=118.546  PPL@16384=110.893   (results/sweeps/rq1_pi/test_ppl_rq1_pi.json)
+  passkey  acc=0.000  by length {'4096': 0.0, '8192': 0.0, '16384': 0.0}   (results/sweeps/rq1_pi/test_passkey_rq1_pi.json)
+  ruler    avg=0.0  by length {'4096': 0.0, '8192': 0.0, '16384': 0.0}  complete=True   (results/sweeps/rq1_pi/test_ruler_rq1_pi.json)

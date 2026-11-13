@@ -2,6 +2,15 @@
 
     uv run python -m posext.eval.passkey --run outputs/rq1_learned_freq_head
     uv run python -m posext.eval.passkey --pos-mode yarn --split validation
+
+Prompt versions (`--prompt`, recorded in the results as `prompt_version`):
+- v2 (default): the standard prompt of Landmark Attention (github.com/epfml/landmark-attention,
+  Apache 2.0), as reused by the YaRN and LongLoRA passkey scripts: task description, filler
+  "The grass is green. ... There and back again.", the key line, more filler and the question,
+  one part per line. Kept from v1: 5-digit keys, a fixed depth grid, exact token lengths. The
+  prompt is `length - max_new_tokens` tokens, so the answer is generated inside `length`.
+- v1: the original version of this file (no task description, different filler ending, parts
+  joined without newlines, prompt exactly `length` tokens). Results before 2026-11-12 used v1.
 """
 
 from __future__ import annotations
@@ -17,6 +26,7 @@ from typing import Any
 import torch
 from transformers import AutoTokenizer
 
+from posext.eval.common import greedy_generate
 from posext.models import load_model, load_trained
 from posext.models.build import DEFAULT_MODEL
 from posext.models.positional import PosConfig
@@ -29,6 +39,16 @@ FILLER = (
 )
 KEY_TEMPLATE = "The pass key is {key}. Remember it. {key} is the pass key. "
 QUERY = "What is the pass key? The pass key is"
+
+# v2: the standard passkey prompt (Landmark Attention's `generate_prompt`, see module docstring).
+TASK_DESCRIPTION = (
+    "There is an important info hidden inside a lot of irrelevant text. Find it and memorize them. "
+    "I will quiz you about the important information there."
+)
+STANDARD_FILLER = "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. "
+STANDARD_KEY = "The pass key is {key}. Remember it. {key} is the pass key."
+PROMPT_VERSIONS = ("v1", "v2")
+DEFAULT_PROMPT = "v2"
 
 
 @dataclass(frozen=True)
@@ -59,11 +79,19 @@ def generate_passkey_prompts(
     depths: tuple[float, ...] = (0.0, 0.25, 0.5, 0.75, 1.0),
     n_per_cell: int = 5,
     seed: int = 0,
+    prompt_version: str = DEFAULT_PROMPT,
+    answer_room: int = 16,
 ) -> list[PasskeyPrompt]:
-    """Build prompts: filler + key sentence at `depth` + filler + query.
+    """Build prompts: (task description) + filler + key sentence at `depth` + filler + query.
 
-    Validation and test must use different seeds (CLAUDE.md).
+    Validation and test must use different seeds (CLAUDE.md). Keys and depths depend only on the
+    seed, so v1 and v2 prompts with the same seed ask for the same keys at the same depths.
+    v2 prompts are `length - answer_room` tokens long; v1 prompts are exactly `length`.
     """
+    if prompt_version not in PROMPT_VERSIONS:
+        raise ValueError(f"prompt_version must be one of {PROMPT_VERSIONS}, got {prompt_version!r}")
+    if prompt_version == "v2":
+        return _standard_prompts(tokenizer, lengths, depths, n_per_cell, seed, answer_room)
     rng = torch.Generator().manual_seed(seed)
     query_ids = tokenizer(QUERY, add_special_tokens=False)["input_ids"]
     prompts: list[PasskeyPrompt] = []
@@ -86,24 +114,42 @@ def generate_passkey_prompts(
     return prompts
 
 
+def _standard_prompts(
+    tokenizer, lengths: tuple[int, ...], depths: tuple[float, ...], n_per_cell: int, seed: int, answer_room: int
+) -> list[PasskeyPrompt]:
+    """v2: task description, filler, key line, filler, question; one part per line."""
+    rng = torch.Generator().manual_seed(seed)  # same key draws as v1 for the same seed
+
+    def enc(text: str) -> list[int]:
+        return tokenizer(text, add_special_tokens=False)["input_ids"]
+
+    task_ids = enc(TASK_DESCRIPTION + "\n")
+    query_ids = enc("\n" + QUERY)
+    prompts: list[PasskeyPrompt] = []
+    for length in lengths:
+        prompt_len = length - answer_room
+        for depth in depths:
+            for _ in range(n_per_cell):
+                key = f"{int(torch.randint(0, 100_000, (1,), generator=rng).item()):05d}"
+                key_ids = enc("\n" + STANDARD_KEY.format(key=key) + "\n")
+                budget = prompt_len - len(task_ids) - len(key_ids) - len(query_ids)
+                if budget < 2:
+                    raise ValueError(f"length {length} too short for task description, key and query")
+                prefix_len = int(budget * depth)
+                prefix = _repeat_to_token_budget(tokenizer, STANDARD_FILLER, prefix_len)
+                suffix = _repeat_to_token_budget(tokenizer, STANDARD_FILLER, budget - prefix_len)
+                input_ids = task_ids + prefix + key_ids + suffix + query_ids
+                assert len(input_ids) == prompt_len, (len(input_ids), prompt_len)
+                prompts.append(PasskeyPrompt(input_ids, key, length, depth))
+    return prompts
+
+
 @torch.no_grad()
 def answer_passkey(model, tokenizer, prompt: PasskeyPrompt, *, max_new_tokens: int = 16) -> str:
     """Greedy-generate a short continuation and return the decoded text."""
-    device = next(model.parameters()).device
-    input_ids = torch.tensor([prompt.input_ids], device=device)
-    attention_mask = torch.ones_like(input_ids)
-    # No explicit position_ids: generate() never extends a passed tensor, so every new token
-    # would reuse the last prompt position. Without it, positions come from the attention mask
-    # and keep counting (0..L-1 for the prompt, then L, L+1, ...).
-    out = model.generate(
-        input_ids=input_ids,
-        attention_mask=attention_mask,
-        max_new_tokens=max_new_tokens,
-        do_sample=False,
-        use_cache=True,
-        pad_token_id=tokenizer.eos_token_id,
+    new_tokens = greedy_generate(
+        model, prompt.input_ids, max_new_tokens=max_new_tokens, pad_token_id=tokenizer.eos_token_id
     )
-    new_tokens = out[0, input_ids.shape[1] :]
     return tokenizer.decode(new_tokens, skip_special_tokens=True)
 
 
@@ -122,11 +168,13 @@ def evaluate_passkey(
     n_per_cell: int = 5,
     seed: int = 0,
     max_new_tokens: int = 16,
+    prompt_version: str = DEFAULT_PROMPT,
 ) -> dict[str, Any]:
     """Accuracy overall and broken down by length and depth."""
     if prompts is None:
         prompts = generate_passkey_prompts(
-            tokenizer, lengths=lengths, depths=depths, n_per_cell=n_per_cell, seed=seed
+            tokenizer, lengths=lengths, depths=depths, n_per_cell=n_per_cell, seed=seed,
+            prompt_version=prompt_version, answer_room=max_new_tokens,
         )
     model.eval()
     rows = []
@@ -156,6 +204,7 @@ def evaluate_passkey(
 
     return {
         "seed": seed,
+        "prompt_version": prompt_version,
         "n": len(rows),
         "accuracy": _acc([r["ok"] for r in rows]),
         "by_length": {k: _acc(v) for k, v in by_length.items()},
@@ -174,6 +223,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--depths", default="0,0.25,0.5,0.75,1")
     p.add_argument("--n-per-cell", type=int, default=5)
     p.add_argument("--seed", type=int, default=0, help="Use a different seed for validation vs test")
+    p.add_argument("--prompt", default=DEFAULT_PROMPT, choices=PROMPT_VERSIONS,
+                   help="v2 = standard Landmark-Attention prompt (default); v1 = original (before 2026-11-12)")
     p.add_argument("--device", default=None)
     p.add_argument("--attn", default="sdpa")
     p.add_argument("--factor", type=float, default=4.0)
@@ -216,6 +267,7 @@ def main(argv: list[str] | None = None) -> None:
         depths=depths,
         n_per_cell=args.n_per_cell,
         seed=args.seed,
+        prompt_version=args.prompt,
     )
     results["source"] = str(args.run) if args.run else {"pos_mode": args.pos_mode}
     # Details are large; keep them only in the file.

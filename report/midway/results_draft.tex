@@ -1,0 +1,51 @@
+% Draft body of \section{Results} (goes under \label{sec:results} in main.tex; no \section here).
+% Use with \input{results_draft}.
+%
+% Depends on Table~\ref{tab:main} having the frequency-only and PoSE rows (results_table.tex).
+% Sources: Documentation/rq1_temp_results.md, results/sweeps/*/test_*.json, and the learned
+% tau/gamma in outputs/sweeps/*/runs/<selected lr>/positional.safetensors.
+
+\paragraph{Learned frequencies need a learned temperature.}
+From $a = 0$, frequencies alone beat tuned YaRN only on 16k perplexity, and only per layer and per head; they are worse at 4k and fail at retrieval (Table~\ref{tab:main}). With a learned temperature, every granularity beats tuned YaRN on perplexity at all lengths, and shared and per-layer models also beat it on RULER at 16k; per head from zero does not. Tuned YaRN is training-free, so this comparison credits training as much as the parameterization. The ablation that separates the two, YaRN frequencies with only a learned temperature, is next.
+
+\paragraph{YaRN is a good starting point.}
+Starting from YaRN lowers perplexity at every granularity and length, and training converges in roughly a tenth of the steps needed from zero. On RULER the gain is large only per head; shared and per-layer models are on par with their from-zero counterparts. The YaRN start also initializes the temperature and was selected at a lower learning rate, so the gain cannot yet be attributed to the frequencies alone.
+
+\paragraph{The learned temperature is mostly a constant sharpening.}
+Table~\ref{tab:temp} summarizes the learned $\tau_h$ and $\gamma_h$. From both starts, $\tau_h$ converges to similar values that sharpen attention by about the same factor at every length, while $\gamma_h$ stays near zero for most heads, so attention grows only slightly sharper from 4k to 16k. The temperature thus behaves more like YaRN's fixed attention factor than like length-dependent scaling: it helps, but we cannot yet say it corrects dilution as such. A constant-$\tau$ run will test this. Because $\lambda_h > 1$ also within $L$, the temperature changes the model at native length and may account for part of the 4k cost.
+
+\paragraph{PoSE works up to 8k but fails to retrieve at 16k.}
+Trained only on 4k text, PoSE models beat tuned YaRN on perplexity at every length and match or exceed long-data training on RULER at 4k and 8k, but their retrieval at 16k collapses and their perplexity rises from 8k to 16k (Table~\ref{tab:main}). Starting from YaRN improves perplexity but not 16k retrieval. Table~\ref{tab:temp} points to a cause consistent with our RQ2 hypothesis that temperatures cannot be learned from short sequences: PoSE models learn more heads with strongly negative $\gamma_h$, mostly in layers 0--3, whose attention becomes several times flatter at 16k. Long-data models started from YaRN have no such heads, while the one long-data model that fails on RULER (per head, from zero) has several. The correlation is not clean, since the frequencies differ too; we will test it by clamping $\gamma_h \geq 0$ at evaluation, which needs no retraining.
+
+\paragraph{Perplexity does not predict retrieval.}
+Among long-data models, lower perplexity mostly goes with higher RULER scores, the exception being per head from zero. The two retrieval tests disagree more: the per-head model started from YaRN is best on RULER but fails passkey at 16k, while shared models pass it. Passkey is the less reliable of the two here: it has 50 prompts per depth, and its scores shifted noticeably when we switched to the standard prompt. Per-depth and per-task breakdowns (\S\ref{sec:future}) should show which needles each model misses.
+
+\paragraph{Caveats.}
+Each configuration was run with one seed, many perplexity gaps are only 1--2 points, each test length uses few books, and learning rates were selected on validation perplexity only.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Run & Start & $\lambda_{\le 4\mathrm{k}}$ & Growth & Flat & RULER \\
+\midrule
+Long, shared & $a{=}0$ & 1.18 & 1.02 (0.33--2.06) & 1 & 36.8 \\
+Long, layer  & $a{=}0$ & 1.16 & 1.04 (0.24--2.51) & 1 & 33.3 \\
+Long, head   & $a{=}0$ & 1.15 & 1.11 (0.06--2.04) & 5 & 5.9 \\
+Long, shared & YaRN & 1.15 & 1.02 (0.70--1.64) & 0 & 36.2 \\
+Long, layer  & YaRN & 1.14 & 1.04 (0.70--1.46) & 0 & 35.6 \\
+Long, head   & YaRN & 1.14 & 1.03 (0.77--1.37) & 0 & 53.1 \\
+\midrule
+PoSE, shared & $a{=}0$ & 1.13 & 1.04 (0.10--2.42) & 21 & 0.0 \\
+PoSE, layer  & $a{=}0$ & 1.12 & 1.06 (0.09--3.30) & 14 & 0.0 \\
+PoSE, head   & $a{=}0$ & 1.15 & 1.06 (0.03--2.12) & 8 & 0.1 \\
+PoSE, shared & YaRN & 1.11 & 1.03 (0.17--2.13) & 7 & 0.1 \\
+PoSE, layer  & YaRN & 1.11 & 1.07 (0.12--1.71) & 6 & 0.0 \\
+PoSE, head   & YaRN & 1.11 & 1.05 (0.16--1.49) & 5 & 1.1 \\
+\bottomrule
+\end{tabular}
+\caption{Learned temperatures over all 256 heads. $\lambda_{\le 4\mathrm{k}} = (\ln 2)^{\gamma_h}/\tau_h$: median query scale up to 4k (the YaRN start begins at 1.30, from zero at 1). Growth: $\lambda_h(16\mathrm{k})/\lambda_h(4\mathrm{k}) = (\ln 5/\ln 2)^{\gamma_h}$, median (min--max); ${>}1$ is sharper at 16k. Flat: heads at least $2\times$ flatter at 16k. RULER: test average at 16k.}
+\label{tab:temp}
+\end{table}

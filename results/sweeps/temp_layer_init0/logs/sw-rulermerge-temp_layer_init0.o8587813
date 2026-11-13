@@ -1,0 +1,18 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-gf4  JOB_ID=8587813  TASK=undefined  STAGE=ruler_merge  SWEEP_DIR=outputs/sweeps/temp_layer_init0
+2026-11-12 05:52:23,820 INFO posext.pipeline: RULER avg 45.65 {'4096': 59.92, '8192': 43.72, '16384': 33.3} -> results/sweeps/temp_layer_init0/test_ruler_rq1_learned_freq_temp_layer__lr3e-2.json
+Sweep temp_layer_init0  (submitted 2026-11-12 01:13:46, jobs {'train': '8587809', 'select': '8587810', 'test': '8587811', 'ruler': '8587812', 'ruler_merge': '8587813'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_layer__lr1e-2                              yes      16.710    0.473
+rq1_learned_freq_temp_layer__lr3e-2                              yes      14.511    0.633  <- selected
+
+Test results for rq1_learned_freq_temp_layer__lr3e-2:
+  ppl      PPL@4096=17.900  PPL@8192=18.428  PPL@16384=16.049   (results/sweeps/temp_layer_init0/test_ppl_rq1_learned_freq_temp_layer__lr3e-2.json)
+  passkey  acc=0.607  by length {'4096': 0.86, '8192': 0.96, '16384': 0.0}   (results/sweeps/temp_layer_init0/test_passkey_rq1_learned_freq_temp_layer__lr3e-2.json)
+  ruler    avg=45.65  by length {'4096': 59.92, '8192': 43.72, '16384': 33.3}  complete=True   (results/sweeps/temp_layer_init0/test_ruler_rq1_learned_freq_temp_layer__lr3e-2.json)

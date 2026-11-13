@@ -1,0 +1,144 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-705  JOB_ID=8597610  TASK=undefined  STAGE=retest  SWEEP_DIR=outputs/sweeps/rq1_pi
+Thu Nov 12 17:31:36 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H200 NVL                On  |   00000000:0B:00.0 Off |                    0 |
+| N/A   37C    P0             74W /  450W |       0MiB / 143771MiB |      0%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA H200 NVL                On  |   00000001:0B:00.0 Off |                    0 |
+| N/A   67C    P0            419W /  450W |  131299MiB / 143771MiB |    100%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    1   N/A  N/A         2331956      C   ...tics/llm/vllm-env/bin/python3      13128... |
++-----------------------------------------------------------------------------------------+
+2026-11-12 17:31:59,043 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.passkey --model allenai/OLMo-2-0425-1B --pos-mode pi --factor 4.0 --seed 1 --n-per-cell 50 --prompt v2 --device cuda --out results/sweeps/rq1_pi/test_passkey_v2_n50_rq1_pi.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.passkey' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.passkey'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 517.27it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:11<00:11, 11.09s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:13<00:00,  5.73s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:13<00:00,  6.53s/it]
+2026-11-12 17:32:18,269 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=pi
+2026-11-12 17:32:22,792 INFO posext.eval.passkey: passkey 10/750  running acc=0.00
+2026-11-12 17:32:24,574 INFO posext.eval.passkey: passkey 20/750  running acc=0.00
+2026-11-12 17:32:26,333 INFO posext.eval.passkey: passkey 30/750  running acc=0.00
+2026-11-12 17:32:28,095 INFO posext.eval.passkey: passkey 40/750  running acc=0.00
+2026-11-12 17:32:29,859 INFO posext.eval.passkey: passkey 50/750  running acc=0.00
+2026-11-12 17:32:31,621 INFO posext.eval.passkey: passkey 60/750  running acc=0.00
+2026-11-12 17:32:33,385 INFO posext.eval.passkey: passkey 70/750  running acc=0.00
+2026-11-12 17:32:35,147 INFO posext.eval.passkey: passkey 80/750  running acc=0.00
+2026-11-12 17:32:36,903 INFO posext.eval.passkey: passkey 90/750  running acc=0.00
+2026-11-12 17:32:38,661 INFO posext.eval.passkey: passkey 100/750  running acc=0.00
+2026-11-12 17:32:40,417 INFO posext.eval.passkey: passkey 110/750  running acc=0.00
+2026-11-12 17:32:42,174 INFO posext.eval.passkey: passkey 120/750  running acc=0.00
+2026-11-12 17:32:43,931 INFO posext.eval.passkey: passkey 130/750  running acc=0.00
+2026-11-12 17:32:45,689 INFO posext.eval.passkey: passkey 140/750  running acc=0.00
+2026-11-12 17:32:47,446 INFO posext.eval.passkey: passkey 150/750  running acc=0.00
+2026-11-12 17:32:49,202 INFO posext.eval.passkey: passkey 160/750  running acc=0.00
+2026-11-12 17:32:50,960 INFO posext.eval.passkey: passkey 170/750  running acc=0.00
+2026-11-12 17:32:52,718 INFO posext.eval.passkey: passkey 180/750  running acc=0.00
+2026-11-12 17:32:54,478 INFO posext.eval.passkey: passkey 190/750  running acc=0.00
+2026-11-12 17:32:56,238 INFO posext.eval.passkey: passkey 200/750  running acc=0.00
+2026-11-12 17:32:57,999 INFO posext.eval.passkey: passkey 210/750  running acc=0.00
+2026-11-12 17:32:59,761 INFO posext.eval.passkey: passkey 220/750  running acc=0.00
+2026-11-12 17:33:01,523 INFO posext.eval.passkey: passkey 230/750  running acc=0.00
+2026-11-12 17:33:03,280 INFO posext.eval.passkey: passkey 240/750  running acc=0.00
+2026-11-12 17:33:05,040 INFO posext.eval.passkey: passkey 250/750  running acc=0.00
+This is a friendly reminder - the current text generation call has exceeded the model's predefined maximum length (4096). Depending on the model, you may observe exceptions, performance degradation, or nothing at all.
+2026-11-12 17:33:07,258 INFO posext.eval.passkey: passkey 260/750  running acc=0.00
+2026-11-12 17:33:09,478 INFO posext.eval.passkey: passkey 270/750  running acc=0.00
+2026-11-12 17:33:11,696 INFO posext.eval.passkey: passkey 280/750  running acc=0.00
+2026-11-12 17:33:13,913 INFO posext.eval.passkey: passkey 290/750  running acc=0.00
+2026-11-12 17:33:16,132 INFO posext.eval.passkey: passkey 300/750  running acc=0.00
+2026-11-12 17:33:18,349 INFO posext.eval.passkey: passkey 310/750  running acc=0.00
+2026-11-12 17:33:20,571 INFO posext.eval.passkey: passkey 320/750  running acc=0.00
+2026-11-12 17:33:22,794 INFO posext.eval.passkey: passkey 330/750  running acc=0.00
+2026-11-12 17:33:25,016 INFO posext.eval.passkey: passkey 340/750  running acc=0.00
+2026-11-12 17:33:27,241 INFO posext.eval.passkey: passkey 350/750  running acc=0.00
+2026-11-12 17:33:29,466 INFO posext.eval.passkey: passkey 360/750  running acc=0.00
+2026-11-12 17:33:31,689 INFO posext.eval.passkey: passkey 370/750  running acc=0.00
+2026-11-12 17:33:33,910 INFO posext.eval.passkey: passkey 380/750  running acc=0.00
+2026-11-12 17:33:36,133 INFO posext.eval.passkey: passkey 390/750  running acc=0.00
+2026-11-12 17:33:38,355 INFO posext.eval.passkey: passkey 400/750  running acc=0.00
+2026-11-12 17:33:40,577 INFO posext.eval.passkey: passkey 410/750  running acc=0.00
+2026-11-12 17:33:42,802 INFO posext.eval.passkey: passkey 420/750  running acc=0.00
+2026-11-12 17:33:45,026 INFO posext.eval.passkey: passkey 430/750  running acc=0.00
+2026-11-12 17:33:47,253 INFO posext.eval.passkey: passkey 440/750  running acc=0.00
+2026-11-12 17:33:49,481 INFO posext.eval.passkey: passkey 450/750  running acc=0.00
+2026-11-12 17:33:51,710 INFO posext.eval.passkey: passkey 460/750  running acc=0.00
+2026-11-12 17:33:53,937 INFO posext.eval.passkey: passkey 470/750  running acc=0.00
+2026-11-12 17:33:56,166 INFO posext.eval.passkey: passkey 480/750  running acc=0.00
+2026-11-12 17:33:58,393 INFO posext.eval.passkey: passkey 490/750  running acc=0.00
+2026-11-12 17:34:00,619 INFO posext.eval.passkey: passkey 500/750  running acc=0.00
+2026-11-12 17:34:04,006 INFO posext.eval.passkey: passkey 510/750  running acc=0.00
+2026-11-12 17:34:07,385 INFO posext.eval.passkey: passkey 520/750  running acc=0.00
+2026-11-12 17:34:10,769 INFO posext.eval.passkey: passkey 530/750  running acc=0.00
+2026-11-12 17:34:14,156 INFO posext.eval.passkey: passkey 540/750  running acc=0.00
+2026-11-12 17:34:17,540 INFO posext.eval.passkey: passkey 550/750  running acc=0.00
+2026-11-12 17:34:20,927 INFO posext.eval.passkey: passkey 560/750  running acc=0.00
+2026-11-12 17:34:24,313 INFO posext.eval.passkey: passkey 570/750  running acc=0.00
+2026-11-12 17:34:27,706 INFO posext.eval.passkey: passkey 580/750  running acc=0.00
+2026-11-12 17:34:31,095 INFO posext.eval.passkey: passkey 590/750  running acc=0.00
+2026-11-12 17:34:34,487 INFO posext.eval.passkey: passkey 600/750  running acc=0.00
+2026-11-12 17:34:37,881 INFO posext.eval.passkey: passkey 610/750  running acc=0.00
+2026-11-12 17:34:41,272 INFO posext.eval.passkey: passkey 620/750  running acc=0.00
+2026-11-12 17:34:44,668 INFO posext.eval.passkey: passkey 630/750  running acc=0.00
+2026-11-12 17:34:48,059 INFO posext.eval.passkey: passkey 640/750  running acc=0.00
+2026-11-12 17:34:51,446 INFO posext.eval.passkey: passkey 650/750  running acc=0.00
+2026-11-12 17:34:54,600 INFO posext.eval.passkey: passkey 660/750  running acc=0.00
+2026-11-12 17:34:57,678 INFO posext.eval.passkey: passkey 670/750  running acc=0.00
+2026-11-12 17:35:00,919 INFO posext.eval.passkey: passkey 680/750  running acc=0.00
+2026-11-12 17:35:04,158 INFO posext.eval.passkey: passkey 690/750  running acc=0.00
+2026-11-12 17:35:07,382 INFO posext.eval.passkey: passkey 700/750  running acc=0.00
+2026-11-12 17:35:10,776 INFO posext.eval.passkey: passkey 710/750  running acc=0.00
+2026-11-12 17:35:14,171 INFO posext.eval.passkey: passkey 720/750  running acc=0.00
+2026-11-12 17:35:17,568 INFO posext.eval.passkey: passkey 730/750  running acc=0.00
+2026-11-12 17:35:20,963 INFO posext.eval.passkey: passkey 740/750  running acc=0.00
+2026-11-12 17:35:24,358 INFO posext.eval.passkey: passkey 750/750  running acc=0.00
+{
+  "seed": 1,
+  "prompt_version": "v2",
+  "n": 750,
+  "accuracy": 0.0,
+  "by_length": {
+    "4096": 0.0,
+    "8192": 0.0,
+    "16384": 0.0
+  },
+  "by_depth": {
+    "0.0": 0.0,
+    "0.25": 0.0,
+    "0.5": 0.0,
+    "0.75": 0.0,
+    "1.0": 0.0
+  },
+  "source": {
+    "pos_mode": "pi"
+  }
+}
+Sweep rq1_pi  (submitted 2026-11-12 01:14:30, jobs {'train': '8587834', 'select': '8587835', 'test': '8587836', 'ruler': '8587837', 'ruler_merge': '8587838'})
+variant                                                      trained valPPL@16384  passkey
+rq1_pi                                                             -      97.541    0.000  <- selected
+
+Test results for rq1_pi:
+  ppl      PPL@4096=109.106  PPL@8192=118.546  PPL@16384=110.893   (results/sweeps/rq1_pi/test_ppl_rq1_pi.json)
+  passkey  acc=0.000  by length {'4096': 0.0, '8192': 0.0, '16384': 0.0}   (results/sweeps/rq1_pi/test_passkey_rq1_pi.json)
+  ruler    avg=0.0  by length {'4096': 0.0, '8192': 0.0, '16384': 0.0}  complete=True   (results/sweeps/rq1_pi/test_ruler_rq1_pi.json)
+  passkey n50: acc=0.000  (n=750)  by length {'4096': 0.0, '8192': 0.0, '16384': 0.0}
+  passkey v2_n50: acc=0.000  (n=750)  by length {'4096': 0.0, '8192': 0.0, '16384': 0.0}

@@ -1,0 +1,48 @@
+% !TEX root = main.tex
+% chktex-file 3
+% chktex-file 8
+% chktex-file 12
+% chktex-file 13
+% chktex-file 21
+% chktex-file 24
+% chktex-file 46
+% Appendix figures for results.tex. In report/midway/main.tex, after \appendix:
+%   \section{Additional results}
+%   \input{results_appendix}
+% Figure paths are set by \graphicspath in results.tex.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig_ruler_length.pdf}
+  \caption{RULER score vs.\ input length for a representative model of each family. Frequencies only (blue) and PoSE (yellow) fall to zero at 16k; the models with a learned temperature shown here stay above tuned YaRN (dashed).}
+  \label{fig:ruler-length}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig_ablation_16k.pdf}
+  \caption{RULER at 16k per granularity. Blue vs.\ orange differ only in the
+  learned temperature; green starts both at YaRN; hatched yellow is PoSE
+  (trained on 4k text). Dashed: tuned YaRN.}
+  \label{fig:ablation}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig_learned_a.pdf}
+  \caption{Learned log frequency scales $a$ of the per-layer, frequencies-only
+  model ($a<0$: slower rotation, $a=0$: unchanged). Line: mean over bands;
+  shaded: middle 50\% of slow bands. Dashed: the single value YaRN and PI use
+  for slow bands.}
+  \label{fig:learned-a}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig_ppl_vs_ruler.pdf}
+  \caption{PG-19 test perplexity vs.\ RULER score at 16k. Each marker is one
+  trained model: frequencies only (blue), + temperature (orange), PoSE + temperature
+  (yellow). The original model and PI are off the scale and not shown.}
+  \label{fig:ppl-ruler}
+\end{figure}
+

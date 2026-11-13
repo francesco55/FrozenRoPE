@@ -1,0 +1,548 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-604  JOB_ID=8589443  TASK=2  STAGE=ruler  SWEEP_DIR=outputs/sweeps/pose_pos_temp_layer_init0
+Thu Nov 12 10:28:55 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX A6000               On  |   00000000:01:00.0 Off |                    0 |
+| 30%   36C    P8             19W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX A6000               On  |   00000000:21:00.0 Off |                    0 |
+| 45%   73C    P2            280W /  300W |    1888MiB /  46068MiB |    100%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX A6000               On  |   00000000:41:00.0 Off |                    0 |
+| 30%   35C    P8             22W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX A6000               On  |   00000000:61:00.0 Off |                    0 |
+| 44%   71C    P2            278W /  300W |    1878MiB /  46068MiB |    100%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX A6000               On  |   00000000:81:00.0 Off |                    0 |
+| 30%   34C    P8             21W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX A6000               On  |   00000000:A1:00.0 Off |                    0 |
+| 30%   32C    P8             21W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX A6000               On  |   00000000:C1:00.0 Off |                    0 |
+| 48%   62C    P8             21W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX A6000               On  |   00000000:E1:00.0 Off |                    0 |
+| 30%   33C    P8             16W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    1   N/A  N/A         1055578      C   python                                 1878MiB |
+|    3   N/A  N/A         1055689      C   python                                 1868MiB |
++-----------------------------------------------------------------------------------------+
+2026-11-12 10:29:06,168 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.ruler run --run outputs/sweeps/pose_pos_temp_layer_init0/runs/rq1_learned_freq_temp_layer__lr3e-2 --split test --device cuda --tag rq1_learned_freq_temp_layer__lr3e-2 --pred-dir outputs/sweeps/pose_pos_temp_layer_init0/ruler_test/rq1_learned_freq_temp_layer__lr3e-2 --out outputs/sweeps/pose_pos_temp_layer_init0/ruler_test/rq1_learned_freq_temp_layer__lr3e-2/result_8192.json --tasks niah_single_1,niah_single_2,niah_single_3,niah_multikey_1,niah_multikey_2,niah_multikey_3,niah_multivalue,niah_multiquery --lengths 8192
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.01it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  2.04it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.77it/s]
+2026-11-12 10:29:12,141 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+2026-11-12 10:29:12,206 INFO posext.eval.ruler: RULER niah_single_1 @ 8192: 0 done, 500 to go
+This is a friendly reminder - the current text generation call has exceeded the model's predefined maximum length (4096). Depending on the model, you may observe exceptions, performance degradation, or nothing at all.
+2026-11-12 10:29:23,285 INFO posext.eval.ruler:   niah_single_1 @ 8192: 10/500  1.1 s/sample  ETA 9 min
+2026-11-12 10:29:29,013 INFO posext.eval.ruler:   niah_single_1 @ 8192: 20/500  0.8 s/sample  ETA 7 min
+2026-11-12 10:29:39,822 INFO posext.eval.ruler:   niah_single_1 @ 8192: 30/500  0.9 s/sample  ETA 7 min
+2026-11-12 10:29:50,641 INFO posext.eval.ruler:   niah_single_1 @ 8192: 40/500  1.0 s/sample  ETA 7 min
+2026-11-12 10:29:56,408 INFO posext.eval.ruler:   niah_single_1 @ 8192: 50/500  0.9 s/sample  ETA 7 min
+2026-11-12 10:30:02,204 INFO posext.eval.ruler:   niah_single_1 @ 8192: 60/500  0.8 s/sample  ETA 6 min
+2026-11-12 10:30:07,931 INFO posext.eval.ruler:   niah_single_1 @ 8192: 70/500  0.8 s/sample  ETA 6 min
+2026-11-12 10:30:15,391 INFO posext.eval.ruler:   niah_single_1 @ 8192: 80/500  0.8 s/sample  ETA 6 min
+2026-11-12 10:30:22,825 INFO posext.eval.ruler:   niah_single_1 @ 8192: 90/500  0.8 s/sample  ETA 5 min
+2026-11-12 10:30:26,889 INFO posext.eval.ruler:   niah_single_1 @ 8192: 100/500  0.7 s/sample  ETA 5 min
+2026-11-12 10:30:37,754 INFO posext.eval.ruler:   niah_single_1 @ 8192: 110/500  0.8 s/sample  ETA 5 min
+2026-11-12 10:30:46,930 INFO posext.eval.ruler:   niah_single_1 @ 8192: 120/500  0.8 s/sample  ETA 5 min
+2026-11-12 10:30:56,108 INFO posext.eval.ruler:   niah_single_1 @ 8192: 130/500  0.8 s/sample  ETA 5 min
+2026-11-12 10:31:05,305 INFO posext.eval.ruler:   niah_single_1 @ 8192: 140/500  0.8 s/sample  ETA 5 min
+2026-11-12 10:31:12,796 INFO posext.eval.ruler:   niah_single_1 @ 8192: 150/500  0.8 s/sample  ETA 5 min
+2026-11-12 10:31:20,301 INFO posext.eval.ruler:   niah_single_1 @ 8192: 160/500  0.8 s/sample  ETA 5 min
+2026-11-12 10:31:27,793 INFO posext.eval.ruler:   niah_single_1 @ 8192: 170/500  0.8 s/sample  ETA 4 min
+2026-11-12 10:31:37,011 INFO posext.eval.ruler:   niah_single_1 @ 8192: 180/500  0.8 s/sample  ETA 4 min
+2026-11-12 10:31:46,213 INFO posext.eval.ruler:   niah_single_1 @ 8192: 190/500  0.8 s/sample  ETA 4 min
+2026-11-12 10:31:57,135 INFO posext.eval.ruler:   niah_single_1 @ 8192: 200/500  0.8 s/sample  ETA 4 min
+2026-11-12 10:32:04,635 INFO posext.eval.ruler:   niah_single_1 @ 8192: 210/500  0.8 s/sample  ETA 4 min
+2026-11-12 10:32:12,151 INFO posext.eval.ruler:   niah_single_1 @ 8192: 220/500  0.8 s/sample  ETA 4 min
+2026-11-12 10:32:23,064 INFO posext.eval.ruler:   niah_single_1 @ 8192: 230/500  0.8 s/sample  ETA 4 min
+2026-11-12 10:32:35,667 INFO posext.eval.ruler:   niah_single_1 @ 8192: 240/500  0.8 s/sample  ETA 4 min
+2026-11-12 10:32:46,553 INFO posext.eval.ruler:   niah_single_1 @ 8192: 250/500  0.9 s/sample  ETA 4 min
+2026-11-12 10:32:54,074 INFO posext.eval.ruler:   niah_single_1 @ 8192: 260/500  0.9 s/sample  ETA 3 min
+2026-11-12 10:33:06,694 INFO posext.eval.ruler:   niah_single_1 @ 8192: 270/500  0.9 s/sample  ETA 3 min
+2026-11-12 10:33:14,215 INFO posext.eval.ruler:   niah_single_1 @ 8192: 280/500  0.9 s/sample  ETA 3 min
+2026-11-12 10:33:26,851 INFO posext.eval.ruler:   niah_single_1 @ 8192: 290/500  0.9 s/sample  ETA 3 min
+2026-11-12 10:33:36,086 INFO posext.eval.ruler:   niah_single_1 @ 8192: 300/500  0.9 s/sample  ETA 3 min
+2026-11-12 10:33:43,648 INFO posext.eval.ruler:   niah_single_1 @ 8192: 310/500  0.9 s/sample  ETA 3 min
+2026-11-12 10:33:49,480 INFO posext.eval.ruler:   niah_single_1 @ 8192: 320/500  0.9 s/sample  ETA 3 min
+2026-11-12 10:33:56,988 INFO posext.eval.ruler:   niah_single_1 @ 8192: 330/500  0.9 s/sample  ETA 2 min
+2026-11-12 10:34:04,509 INFO posext.eval.ruler:   niah_single_1 @ 8192: 340/500  0.9 s/sample  ETA 2 min
+2026-11-12 10:34:15,428 INFO posext.eval.ruler:   niah_single_1 @ 8192: 350/500  0.9 s/sample  ETA 2 min
+2026-11-12 10:34:21,248 INFO posext.eval.ruler:   niah_single_1 @ 8192: 360/500  0.9 s/sample  ETA 2 min
+2026-11-12 10:34:32,182 INFO posext.eval.ruler:   niah_single_1 @ 8192: 370/500  0.9 s/sample  ETA 2 min
+2026-11-12 10:34:38,003 INFO posext.eval.ruler:   niah_single_1 @ 8192: 380/500  0.9 s/sample  ETA 2 min
+2026-11-12 10:34:48,908 INFO posext.eval.ruler:   niah_single_1 @ 8192: 390/500  0.9 s/sample  ETA 2 min
+2026-11-12 10:34:56,403 INFO posext.eval.ruler:   niah_single_1 @ 8192: 400/500  0.9 s/sample  ETA 1 min
+2026-11-12 10:35:03,926 INFO posext.eval.ruler:   niah_single_1 @ 8192: 410/500  0.9 s/sample  ETA 1 min
+2026-11-12 10:35:13,149 INFO posext.eval.ruler:   niah_single_1 @ 8192: 420/500  0.9 s/sample  ETA 1 min
+2026-11-12 10:35:20,657 INFO posext.eval.ruler:   niah_single_1 @ 8192: 430/500  0.9 s/sample  ETA 1 min
+2026-11-12 10:35:24,764 INFO posext.eval.ruler:   niah_single_1 @ 8192: 440/500  0.8 s/sample  ETA 1 min
+2026-11-12 10:35:32,595 INFO posext.eval.ruler:   niah_single_1 @ 8192: 450/500  0.8 s/sample  ETA 1 min
+2026-11-12 10:35:41,814 INFO posext.eval.ruler:   niah_single_1 @ 8192: 460/500  0.8 s/sample  ETA 1 min
+2026-11-12 10:35:56,167 INFO posext.eval.ruler:   niah_single_1 @ 8192: 470/500  0.9 s/sample  ETA 0 min
+2026-11-12 10:36:07,075 INFO posext.eval.ruler:   niah_single_1 @ 8192: 480/500  0.9 s/sample  ETA 0 min
+2026-11-12 10:36:16,294 INFO posext.eval.ruler:   niah_single_1 @ 8192: 490/500  0.9 s/sample  ETA 0 min
+2026-11-12 10:36:22,129 INFO posext.eval.ruler:   niah_single_1 @ 8192: 500/500  0.9 s/sample  ETA 0 min
+2026-11-12 10:36:22,285 INFO posext.eval.ruler: RULER niah_single_2 @ 8192: 0 done, 500 to go
+2026-11-12 10:36:34,702 INFO posext.eval.ruler:   niah_single_2 @ 8192: 10/500  1.2 s/sample  ETA 10 min
+2026-11-12 10:36:52,944 INFO posext.eval.ruler:   niah_single_2 @ 8192: 20/500  1.5 s/sample  ETA 12 min
+2026-11-12 10:37:09,538 INFO posext.eval.ruler:   niah_single_2 @ 8192: 30/500  1.6 s/sample  ETA 12 min
+2026-11-12 10:37:25,918 INFO posext.eval.ruler:   niah_single_2 @ 8192: 40/500  1.6 s/sample  ETA 12 min
+2026-11-12 10:37:37,813 INFO posext.eval.ruler:   niah_single_2 @ 8192: 50/500  1.5 s/sample  ETA 11 min
+2026-11-12 10:37:53,092 INFO posext.eval.ruler:   niah_single_2 @ 8192: 60/500  1.5 s/sample  ETA 11 min
+2026-11-12 10:38:09,070 INFO posext.eval.ruler:   niah_single_2 @ 8192: 70/500  1.5 s/sample  ETA 11 min
+2026-11-12 10:38:28,451 INFO posext.eval.ruler:   niah_single_2 @ 8192: 80/500  1.6 s/sample  ETA 11 min
+2026-11-12 10:38:44,427 INFO posext.eval.ruler:   niah_single_2 @ 8192: 90/500  1.6 s/sample  ETA 11 min
+2026-11-12 10:39:01,450 INFO posext.eval.ruler:   niah_single_2 @ 8192: 100/500  1.6 s/sample  ETA 11 min
+2026-11-12 10:39:17,429 INFO posext.eval.ruler:   niah_single_2 @ 8192: 110/500  1.6 s/sample  ETA 10 min
+2026-11-12 10:39:28,536 INFO posext.eval.ruler:   niah_single_2 @ 8192: 120/500  1.6 s/sample  ETA 10 min
+2026-11-12 10:39:41,693 INFO posext.eval.ruler:   niah_single_2 @ 8192: 130/500  1.5 s/sample  ETA 9 min
+2026-11-12 10:39:53,472 INFO posext.eval.ruler:   niah_single_2 @ 8192: 140/500  1.5 s/sample  ETA 9 min
+2026-11-12 10:40:11,454 INFO posext.eval.ruler:   niah_single_2 @ 8192: 150/500  1.5 s/sample  ETA 9 min
+2026-11-12 10:40:31,379 INFO posext.eval.ruler:   niah_single_2 @ 8192: 160/500  1.6 s/sample  ETA 9 min
+2026-11-12 10:40:46,721 INFO posext.eval.ruler:   niah_single_2 @ 8192: 170/500  1.6 s/sample  ETA 9 min
+2026-11-12 10:41:00,437 INFO posext.eval.ruler:   niah_single_2 @ 8192: 180/500  1.5 s/sample  ETA 8 min
+2026-11-12 10:41:12,930 INFO posext.eval.ruler:   niah_single_2 @ 8192: 190/500  1.5 s/sample  ETA 8 min
+2026-11-12 10:41:30,680 INFO posext.eval.ruler:   niah_single_2 @ 8192: 200/500  1.5 s/sample  ETA 8 min
+2026-11-12 10:41:46,502 INFO posext.eval.ruler:   niah_single_2 @ 8192: 210/500  1.5 s/sample  ETA 7 min
+2026-11-12 10:42:04,724 INFO posext.eval.ruler:   niah_single_2 @ 8192: 220/500  1.6 s/sample  ETA 7 min
+2026-11-12 10:42:23,012 INFO posext.eval.ruler:   niah_single_2 @ 8192: 230/500  1.6 s/sample  ETA 7 min
+2026-11-12 10:42:34,620 INFO posext.eval.ruler:   niah_single_2 @ 8192: 240/500  1.6 s/sample  ETA 7 min
+2026-11-12 10:42:47,830 INFO posext.eval.ruler:   niah_single_2 @ 8192: 250/500  1.5 s/sample  ETA 6 min
+2026-11-12 10:42:59,771 INFO posext.eval.ruler:   niah_single_2 @ 8192: 260/500  1.5 s/sample  ETA 6 min
+2026-11-12 10:43:14,688 INFO posext.eval.ruler:   niah_single_2 @ 8192: 270/500  1.5 s/sample  ETA 6 min
+2026-11-12 10:43:28,974 INFO posext.eval.ruler:   niah_single_2 @ 8192: 280/500  1.5 s/sample  ETA 6 min
+2026-11-12 10:43:44,041 INFO posext.eval.ruler:   niah_single_2 @ 8192: 290/500  1.5 s/sample  ETA 5 min
+2026-11-12 10:43:58,374 INFO posext.eval.ruler:   niah_single_2 @ 8192: 300/500  1.5 s/sample  ETA 5 min
+2026-11-12 10:44:14,419 INFO posext.eval.ruler:   niah_single_2 @ 8192: 310/500  1.5 s/sample  ETA 5 min
+2026-11-12 10:44:29,708 INFO posext.eval.ruler:   niah_single_2 @ 8192: 320/500  1.5 s/sample  ETA 5 min
+2026-11-12 10:44:40,663 INFO posext.eval.ruler:   niah_single_2 @ 8192: 330/500  1.5 s/sample  ETA 4 min
+2026-11-12 10:44:56,709 INFO posext.eval.ruler:   niah_single_2 @ 8192: 340/500  1.5 s/sample  ETA 4 min
+2026-11-12 10:45:10,507 INFO posext.eval.ruler:   niah_single_2 @ 8192: 350/500  1.5 s/sample  ETA 4 min
+2026-11-12 10:45:26,770 INFO posext.eval.ruler:   niah_single_2 @ 8192: 360/500  1.5 s/sample  ETA 4 min
+2026-11-12 10:45:39,423 INFO posext.eval.ruler:   niah_single_2 @ 8192: 370/500  1.5 s/sample  ETA 3 min
+2026-11-12 10:45:51,450 INFO posext.eval.ruler:   niah_single_2 @ 8192: 380/500  1.5 s/sample  ETA 3 min
+2026-11-12 10:46:09,385 INFO posext.eval.ruler:   niah_single_2 @ 8192: 390/500  1.5 s/sample  ETA 3 min
+2026-11-12 10:46:21,446 INFO posext.eval.ruler:   niah_single_2 @ 8192: 400/500  1.5 s/sample  ETA 2 min
+2026-11-12 10:46:34,015 INFO posext.eval.ruler:   niah_single_2 @ 8192: 410/500  1.5 s/sample  ETA 2 min
+2026-11-12 10:46:46,288 INFO posext.eval.ruler:   niah_single_2 @ 8192: 420/500  1.5 s/sample  ETA 2 min
+2026-11-12 10:47:02,832 INFO posext.eval.ruler:   niah_single_2 @ 8192: 430/500  1.5 s/sample  ETA 2 min
+2026-11-12 10:47:14,673 INFO posext.eval.ruler:   niah_single_2 @ 8192: 440/500  1.5 s/sample  ETA 1 min
+2026-11-12 10:47:29,803 INFO posext.eval.ruler:   niah_single_2 @ 8192: 450/500  1.5 s/sample  ETA 1 min
+2026-11-12 10:47:42,883 INFO posext.eval.ruler:   niah_single_2 @ 8192: 460/500  1.5 s/sample  ETA 1 min
+2026-11-12 10:47:57,231 INFO posext.eval.ruler:   niah_single_2 @ 8192: 470/500  1.5 s/sample  ETA 1 min
+2026-11-12 10:48:12,023 INFO posext.eval.ruler:   niah_single_2 @ 8192: 480/500  1.5 s/sample  ETA 0 min
+2026-11-12 10:48:29,007 INFO posext.eval.ruler:   niah_single_2 @ 8192: 490/500  1.5 s/sample  ETA 0 min
+2026-11-12 10:48:43,116 INFO posext.eval.ruler:   niah_single_2 @ 8192: 500/500  1.5 s/sample  ETA 0 min
+2026-11-12 10:48:43,184 INFO posext.eval.ruler: RULER niah_single_3 @ 8192: 0 done, 500 to go
+2026-11-12 10:49:02,342 INFO posext.eval.ruler:   niah_single_3 @ 8192: 10/500  1.9 s/sample  ETA 16 min
+2026-11-12 10:49:20,046 INFO posext.eval.ruler:   niah_single_3 @ 8192: 20/500  1.8 s/sample  ETA 15 min
+2026-11-12 10:49:39,395 INFO posext.eval.ruler:   niah_single_3 @ 8192: 30/500  1.9 s/sample  ETA 15 min
+2026-11-12 10:49:57,128 INFO posext.eval.ruler:   niah_single_3 @ 8192: 40/500  1.8 s/sample  ETA 14 min
+2026-11-12 10:50:17,164 INFO posext.eval.ruler:   niah_single_3 @ 8192: 50/500  1.9 s/sample  ETA 14 min
+2026-11-12 10:50:36,243 INFO posext.eval.ruler:   niah_single_3 @ 8192: 60/500  1.9 s/sample  ETA 14 min
+2026-11-12 10:50:55,620 INFO posext.eval.ruler:   niah_single_3 @ 8192: 70/500  1.9 s/sample  ETA 14 min
+2026-11-12 10:51:11,980 INFO posext.eval.ruler:   niah_single_3 @ 8192: 80/500  1.9 s/sample  ETA 13 min
+2026-11-12 10:51:31,082 INFO posext.eval.ruler:   niah_single_3 @ 8192: 90/500  1.9 s/sample  ETA 13 min
+2026-11-12 10:51:49,594 INFO posext.eval.ruler:   niah_single_3 @ 8192: 100/500  1.9 s/sample  ETA 12 min
+2026-11-12 10:52:10,126 INFO posext.eval.ruler:   niah_single_3 @ 8192: 110/500  1.9 s/sample  ETA 12 min
+2026-11-12 10:52:26,449 INFO posext.eval.ruler:   niah_single_3 @ 8192: 120/500  1.9 s/sample  ETA 12 min
+2026-11-12 10:52:45,645 INFO posext.eval.ruler:   niah_single_3 @ 8192: 130/500  1.9 s/sample  ETA 12 min
+2026-11-12 10:53:06,180 INFO posext.eval.ruler:   niah_single_3 @ 8192: 140/500  1.9 s/sample  ETA 11 min
+2026-11-12 10:53:25,199 INFO posext.eval.ruler:   niah_single_3 @ 8192: 150/500  1.9 s/sample  ETA 11 min
+2026-11-12 10:53:43,538 INFO posext.eval.ruler:   niah_single_3 @ 8192: 160/500  1.9 s/sample  ETA 11 min
+2026-11-12 10:54:02,688 INFO posext.eval.ruler:   niah_single_3 @ 8192: 170/500  1.9 s/sample  ETA 10 min
+2026-11-12 10:54:20,295 INFO posext.eval.ruler:   niah_single_3 @ 8192: 180/500  1.9 s/sample  ETA 10 min
+2026-11-12 10:54:40,689 INFO posext.eval.ruler:   niah_single_3 @ 8192: 190/500  1.9 s/sample  ETA 10 min
+2026-11-12 10:54:58,795 INFO posext.eval.ruler:   niah_single_3 @ 8192: 200/500  1.9 s/sample  ETA 9 min
+2026-11-12 10:55:19,261 INFO posext.eval.ruler:   niah_single_3 @ 8192: 210/500  1.9 s/sample  ETA 9 min
+2026-11-12 10:55:37,433 INFO posext.eval.ruler:   niah_single_3 @ 8192: 220/500  1.9 s/sample  ETA 9 min
+2026-11-12 10:55:57,341 INFO posext.eval.ruler:   niah_single_3 @ 8192: 230/500  1.9 s/sample  ETA 8 min
+2026-11-12 10:56:15,986 INFO posext.eval.ruler:   niah_single_3 @ 8192: 240/500  1.9 s/sample  ETA 8 min
+2026-11-12 10:56:33,670 INFO posext.eval.ruler:   niah_single_3 @ 8192: 250/500  1.9 s/sample  ETA 8 min
+2026-11-12 10:56:54,058 INFO posext.eval.ruler:   niah_single_3 @ 8192: 260/500  1.9 s/sample  ETA 8 min
+2026-11-12 10:57:10,771 INFO posext.eval.ruler:   niah_single_3 @ 8192: 270/500  1.9 s/sample  ETA 7 min
+2026-11-12 10:57:29,337 INFO posext.eval.ruler:   niah_single_3 @ 8192: 280/500  1.9 s/sample  ETA 7 min
+2026-11-12 10:57:45,551 INFO posext.eval.ruler:   niah_single_3 @ 8192: 290/500  1.9 s/sample  ETA 7 min
+2026-11-12 10:58:04,981 INFO posext.eval.ruler:   niah_single_3 @ 8192: 300/500  1.9 s/sample  ETA 6 min
+2026-11-12 10:58:24,049 INFO posext.eval.ruler:   niah_single_3 @ 8192: 310/500  1.9 s/sample  ETA 6 min
+2026-11-12 10:58:43,378 INFO posext.eval.ruler:   niah_single_3 @ 8192: 320/500  1.9 s/sample  ETA 6 min
+2026-11-12 10:59:03,833 INFO posext.eval.ruler:   niah_single_3 @ 8192: 330/500  1.9 s/sample  ETA 5 min
+2026-11-12 10:59:17,460 INFO posext.eval.ruler:   niah_single_3 @ 8192: 340/500  1.9 s/sample  ETA 5 min
+2026-11-12 10:59:38,163 INFO posext.eval.ruler:   niah_single_3 @ 8192: 350/500  1.9 s/sample  ETA 5 min
+2026-11-12 10:59:56,239 INFO posext.eval.ruler:   niah_single_3 @ 8192: 360/500  1.9 s/sample  ETA 4 min
+2026-11-12 11:00:14,751 INFO posext.eval.ruler:   niah_single_3 @ 8192: 370/500  1.9 s/sample  ETA 4 min
+2026-11-12 11:00:31,552 INFO posext.eval.ruler:   niah_single_3 @ 8192: 380/500  1.9 s/sample  ETA 4 min
+2026-11-12 11:00:48,122 INFO posext.eval.ruler:   niah_single_3 @ 8192: 390/500  1.9 s/sample  ETA 3 min
+2026-11-12 11:01:08,007 INFO posext.eval.ruler:   niah_single_3 @ 8192: 400/500  1.9 s/sample  ETA 3 min
+2026-11-12 11:01:27,123 INFO posext.eval.ruler:   niah_single_3 @ 8192: 410/500  1.9 s/sample  ETA 3 min
+2026-11-12 11:01:42,682 INFO posext.eval.ruler:   niah_single_3 @ 8192: 420/500  1.9 s/sample  ETA 2 min
+2026-11-12 11:01:59,087 INFO posext.eval.ruler:   niah_single_3 @ 8192: 430/500  1.9 s/sample  ETA 2 min
+2026-11-12 11:02:19,544 INFO posext.eval.ruler:   niah_single_3 @ 8192: 440/500  1.9 s/sample  ETA 2 min
+2026-11-12 11:02:36,165 INFO posext.eval.ruler:   niah_single_3 @ 8192: 450/500  1.9 s/sample  ETA 2 min
+2026-11-12 11:02:56,620 INFO posext.eval.ruler:   niah_single_3 @ 8192: 460/500  1.9 s/sample  ETA 1 min
+2026-11-12 11:03:14,490 INFO posext.eval.ruler:   niah_single_3 @ 8192: 470/500  1.9 s/sample  ETA 1 min
+2026-11-12 11:03:33,501 INFO posext.eval.ruler:   niah_single_3 @ 8192: 480/500  1.9 s/sample  ETA 1 min
+2026-11-12 11:03:51,182 INFO posext.eval.ruler:   niah_single_3 @ 8192: 490/500  1.9 s/sample  ETA 0 min
+2026-11-12 11:04:06,335 INFO posext.eval.ruler:   niah_single_3 @ 8192: 500/500  1.8 s/sample  ETA 0 min
+2026-11-12 11:04:06,392 INFO posext.eval.ruler: RULER niah_multikey_1 @ 8192: 0 done, 500 to go
+2026-11-12 11:04:26,044 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 10/500  2.0 s/sample  ETA 16 min
+2026-11-12 11:04:45,142 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 20/500  1.9 s/sample  ETA 16 min
+2026-11-12 11:05:04,459 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 30/500  1.9 s/sample  ETA 15 min
+2026-11-12 11:05:22,808 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 40/500  1.9 s/sample  ETA 15 min
+2026-11-12 11:05:36,943 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 50/500  1.8 s/sample  ETA 14 min
+2026-11-12 11:05:54,530 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 60/500  1.8 s/sample  ETA 13 min
+2026-11-12 11:06:15,120 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 70/500  1.8 s/sample  ETA 13 min
+2026-11-12 11:06:31,832 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 80/500  1.8 s/sample  ETA 13 min
+2026-11-12 11:06:51,481 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 90/500  1.8 s/sample  ETA 13 min
+2026-11-12 11:07:09,089 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 100/500  1.8 s/sample  ETA 12 min
+2026-11-12 11:07:26,507 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 110/500  1.8 s/sample  ETA 12 min
+2026-11-12 11:07:43,764 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 120/500  1.8 s/sample  ETA 11 min
+2026-11-12 11:08:02,148 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 130/500  1.8 s/sample  ETA 11 min
+2026-11-12 11:08:19,872 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 140/500  1.8 s/sample  ETA 11 min
+2026-11-12 11:08:38,784 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 150/500  1.8 s/sample  ETA 11 min
+2026-11-12 11:08:56,422 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 160/500  1.8 s/sample  ETA 10 min
+2026-11-12 11:09:15,364 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 170/500  1.8 s/sample  ETA 10 min
+2026-11-12 11:09:31,365 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 180/500  1.8 s/sample  ETA 10 min
+2026-11-12 11:09:49,259 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 190/500  1.8 s/sample  ETA 9 min
+2026-11-12 11:10:05,000 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 200/500  1.8 s/sample  ETA 9 min
+2026-11-12 11:10:19,795 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 210/500  1.8 s/sample  ETA 9 min
+2026-11-12 11:10:39,302 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 220/500  1.8 s/sample  ETA 8 min
+2026-11-12 11:10:58,878 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 230/500  1.8 s/sample  ETA 8 min
+2026-11-12 11:11:17,801 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 240/500  1.8 s/sample  ETA 8 min
+2026-11-12 11:11:37,141 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 250/500  1.8 s/sample  ETA 8 min
+2026-11-12 11:11:53,674 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 260/500  1.8 s/sample  ETA 7 min
+2026-11-12 11:12:09,959 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 270/500  1.8 s/sample  ETA 7 min
+2026-11-12 11:12:25,731 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 280/500  1.8 s/sample  ETA 7 min
+2026-11-12 11:12:43,442 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 290/500  1.8 s/sample  ETA 6 min
+2026-11-12 11:13:04,408 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 300/500  1.8 s/sample  ETA 6 min
+2026-11-12 11:13:24,218 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 310/500  1.8 s/sample  ETA 6 min
+2026-11-12 11:13:43,399 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 320/500  1.8 s/sample  ETA 5 min
+2026-11-12 11:14:01,705 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 330/500  1.8 s/sample  ETA 5 min
+2026-11-12 11:14:20,406 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 340/500  1.8 s/sample  ETA 5 min
+2026-11-12 11:14:40,240 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 350/500  1.8 s/sample  ETA 5 min
+2026-11-12 11:15:00,238 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 360/500  1.8 s/sample  ETA 4 min
+2026-11-12 11:15:17,922 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 370/500  1.8 s/sample  ETA 4 min
+2026-11-12 11:15:35,260 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 380/500  1.8 s/sample  ETA 4 min
+2026-11-12 11:15:54,118 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 390/500  1.8 s/sample  ETA 3 min
+2026-11-12 11:16:11,540 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 400/500  1.8 s/sample  ETA 3 min
+2026-11-12 11:16:32,493 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 410/500  1.8 s/sample  ETA 3 min
+2026-11-12 11:16:50,365 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 420/500  1.8 s/sample  ETA 2 min
+2026-11-12 11:17:07,929 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 430/500  1.8 s/sample  ETA 2 min
+2026-11-12 11:17:26,956 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 440/500  1.8 s/sample  ETA 2 min
+2026-11-12 11:17:47,071 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 450/500  1.8 s/sample  ETA 2 min
+2026-11-12 11:18:04,871 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 460/500  1.8 s/sample  ETA 1 min
+2026-11-12 11:18:23,559 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 470/500  1.8 s/sample  ETA 1 min
+2026-11-12 11:18:41,702 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 480/500  1.8 s/sample  ETA 1 min
+2026-11-12 11:19:00,546 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 490/500  1.8 s/sample  ETA 0 min
+2026-11-12 11:19:14,185 INFO posext.eval.ruler:   niah_multikey_1 @ 8192: 500/500  1.8 s/sample  ETA 0 min
+2026-11-12 11:19:14,237 INFO posext.eval.ruler: RULER niah_multikey_2 @ 8192: 0 done, 500 to go
+2026-11-12 11:19:19,965 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 10/500  0.6 s/sample  ETA 5 min
+2026-11-12 11:19:30,857 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 20/500  0.8 s/sample  ETA 7 min
+2026-11-12 11:19:41,707 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 30/500  0.9 s/sample  ETA 7 min
+2026-11-12 11:19:50,877 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 40/500  0.9 s/sample  ETA 7 min
+2026-11-12 11:20:01,581 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 50/500  0.9 s/sample  ETA 7 min
+2026-11-12 11:20:13,869 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 60/500  1.0 s/sample  ETA 7 min
+2026-11-12 11:20:29,786 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 70/500  1.1 s/sample  ETA 8 min
+2026-11-12 11:20:37,135 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 80/500  1.0 s/sample  ETA 7 min
+2026-11-12 11:20:49,548 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 90/500  1.1 s/sample  ETA 7 min
+2026-11-12 11:21:00,410 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 100/500  1.1 s/sample  ETA 7 min
+2026-11-12 11:21:06,276 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 110/500  1.0 s/sample  ETA 7 min
+2026-11-12 11:21:15,350 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 120/500  1.0 s/sample  ETA 6 min
+2026-11-12 11:21:26,174 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 130/500  1.0 s/sample  ETA 6 min
+2026-11-12 11:21:31,939 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 140/500  1.0 s/sample  ETA 6 min
+2026-11-12 11:21:41,065 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 150/500  1.0 s/sample  ETA 6 min
+2026-11-12 11:21:50,248 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 160/500  1.0 s/sample  ETA 6 min
+2026-11-12 11:21:59,471 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 170/500  1.0 s/sample  ETA 5 min
+2026-11-12 11:22:08,588 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 180/500  1.0 s/sample  ETA 5 min
+2026-11-12 11:22:19,500 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 190/500  1.0 s/sample  ETA 5 min
+2026-11-12 11:22:31,981 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 200/500  1.0 s/sample  ETA 5 min
+2026-11-12 11:22:42,794 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 210/500  1.0 s/sample  ETA 5 min
+2026-11-12 11:22:51,874 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 220/500  1.0 s/sample  ETA 5 min
+2026-11-12 11:23:02,730 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 230/500  1.0 s/sample  ETA 4 min
+2026-11-12 11:23:10,202 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 240/500  1.0 s/sample  ETA 4 min
+2026-11-12 11:23:24,436 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 250/500  1.0 s/sample  ETA 4 min
+2026-11-12 11:23:36,930 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 260/500  1.0 s/sample  ETA 4 min
+2026-11-12 11:23:44,454 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 270/500  1.0 s/sample  ETA 4 min
+2026-11-12 11:23:55,374 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 280/500  1.0 s/sample  ETA 4 min
+2026-11-12 11:24:06,185 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 290/500  1.0 s/sample  ETA 4 min
+2026-11-12 11:24:16,892 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 300/500  1.0 s/sample  ETA 3 min
+2026-11-12 11:24:31,047 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 310/500  1.0 s/sample  ETA 3 min
+2026-11-12 11:24:40,252 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 320/500  1.0 s/sample  ETA 3 min
+2026-11-12 11:24:51,003 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 330/500  1.0 s/sample  ETA 3 min
+2026-11-12 11:25:00,215 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 340/500  1.0 s/sample  ETA 3 min
+2026-11-12 11:25:07,646 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 350/500  1.0 s/sample  ETA 3 min
+2026-11-12 11:25:18,460 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 360/500  1.0 s/sample  ETA 2 min
+2026-11-12 11:25:29,224 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 370/500  1.0 s/sample  ETA 2 min
+2026-11-12 11:25:40,110 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 380/500  1.0 s/sample  ETA 2 min
+2026-11-12 11:25:54,297 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 390/500  1.0 s/sample  ETA 2 min
+2026-11-12 11:26:03,397 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 400/500  1.0 s/sample  ETA 2 min
+2026-11-12 11:26:15,859 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 410/500  1.0 s/sample  ETA 2 min
+2026-11-12 11:26:25,011 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 420/500  1.0 s/sample  ETA 1 min
+2026-11-12 11:26:32,483 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 430/500  1.0 s/sample  ETA 1 min
+2026-11-12 11:26:43,347 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 440/500  1.0 s/sample  ETA 1 min
+2026-11-12 11:26:55,874 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 450/500  1.0 s/sample  ETA 1 min
+2026-11-12 11:27:08,383 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 460/500  1.0 s/sample  ETA 1 min
+2026-11-12 11:27:17,577 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 470/500  1.0 s/sample  ETA 1 min
+2026-11-12 11:27:31,679 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 480/500  1.0 s/sample  ETA 0 min
+2026-11-12 11:27:40,785 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 490/500  1.0 s/sample  ETA 0 min
+2026-11-12 11:27:51,560 INFO posext.eval.ruler:   niah_multikey_2 @ 8192: 500/500  1.0 s/sample  ETA 0 min
+2026-11-12 11:27:51,595 INFO posext.eval.ruler: RULER niah_multikey_3 @ 8192: 0 done, 500 to go
+2026-11-12 11:28:02,622 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 10/500  1.1 s/sample  ETA 9 min
+2026-11-12 11:28:15,031 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 20/500  1.2 s/sample  ETA 9 min
+2026-11-12 11:28:27,399 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 30/500  1.2 s/sample  ETA 9 min
+2026-11-12 11:28:38,554 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 40/500  1.2 s/sample  ETA 9 min
+2026-11-12 11:28:52,643 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 50/500  1.2 s/sample  ETA 9 min
+2026-11-12 11:29:03,967 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 60/500  1.2 s/sample  ETA 9 min
+2026-11-12 11:29:16,049 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 70/500  1.2 s/sample  ETA 9 min
+2026-11-12 11:29:24,484 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 80/500  1.2 s/sample  ETA 8 min
+2026-11-12 11:29:34,146 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 90/500  1.1 s/sample  ETA 8 min
+2026-11-12 11:29:46,504 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 100/500  1.1 s/sample  ETA 8 min
+2026-11-12 11:30:00,193 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 110/500  1.2 s/sample  ETA 8 min
+2026-11-12 11:30:10,914 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 120/500  1.2 s/sample  ETA 7 min
+2026-11-12 11:30:22,914 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 130/500  1.2 s/sample  ETA 7 min
+2026-11-12 11:30:31,419 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 140/500  1.1 s/sample  ETA 7 min
+2026-11-12 11:30:42,189 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 150/500  1.1 s/sample  ETA 7 min
+2026-11-12 11:30:52,223 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 160/500  1.1 s/sample  ETA 6 min
+2026-11-12 11:31:06,314 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 170/500  1.1 s/sample  ETA 6 min
+2026-11-12 11:31:18,814 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 180/500  1.2 s/sample  ETA 6 min
+2026-11-12 11:31:32,854 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 190/500  1.2 s/sample  ETA 6 min
+2026-11-12 11:31:42,297 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 200/500  1.2 s/sample  ETA 6 min
+2026-11-12 11:31:50,422 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 210/500  1.1 s/sample  ETA 5 min
+2026-11-12 11:32:04,544 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 220/500  1.1 s/sample  ETA 5 min
+2026-11-12 11:32:14,500 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 230/500  1.1 s/sample  ETA 5 min
+2026-11-12 11:32:25,590 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 240/500  1.1 s/sample  ETA 5 min
+2026-11-12 11:32:33,626 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 250/500  1.1 s/sample  ETA 5 min
+2026-11-12 11:32:43,350 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 260/500  1.1 s/sample  ETA 4 min
+2026-11-12 11:32:54,264 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 270/500  1.1 s/sample  ETA 4 min
+2026-11-12 11:33:03,783 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 280/500  1.1 s/sample  ETA 4 min
+2026-11-12 11:33:12,835 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 290/500  1.1 s/sample  ETA 4 min
+2026-11-12 11:33:23,374 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 300/500  1.1 s/sample  ETA 4 min
+2026-11-12 11:33:39,809 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 310/500  1.1 s/sample  ETA 4 min
+2026-11-12 11:33:54,948 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 320/500  1.1 s/sample  ETA 3 min
+2026-11-12 11:34:10,091 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 330/500  1.1 s/sample  ETA 3 min
+2026-11-12 11:34:22,145 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 340/500  1.1 s/sample  ETA 3 min
+2026-11-12 11:34:37,259 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 350/500  1.2 s/sample  ETA 3 min
+2026-11-12 11:34:49,529 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 360/500  1.2 s/sample  ETA 3 min
+2026-11-12 11:34:58,993 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 370/500  1.2 s/sample  ETA 3 min
+2026-11-12 11:35:14,434 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 380/500  1.2 s/sample  ETA 2 min
+2026-11-12 11:35:24,370 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 390/500  1.2 s/sample  ETA 2 min
+2026-11-12 11:35:40,946 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 400/500  1.2 s/sample  ETA 2 min
+2026-11-12 11:35:54,891 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 410/500  1.2 s/sample  ETA 2 min
+2026-11-12 11:36:05,811 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 420/500  1.2 s/sample  ETA 2 min
+2026-11-12 11:36:15,414 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 430/500  1.2 s/sample  ETA 1 min
+2026-11-12 11:36:31,951 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 440/500  1.2 s/sample  ETA 1 min
+2026-11-12 11:36:47,115 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 450/500  1.2 s/sample  ETA 1 min
+2026-11-12 11:37:00,546 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 460/500  1.2 s/sample  ETA 1 min
+2026-11-12 11:37:14,141 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 470/500  1.2 s/sample  ETA 1 min
+2026-11-12 11:37:27,536 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 480/500  1.2 s/sample  ETA 0 min
+2026-11-12 11:37:37,029 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 490/500  1.2 s/sample  ETA 0 min
+2026-11-12 11:37:47,751 INFO posext.eval.ruler:   niah_multikey_3 @ 8192: 500/500  1.2 s/sample  ETA 0 min
+2026-11-12 11:37:47,816 INFO posext.eval.ruler: RULER niah_multivalue @ 8192: 0 done, 500 to go
+2026-11-12 11:38:08,833 INFO posext.eval.ruler:   niah_multivalue @ 8192: 10/500  2.1 s/sample  ETA 17 min
+2026-11-12 11:38:28,035 INFO posext.eval.ruler:   niah_multivalue @ 8192: 20/500  2.0 s/sample  ETA 16 min
+2026-11-12 11:38:49,123 INFO posext.eval.ruler:   niah_multivalue @ 8192: 30/500  2.0 s/sample  ETA 16 min
+2026-11-12 11:39:09,999 INFO posext.eval.ruler:   niah_multivalue @ 8192: 40/500  2.1 s/sample  ETA 16 min
+2026-11-12 11:39:29,409 INFO posext.eval.ruler:   niah_multivalue @ 8192: 50/500  2.0 s/sample  ETA 15 min
+2026-11-12 11:39:50,354 INFO posext.eval.ruler:   niah_multivalue @ 8192: 60/500  2.0 s/sample  ETA 15 min
+2026-11-12 11:40:11,372 INFO posext.eval.ruler:   niah_multivalue @ 8192: 70/500  2.1 s/sample  ETA 15 min
+2026-11-12 11:40:32,389 INFO posext.eval.ruler:   niah_multivalue @ 8192: 80/500  2.1 s/sample  ETA 14 min
+2026-11-12 11:40:53,476 INFO posext.eval.ruler:   niah_multivalue @ 8192: 90/500  2.1 s/sample  ETA 14 min
+2026-11-12 11:41:13,037 INFO posext.eval.ruler:   niah_multivalue @ 8192: 100/500  2.1 s/sample  ETA 14 min
+2026-11-12 11:41:34,127 INFO posext.eval.ruler:   niah_multivalue @ 8192: 110/500  2.1 s/sample  ETA 13 min
+2026-11-12 11:41:53,643 INFO posext.eval.ruler:   niah_multivalue @ 8192: 120/500  2.0 s/sample  ETA 13 min
+2026-11-12 11:42:14,733 INFO posext.eval.ruler:   niah_multivalue @ 8192: 130/500  2.1 s/sample  ETA 13 min
+2026-11-12 11:42:35,747 INFO posext.eval.ruler:   niah_multivalue @ 8192: 140/500  2.1 s/sample  ETA 12 min
+2026-11-12 11:42:56,451 INFO posext.eval.ruler:   niah_multivalue @ 8192: 150/500  2.1 s/sample  ETA 12 min
+2026-11-12 11:43:16,011 INFO posext.eval.ruler:   niah_multivalue @ 8192: 160/500  2.1 s/sample  ETA 12 min
+2026-11-12 11:43:36,960 INFO posext.eval.ruler:   niah_multivalue @ 8192: 170/500  2.1 s/sample  ETA 11 min
+2026-11-12 11:43:57,980 INFO posext.eval.ruler:   niah_multivalue @ 8192: 180/500  2.1 s/sample  ETA 11 min
+2026-11-12 11:44:18,638 INFO posext.eval.ruler:   niah_multivalue @ 8192: 190/500  2.1 s/sample  ETA 11 min
+2026-11-12 11:44:37,987 INFO posext.eval.ruler:   niah_multivalue @ 8192: 200/500  2.1 s/sample  ETA 10 min
+2026-11-12 11:44:58,062 INFO posext.eval.ruler:   niah_multivalue @ 8192: 210/500  2.0 s/sample  ETA 10 min
+2026-11-12 11:45:19,153 INFO posext.eval.ruler:   niah_multivalue @ 8192: 220/500  2.1 s/sample  ETA 10 min
+2026-11-12 11:45:40,176 INFO posext.eval.ruler:   niah_multivalue @ 8192: 230/500  2.1 s/sample  ETA 9 min
+2026-11-12 11:46:01,269 INFO posext.eval.ruler:   niah_multivalue @ 8192: 240/500  2.1 s/sample  ETA 9 min
+2026-11-12 11:46:22,359 INFO posext.eval.ruler:   niah_multivalue @ 8192: 250/500  2.1 s/sample  ETA 9 min
+2026-11-12 11:46:43,378 INFO posext.eval.ruler:   niah_multivalue @ 8192: 260/500  2.1 s/sample  ETA 8 min
+2026-11-12 11:47:04,400 INFO posext.eval.ruler:   niah_multivalue @ 8192: 270/500  2.1 s/sample  ETA 8 min
+2026-11-12 11:47:25,417 INFO posext.eval.ruler:   niah_multivalue @ 8192: 280/500  2.1 s/sample  ETA 8 min
+2026-11-12 11:47:46,511 INFO posext.eval.ruler:   niah_multivalue @ 8192: 290/500  2.1 s/sample  ETA 7 min
+2026-11-12 11:48:07,606 INFO posext.eval.ruler:   niah_multivalue @ 8192: 300/500  2.1 s/sample  ETA 7 min
+2026-11-12 11:48:28,699 INFO posext.eval.ruler:   niah_multivalue @ 8192: 310/500  2.1 s/sample  ETA 7 min
+2026-11-12 11:48:49,723 INFO posext.eval.ruler:   niah_multivalue @ 8192: 320/500  2.1 s/sample  ETA 6 min
+2026-11-12 11:49:09,427 INFO posext.eval.ruler:   niah_multivalue @ 8192: 330/500  2.1 s/sample  ETA 6 min
+2026-11-12 11:49:28,994 INFO posext.eval.ruler:   niah_multivalue @ 8192: 340/500  2.1 s/sample  ETA 5 min
+2026-11-12 11:49:50,012 INFO posext.eval.ruler:   niah_multivalue @ 8192: 350/500  2.1 s/sample  ETA 5 min
+2026-11-12 11:50:11,097 INFO posext.eval.ruler:   niah_multivalue @ 8192: 360/500  2.1 s/sample  ETA 5 min
+2026-11-12 11:50:32,120 INFO posext.eval.ruler:   niah_multivalue @ 8192: 370/500  2.1 s/sample  ETA 4 min
+2026-11-12 11:50:51,584 INFO posext.eval.ruler:   niah_multivalue @ 8192: 380/500  2.1 s/sample  ETA 4 min
+2026-11-12 11:51:12,538 INFO posext.eval.ruler:   niah_multivalue @ 8192: 390/500  2.1 s/sample  ETA 4 min
+2026-11-12 11:51:32,026 INFO posext.eval.ruler:   niah_multivalue @ 8192: 400/500  2.1 s/sample  ETA 3 min
+2026-11-12 11:51:53,114 INFO posext.eval.ruler:   niah_multivalue @ 8192: 410/500  2.1 s/sample  ETA 3 min
+2026-11-12 11:52:14,206 INFO posext.eval.ruler:   niah_multivalue @ 8192: 420/500  2.1 s/sample  ETA 3 min
+2026-11-12 11:52:35,295 INFO posext.eval.ruler:   niah_multivalue @ 8192: 430/500  2.1 s/sample  ETA 2 min
+2026-11-12 11:52:56,386 INFO posext.eval.ruler:   niah_multivalue @ 8192: 440/500  2.1 s/sample  ETA 2 min
+2026-11-12 11:53:17,475 INFO posext.eval.ruler:   niah_multivalue @ 8192: 450/500  2.1 s/sample  ETA 2 min
+2026-11-12 11:53:38,563 INFO posext.eval.ruler:   niah_multivalue @ 8192: 460/500  2.1 s/sample  ETA 1 min
+2026-11-12 11:53:57,900 INFO posext.eval.ruler:   niah_multivalue @ 8192: 470/500  2.1 s/sample  ETA 1 min
+2026-11-12 11:54:18,707 INFO posext.eval.ruler:   niah_multivalue @ 8192: 480/500  2.1 s/sample  ETA 1 min
+2026-11-12 11:54:39,796 INFO posext.eval.ruler:   niah_multivalue @ 8192: 490/500  2.1 s/sample  ETA 0 min
+2026-11-12 11:54:59,207 INFO posext.eval.ruler:   niah_multivalue @ 8192: 500/500  2.1 s/sample  ETA 0 min
+2026-11-12 11:54:59,319 INFO posext.eval.ruler: RULER niah_multiquery @ 8192: 0 done, 500 to go
+2026-11-12 11:55:17,426 INFO posext.eval.ruler:   niah_multiquery @ 8192: 10/500  1.8 s/sample  ETA 15 min
+2026-11-12 11:55:36,950 INFO posext.eval.ruler:   niah_multiquery @ 8192: 20/500  1.9 s/sample  ETA 15 min
+2026-11-12 11:55:54,455 INFO posext.eval.ruler:   niah_multiquery @ 8192: 30/500  1.8 s/sample  ETA 14 min
+2026-11-12 11:56:11,875 INFO posext.eval.ruler:   niah_multiquery @ 8192: 40/500  1.8 s/sample  ETA 14 min
+2026-11-12 11:56:26,633 INFO posext.eval.ruler:   niah_multiquery @ 8192: 50/500  1.7 s/sample  ETA 13 min
+2026-11-12 11:56:45,754 INFO posext.eval.ruler:   niah_multiquery @ 8192: 60/500  1.8 s/sample  ETA 13 min
+2026-11-12 11:57:03,456 INFO posext.eval.ruler:   niah_multiquery @ 8192: 70/500  1.8 s/sample  ETA 13 min
+2026-11-12 11:57:23,832 INFO posext.eval.ruler:   niah_multiquery @ 8192: 80/500  1.8 s/sample  ETA 13 min
+2026-11-12 11:57:42,336 INFO posext.eval.ruler:   niah_multiquery @ 8192: 90/500  1.8 s/sample  ETA 12 min
+2026-11-12 11:57:59,259 INFO posext.eval.ruler:   niah_multiquery @ 8192: 100/500  1.8 s/sample  ETA 12 min
+2026-11-12 11:58:18,331 INFO posext.eval.ruler:   niah_multiquery @ 8192: 110/500  1.8 s/sample  ETA 12 min
+2026-11-12 11:58:37,450 INFO posext.eval.ruler:   niah_multiquery @ 8192: 120/500  1.8 s/sample  ETA 12 min
+2026-11-12 11:58:56,475 INFO posext.eval.ruler:   niah_multiquery @ 8192: 130/500  1.8 s/sample  ETA 11 min
+2026-11-12 11:59:13,553 INFO posext.eval.ruler:   niah_multiquery @ 8192: 140/500  1.8 s/sample  ETA 11 min
+2026-11-12 11:59:28,466 INFO posext.eval.ruler:   niah_multiquery @ 8192: 150/500  1.8 s/sample  ETA 10 min
+2026-11-12 11:59:47,444 INFO posext.eval.ruler:   niah_multiquery @ 8192: 160/500  1.8 s/sample  ETA 10 min
+2026-11-12 12:00:06,455 INFO posext.eval.ruler:   niah_multiquery @ 8192: 170/500  1.8 s/sample  ETA 10 min
+2026-11-12 12:00:22,997 INFO posext.eval.ruler:   niah_multiquery @ 8192: 180/500  1.8 s/sample  ETA 10 min
+2026-11-12 12:00:42,118 INFO posext.eval.ruler:   niah_multiquery @ 8192: 190/500  1.8 s/sample  ETA 9 min
+2026-11-12 12:01:02,104 INFO posext.eval.ruler:   niah_multiquery @ 8192: 200/500  1.8 s/sample  ETA 9 min
+2026-11-12 12:01:19,717 INFO posext.eval.ruler:   niah_multiquery @ 8192: 210/500  1.8 s/sample  ETA 9 min
+2026-11-12 12:01:39,313 INFO posext.eval.ruler:   niah_multiquery @ 8192: 220/500  1.8 s/sample  ETA 8 min
+2026-11-12 12:01:56,204 INFO posext.eval.ruler:   niah_multiquery @ 8192: 230/500  1.8 s/sample  ETA 8 min
+2026-11-12 12:02:14,733 INFO posext.eval.ruler:   niah_multiquery @ 8192: 240/500  1.8 s/sample  ETA 8 min
+2026-11-12 12:02:34,314 INFO posext.eval.ruler:   niah_multiquery @ 8192: 250/500  1.8 s/sample  ETA 8 min
+2026-11-12 12:02:53,661 INFO posext.eval.ruler:   niah_multiquery @ 8192: 260/500  1.8 s/sample  ETA 7 min
+2026-11-12 12:03:10,934 INFO posext.eval.ruler:   niah_multiquery @ 8192: 270/500  1.8 s/sample  ETA 7 min
+2026-11-12 12:03:30,621 INFO posext.eval.ruler:   niah_multiquery @ 8192: 280/500  1.8 s/sample  ETA 7 min
+2026-11-12 12:03:48,949 INFO posext.eval.ruler:   niah_multiquery @ 8192: 290/500  1.8 s/sample  ETA 6 min
+2026-11-12 12:04:07,243 INFO posext.eval.ruler:   niah_multiquery @ 8192: 300/500  1.8 s/sample  ETA 6 min
+2026-11-12 12:04:25,654 INFO posext.eval.ruler:   niah_multiquery @ 8192: 310/500  1.8 s/sample  ETA 6 min
+2026-11-12 12:04:45,257 INFO posext.eval.ruler:   niah_multiquery @ 8192: 320/500  1.8 s/sample  ETA 5 min
+2026-11-12 12:05:01,981 INFO posext.eval.ruler:   niah_multiquery @ 8192: 330/500  1.8 s/sample  ETA 5 min
+2026-11-12 12:05:20,434 INFO posext.eval.ruler:   niah_multiquery @ 8192: 340/500  1.8 s/sample  ETA 5 min
+2026-11-12 12:05:35,730 INFO posext.eval.ruler:   niah_multiquery @ 8192: 350/500  1.8 s/sample  ETA 5 min
+2026-11-12 12:05:53,549 INFO posext.eval.ruler:   niah_multiquery @ 8192: 360/500  1.8 s/sample  ETA 4 min
+2026-11-12 12:06:13,981 INFO posext.eval.ruler:   niah_multiquery @ 8192: 370/500  1.8 s/sample  ETA 4 min
+2026-11-12 12:06:33,027 INFO posext.eval.ruler:   niah_multiquery @ 8192: 380/500  1.8 s/sample  ETA 4 min
+2026-11-12 12:06:53,423 INFO posext.eval.ruler:   niah_multiquery @ 8192: 390/500  1.8 s/sample  ETA 3 min
+2026-11-12 12:07:12,539 INFO posext.eval.ruler:   niah_multiquery @ 8192: 400/500  1.8 s/sample  ETA 3 min
+2026-11-12 12:07:31,196 INFO posext.eval.ruler:   niah_multiquery @ 8192: 410/500  1.8 s/sample  ETA 3 min
+2026-11-12 12:07:48,786 INFO posext.eval.ruler:   niah_multiquery @ 8192: 420/500  1.8 s/sample  ETA 2 min
+2026-11-12 12:08:06,864 INFO posext.eval.ruler:   niah_multiquery @ 8192: 430/500  1.8 s/sample  ETA 2 min
+2026-11-12 12:08:26,217 INFO posext.eval.ruler:   niah_multiquery @ 8192: 440/500  1.8 s/sample  ETA 2 min
+2026-11-12 12:08:44,655 INFO posext.eval.ruler:   niah_multiquery @ 8192: 450/500  1.8 s/sample  ETA 2 min
+2026-11-12 12:08:59,996 INFO posext.eval.ruler:   niah_multiquery @ 8192: 460/500  1.8 s/sample  ETA 1 min
+2026-11-12 12:09:16,364 INFO posext.eval.ruler:   niah_multiquery @ 8192: 470/500  1.8 s/sample  ETA 1 min
+2026-11-12 12:09:35,388 INFO posext.eval.ruler:   niah_multiquery @ 8192: 480/500  1.8 s/sample  ETA 1 min
+2026-11-12 12:09:54,647 INFO posext.eval.ruler:   niah_multiquery @ 8192: 490/500  1.8 s/sample  ETA 0 min
+2026-11-12 12:10:11,107 INFO posext.eval.ruler:   niah_multiquery @ 8192: 500/500  1.8 s/sample  ETA 0 min
+2026-11-12 12:10:11,180 INFO posext.eval.ruler: Wrote outputs/sweeps/pose_pos_temp_layer_init0/ruler_test/rq1_learned_freq_temp_layer__lr3e-2/result_8192.json
+{
+  "benchmark": "ruler",
+  "ruler_commit": "db43f92ff634bbce1c33d1fb15858aec4bba509a",
+  "split": "test",
+  "seed": [
+    42
+  ],
+  "tokenizer": [
+    "allenai/OLMo-2-0425-1B"
+  ],
+  "tasks": [
+    "niah_single_1",
+    "niah_single_2",
+    "niah_single_3",
+    "niah_multikey_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "niah_multivalue",
+    "niah_multiquery"
+  ],
+  "lengths": [
+    8192
+  ],
+  "scores": {
+    "8192": {
+      "niah_single_1": 75.0,
+      "niah_single_2": 82.8,
+      "niah_single_3": 46.8,
+      "niah_multikey_1": 27.4,
+      "niah_multikey_2": 3.6,
+      "niah_multikey_3": 0.0,
+      "niah_multivalue": 27.45,
+      "niah_multiquery": 31.35
+    }
+  },
+  "avg_by_length": {
+    "8192": 36.8
+  },
+  "avg": 36.8,
+  "n": {
+    "8192": {
+      "niah_single_1": 500,
+      "niah_single_2": 500,
+      "niah_single_3": 500,
+      "niah_multikey_1": 500,
+      "niah_multikey_2": 500,
+      "niah_multikey_3": 500,
+      "niah_multivalue": 500,
+      "niah_multiquery": 500
+    }
+  },
+  "nulls": {
+    "8192": {
+      "niah_single_1": 0,
+      "niah_single_2": 0,
+      "niah_single_3": 0,
+      "niah_multikey_1": 0,
+      "niah_multikey_2": 0,
+      "niah_multikey_3": 0,
+      "niah_multivalue": 0,
+      "niah_multiquery": 0
+    }
+  },
+  "complete": true,
+  "tag": "rq1_learned_freq_temp_layer__lr3e-2",
+  "source": "outputs/sweeps/pose_pos_temp_layer_init0/runs/rq1_learned_freq_temp_layer__lr3e-2",
+  "pred_dir": "outputs/sweeps/pose_pos_temp_layer_init0/ruler_test/rq1_learned_freq_temp_layer__lr3e-2",
+  "max_samples": null
+}
+Sweep pose_pos_temp_layer_init0  (submitted 2026-11-12 08:53:58, jobs {'train': '8589440', 'select': '8589441', 'test': '8589442', 'ruler': '8589443', 'ruler_merge': '8589444'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_layer__lr1e-2                              yes      21.423    0.653
+rq1_learned_freq_temp_layer__lr3e-2                              yes      19.315    0.613  <- selected
+
+Test results for rq1_learned_freq_temp_layer__lr3e-2:
+  ppl      PPL@4096=18.333  PPL@8192=19.021  PPL@16384=21.498   (results/sweeps/pose_pos_temp_layer_init0/test_ppl_rq1_learned_freq_temp_layer__lr3e-2.json)
+  passkey  acc=0.587  by length {'4096': 0.82, '8192': 0.94, '16384': 0.0}   (results/sweeps/pose_pos_temp_layer_init0/test_passkey_rq1_learned_freq_temp_layer__lr3e-2.json)
+  ruler    pending (lengths with results: 4096, 8192)   (results/sweeps/pose_pos_temp_layer_init0/test_ruler_rq1_learned_freq_temp_layer__lr3e-2.json)

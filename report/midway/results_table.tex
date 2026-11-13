@@ -1,0 +1,52 @@
+% !TEX root = main.tex
+% chktex-file 3
+% chktex-file 8
+% chktex-file 12
+% chktex-file 13
+% chktex-file 21
+% chktex-file 24
+% chktex-file 46
+% Table 1 (single column) for the Results section. Passkey: standard prompt
+% (test_passkey_v2_n50_*.json). Parameter counts are in the caption.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.4pt}
+\begin{tabular}{@{}l rrr r rrr@{}}
+\toprule
+& \multicolumn{3}{c}{PPL $\downarrow$} & PK $\uparrow$ & \multicolumn{3}{c}{RULER $\uparrow$} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-5}\cmidrule(lr){6-8}
+Method & 4k & 8k & 16k & 16k & 4k & 8k & 16k \\
+\midrule
+Original     & \textbf{16.4} & 124.6 & 430.3 & 0 & \textbf{72.8} & 0.0 & 0.0 \\
+PI ($\times 4$)   & 109.1 & 118.5 & 110.9 & 0 & 0.0 & 0.0 & 0.0 \\
+YaRN, default     & 27.1 & 40.1 & 41.7 & 1 & 8.3 & 6.6 & 1.2 \\
+YaRN, tuned       & 19.9 & 22.9 & 21.4 & 80 & 45.7 & 35.4 & 24.0 \\
+\midrule
+\multicolumn{8}{l}{\textit{Frequencies only, from $a{=}0$}} \\
+\quad Shared      & 21.8 & 23.9 & 22.5 & 0 & 12.2 & 4.7 & 0.2 \\
+\quad Per layer   & 20.0 & 21.3 & 19.5 & 0 & 39.3 & 21.9 & 1.3 \\
+\quad Per head    & 20.7 & 21.8 & 19.7 & 0 & 5.8 & 0.8 & 0.0 \\
+\multicolumn{8}{l}{\textit{Freq.\ + temperature, from $a{=}0$}} \\
+\quad Shared      & 18.1 & 18.7 & 16.2 & \textbf{81} & 61.0 & 49.1 & 36.8 \\
+\quad Per layer   & 17.9 & 18.4 & 16.0 & 1 & 59.9 & 43.7 & 33.3 \\
+\quad Per head    & 18.7 & 19.4 & 17.2 & 0 & 24.5 & 21.3 & 5.9 \\
+\multicolumn{8}{l}{\textit{Freq.\ + temperature, from YaRN}} \\
+\quad Shared      & 17.3 & 17.8 & 15.4 & 80 & 61.4 & 49.0 & 36.2 \\
+\quad Per layer   & 17.2 & 17.6 & 15.3 & 4 & 58.6 & 50.1 & 35.6 \\
+\quad Per head    & 17.0 & \textbf{17.4} & \textbf{15.1} & 0 & 69.8 & \textbf{62.9} & \textbf{53.1} \\
+\multicolumn{8}{l}{\textit{PoSE (4k text) + freq.\ + temp., from YaRN}} \\
+\quad Shared      & 17.1 & 17.7 & 17.6 & 0 & 72.1 & 56.7 & 0.1 \\
+\quad Per layer   & 17.3 & 17.8 & 18.6 & 0 & 65.8 & 47.5 & 0.0 \\
+\quad Per head    & 17.1 & 17.6 & 16.5 & 0 & 59.1 & 43.1 & 1.1 \\
+\bottomrule
+\end{tabular}
+\caption{Test results. Trainable parameters: 0 for the baselines; frequency scales
+64 (shared), 1,024 (per layer) or 16,384 (per head), plus 512 for the temperature.
+PPL: PG-19 perplexity. PK: passkey accuracy (\%) at 16k with the standard prompt, 250 prompts.
+RULER: average over the 8 tasks (\%), 500 samples each.
+PoSE from $a{=}0$ behaves the same as PoSE from YaRN.
+Bold: best.}
+\label{tab:main}
+\end{table}

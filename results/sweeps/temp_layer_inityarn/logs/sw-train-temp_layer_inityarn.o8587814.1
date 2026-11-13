@@ -1,0 +1,170 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-j10  JOB_ID=8587814  TASK=1  STAGE=variant  SWEEP_DIR=outputs/sweeps/temp_layer_inityarn
+Thu Nov 12 01:25:52 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA L40S                    On  |   00000000:0D:00.0 Off |                    0 |
+| N/A   37C    P8             34W /  350W |       0MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA L40S                    On  |   00000000:B5:00.0 Off |                    0 |
+| N/A   39C    P8             37W /  350W |       0MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+2026-11-12 01:25:59,135 INFO posext.pipeline: Variant 1/2: rq1_learned_freq_temp_layer__lr1e-2
+2026-11-12 01:25:59,135 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.train --config outputs/sweeps/temp_layer_inityarn/configs/rq1_learned_freq_temp_layer__lr1e-2.yaml --device cuda --no-wandb --resume
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1709.17it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.29it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.50it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.20it/s]
+2026-11-12 01:26:04,045 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+2026-11-12 01:26:04,047 INFO posext.models.build: Trainable parameters: 1,536 of 1,484,918,272 (0.000103%) in ['model.posext.a', 'model.posext.tau', 'model.posext.gamma']
+2026-11-12 01:26:04,056 INFO posext.train: Training rq1_learned_freq_temp_layer__lr1e-2 for 500 steps on cuda (regime=long, seq_len=16384, target_len=16384)
+2026-11-12 01:26:06,508 INFO posext.train: step 1/500  loss=3.2643  ppl?26.16  grad_norm=50.431  2.5s
+2026-11-12 01:26:24,504 INFO posext.train: step 10/500  loss=2.4136  ppl?11.17  grad_norm=35.861  20.4s
+2026-11-12 01:26:44,590 INFO posext.train: step 20/500  loss=2.7522  ppl?15.68  grad_norm=19.839  40.5s
+2026-11-12 01:27:04,832 INFO posext.train: step 30/500  loss=2.5993  ppl?13.45  grad_norm=9.338  60.8s
+2026-11-12 01:27:24,961 INFO posext.train: step 40/500  loss=2.6349  ppl?13.94  grad_norm=8.319  80.9s
+2026-11-12 01:27:45,107 INFO posext.train: step 50/500  loss=2.6427  ppl?14.05  grad_norm=18.276  101.1s
+2026-11-12 01:28:05,258 INFO posext.train: step 60/500  loss=2.5044  ppl?12.24  grad_norm=11.983  121.2s
+2026-11-12 01:28:25,400 INFO posext.train: step 70/500  loss=2.5960  ppl?13.41  grad_norm=7.797  141.3s
+2026-11-12 01:28:45,535 INFO posext.train: step 80/500  loss=2.5588  ppl?12.92  grad_norm=8.735  161.5s
+2026-11-12 01:29:05,656 INFO posext.train: step 90/500  loss=2.5568  ppl?12.89  grad_norm=8.185  181.6s
+2026-11-12 01:29:25,829 INFO posext.train: step 100/500  loss=2.5368  ppl?12.64  grad_norm=20.878  201.8s
+2026-11-12 01:29:25,875 INFO posext.train: Saved checkpoint at step 100 -> outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2
+2026-11-12 01:29:45,992 INFO posext.train: step 110/500  loss=2.5287  ppl?12.54  grad_norm=8.846  221.9s
+2026-11-12 01:30:06,116 INFO posext.train: step 120/500  loss=2.5708  ppl?13.08  grad_norm=6.228  242.1s
+2026-11-12 01:30:26,230 INFO posext.train: step 130/500  loss=2.5739  ppl?13.12  grad_norm=8.267  262.2s
+2026-11-12 01:30:46,343 INFO posext.train: step 140/500  loss=2.6807  ppl?14.60  grad_norm=7.208  282.3s
+2026-11-12 01:31:06,440 INFO posext.train: step 150/500  loss=2.4670  ppl?11.79  grad_norm=5.280  302.4s
+2026-11-12 01:31:26,543 INFO posext.train: step 160/500  loss=2.2474  ppl?9.46  grad_norm=3.524  322.5s
+2026-11-12 01:31:46,635 INFO posext.train: step 170/500  loss=2.5046  ppl?12.24  grad_norm=13.745  342.6s
+2026-11-12 01:32:06,723 INFO posext.train: step 180/500  loss=2.5105  ppl?12.31  grad_norm=3.511  362.7s
+2026-11-12 01:32:26,824 INFO posext.train: step 190/500  loss=2.6619  ppl?14.32  grad_norm=11.818  382.8s
+2026-11-12 01:32:46,917 INFO posext.train: step 200/500  loss=2.5547  ppl?12.87  grad_norm=27.383  402.9s
+2026-11-12 01:32:46,925 INFO posext.train: Saved checkpoint at step 200 -> outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2
+2026-11-12 01:33:07,022 INFO posext.train: step 210/500  loss=2.5757  ppl?13.14  grad_norm=14.784  423.0s
+2026-11-12 01:33:27,113 INFO posext.train: step 220/500  loss=2.4290  ppl?11.35  grad_norm=7.169  443.1s
+2026-11-12 01:33:47,209 INFO posext.train: step 230/500  loss=2.5047  ppl?12.24  grad_norm=8.865  463.2s
+2026-11-12 01:34:07,302 INFO posext.train: step 240/500  loss=2.5804  ppl?13.20  grad_norm=13.017  483.2s
+2026-11-12 01:34:27,396 INFO posext.train: step 250/500  loss=2.4990  ppl?12.17  grad_norm=8.502  503.3s
+2026-11-12 01:34:47,490 INFO posext.train: step 260/500  loss=2.5152  ppl?12.37  grad_norm=10.186  523.4s
+2026-11-12 01:35:07,595 INFO posext.train: step 270/500  loss=2.4969  ppl?12.14  grad_norm=3.575  543.5s
+2026-11-12 01:35:27,696 INFO posext.train: step 280/500  loss=2.5266  ppl?12.51  grad_norm=3.938  563.6s
+2026-11-12 01:35:47,792 INFO posext.train: step 290/500  loss=2.6129  ppl?13.64  grad_norm=1.951  583.7s
+2026-11-12 01:36:07,897 INFO posext.train: step 300/500  loss=2.5347  ppl?12.61  grad_norm=4.449  603.8s
+2026-11-12 01:36:07,944 INFO posext.train: Saved checkpoint at step 300 -> outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2
+2026-11-12 01:36:28,135 INFO posext.train: step 310/500  loss=2.5217  ppl?12.45  grad_norm=2.325  624.1s
+2026-11-12 01:36:48,328 INFO posext.train: step 320/500  loss=2.5144  ppl?12.36  grad_norm=7.023  644.3s
+2026-11-12 01:37:08,523 INFO posext.train: step 330/500  loss=2.5720  ppl?13.09  grad_norm=2.430  664.5s
+2026-11-12 01:37:28,716 INFO posext.train: step 340/500  loss=2.3307  ppl?10.28  grad_norm=11.483  684.7s
+2026-11-12 01:37:48,909 INFO posext.train: step 350/500  loss=2.5809  ppl?13.21  grad_norm=1.654  704.9s
+2026-11-12 01:38:09,106 INFO posext.train: step 360/500  loss=2.4869  ppl?12.02  grad_norm=3.195  725.0s
+2026-11-12 01:38:29,299 INFO posext.train: step 370/500  loss=2.5466  ppl?12.76  grad_norm=2.426  745.2s
+2026-11-12 01:38:49,490 INFO posext.train: step 380/500  loss=2.5599  ppl?12.93  grad_norm=3.205  765.4s
+2026-11-12 01:39:09,684 INFO posext.train: step 390/500  loss=2.5470  ppl?12.77  grad_norm=1.527  785.6s
+2026-11-12 01:39:29,879 INFO posext.train: step 400/500  loss=2.5428  ppl?12.72  grad_norm=2.632  805.8s
+2026-11-12 01:39:29,889 INFO posext.train: Saved checkpoint at step 400 -> outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2
+2026-11-12 01:39:50,079 INFO posext.train: step 410/500  loss=2.5698  ppl?13.06  grad_norm=4.067  826.0s
+2026-11-12 01:40:10,273 INFO posext.train: step 420/500  loss=2.6075  ppl?13.56  grad_norm=2.478  846.2s
+2026-11-12 01:40:30,465 INFO posext.train: step 430/500  loss=2.4251  ppl?11.30  grad_norm=1.715  866.4s
+2026-11-12 01:40:50,661 INFO posext.train: step 440/500  loss=2.4625  ppl?11.73  grad_norm=2.372  886.6s
+2026-11-12 01:41:10,854 INFO posext.train: step 450/500  loss=2.3936  ppl?10.95  grad_norm=1.628  906.8s
+2026-11-12 01:41:31,049 INFO posext.train: step 460/500  loss=2.6020  ppl?13.49  grad_norm=1.470  927.0s
+2026-11-12 01:41:51,241 INFO posext.train: step 470/500  loss=2.6267  ppl?13.83  grad_norm=4.359  947.2s
+2026-11-12 01:42:11,435 INFO posext.train: step 480/500  loss=2.5202  ppl?12.43  grad_norm=2.432  967.4s
+2026-11-12 01:42:31,629 INFO posext.train: step 490/500  loss=2.5237  ppl?12.47  grad_norm=5.850  987.6s
+2026-11-12 01:42:51,823 INFO posext.train: step 500/500  loss=2.4781  ppl?11.92  grad_norm=2.861  1007.8s
+2026-11-12 01:42:51,835 INFO posext.train: Saved checkpoint at step 500 -> outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2
+2026-11-12 01:42:52,407 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.ppl --run outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2 --split validation --lengths 4096,8192,16384 --max-sequences 50 --device cuda --out outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2/val_ppl.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 848.53it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.33it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.53it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.22it/s]
+2026-11-12 01:43:09,737 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+2026-11-12 01:43:14,473 INFO posext.eval.ppl: PPL@4096 (validation): 16.028  (nll=2.7743, 204750 tokens)
+2026-11-12 01:43:25,651 INFO posext.eval.ppl: PPL@8192 (validation): 14.256  (nll=2.6572, 409550 tokens)
+2026-11-12 01:43:53,110 INFO posext.eval.ppl: PPL@16384 (validation): 13.866  (nll=2.6295, 819150 tokens)
+{
+  "split": "validation",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.774349637031555,
+      "ppl": 16.028199457802774,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 2.657172427177429,
+      "ppl": 14.255922396947813,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 2.6294561004638672,
+      "ppl": 13.866226016859548,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2"
+}
+2026-11-12 01:43:53,764 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.passkey --run outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2 --seed 0 --n-per-cell 10 --device cuda --out outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2/val_passkey.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.passkey' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.passkey'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1005.11it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.25it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.42it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.12it/s]
+2026-11-12 01:43:59,074 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+This is a friendly reminder - the current text generation call has exceeded the model's predefined maximum length (4096). Depending on the model, you may observe exceptions, performance degradation, or nothing at all.
+2026-11-12 01:44:01,766 INFO posext.eval.passkey: passkey 10/150  running acc=1.00
+2026-11-12 01:44:04,069 INFO posext.eval.passkey: passkey 20/150  running acc=1.00
+2026-11-12 01:44:06,372 INFO posext.eval.passkey: passkey 30/150  running acc=1.00
+2026-11-12 01:44:08,662 INFO posext.eval.passkey: passkey 40/150  running acc=1.00
+2026-11-12 01:44:10,944 INFO posext.eval.passkey: passkey 50/150  running acc=1.00
+2026-11-12 01:44:14,467 INFO posext.eval.passkey: passkey 60/150  running acc=1.00
+2026-11-12 01:44:17,989 INFO posext.eval.passkey: passkey 70/150  running acc=1.00
+2026-11-12 01:44:21,513 INFO posext.eval.passkey: passkey 80/150  running acc=1.00
+2026-11-12 01:44:25,037 INFO posext.eval.passkey: passkey 90/150  running acc=1.00
+2026-11-12 01:44:28,561 INFO posext.eval.passkey: passkey 100/150  running acc=1.00
+2026-11-12 01:44:35,836 INFO posext.eval.passkey: passkey 110/150  running acc=0.91
+2026-11-12 01:44:43,114 INFO posext.eval.passkey: passkey 120/150  running acc=0.83
+2026-11-12 01:44:50,393 INFO posext.eval.passkey: passkey 130/150  running acc=0.77
+2026-11-12 01:44:57,142 INFO posext.eval.passkey: passkey 140/150  running acc=0.74
+2026-11-12 01:45:04,423 INFO posext.eval.passkey: passkey 150/150  running acc=0.73
+{
+  "seed": 0,
+  "n": 150,
+  "accuracy": 0.7333333333333333,
+  "by_length": {
+    "4096": 1.0,
+    "8192": 1.0,
+    "16384": 0.2
+  },
+  "by_depth": {
+    "0.0": 0.6666666666666666,
+    "0.25": 0.6666666666666666,
+    "0.5": 0.6666666666666666,
+    "0.75": 0.7666666666666667,
+    "1.0": 0.9
+  },
+  "source": "outputs/sweeps/temp_layer_inityarn/runs/rq1_learned_freq_temp_layer__lr1e-2"
+}
+Sweep temp_layer_inityarn  (submitted 2026-11-12 01:13:55, jobs {'train': '8587814', 'select': '8587815', 'test': '8587816', 'ruler': '8587817', 'ruler_merge': '8587818'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_layer__lr1e-2                              yes      13.866    0.733
+rq1_learned_freq_temp_layer__lr3e-2                              yes      14.335    0.827
+
+Not selected yet.

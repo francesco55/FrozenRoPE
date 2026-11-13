@@ -1,0 +1,53 @@
+#!/bin/bash -l
+#$ -P cs599b1
+#$ -j y
+
+# One stage of a sweep pipeline. Do not submit by hand: `scripts/scc/pipeline.sh` (posext.pipeline
+# submit) passes the job name, log path, resources (GPU or CPU), wall time, array range,
+# -hold_jid dependencies and these variables on the qsub command line:
+#   SWEEP_DIR=outputs/sweeps/<name>   STAGE=variant|select|test|ruler|ruler_merge|retest (+ PASSKEY_N)   POSEXT_ROOT=<repo>
+# Every stage skips work whose outputs already exist, so re-running the pipeline is safe.
+
+set -euo pipefail
+
+: "${SWEEP_DIR:?set by posext.pipeline submit}"
+: "${STAGE:?set by posext.pipeline submit}"
+POSEXT_ROOT="${POSEXT_ROOT:-/projectnb/cs599b1/students/${USER:-$(id -un)}/FrozenRoPE}"
+cd "$POSEXT_ROOT"
+# shellcheck disable=SC1091
+source "${POSEXT_ROOT}/scripts/scc/env.sh"
+
+echo "Host=$(hostname)  JOB_ID=${JOB_ID:-}  TASK=${SGE_TASK_ID:-}  STAGE=$STAGE  SWEEP_DIR=$SWEEP_DIR"
+case "$STAGE" in variant|test|ruler|retest) nvidia-smi || true ;; esac
+
+if command -v uv >/dev/null 2>&1; then
+  PY=(uv run python)
+elif [[ -x "${UV_PROJECT_ENVIRONMENT}/bin/python" ]]; then
+  PY=("${UV_PROJECT_ENVIRONMENT}/bin/python")
+else
+  echo "No uv and no venv at $UV_PROJECT_ENVIRONMENT — run scripts/scc/setup.sh first" >&2
+  exit 1
+fi
+
+case "$STAGE" in
+  variant)
+    "${PY[@]}" -m posext.pipeline variant "$SWEEP_DIR" --index "${SGE_TASK_ID:?array task id}" ;;
+  select)
+    "${PY[@]}" -m posext.pipeline select "$SWEEP_DIR" ;;
+  test)
+    "${PY[@]}" -m posext.pipeline test "$SWEEP_DIR" ;;
+  ruler)
+    # Everything RULER needs was downloaded by ruler_setup.sh (same as ruler.qsub).
+    export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
+    "${PY[@]}" -m posext.pipeline ruler "$SWEEP_DIR" --index "${SGE_TASK_ID:?array task id}" ;;
+  ruler_merge)
+    "${PY[@]}" -m posext.pipeline ruler_merge "$SWEEP_DIR" ;;
+  retest)
+    "${PY[@]}" -m posext.pipeline retest_stage "$SWEEP_DIR" --n "${PASSKEY_N:?set by posext.pipeline retest}" \
+      --prompt "${PASSKEY_PROMPT:-v1}" ;;
+  *)
+    echo "Unknown STAGE=$STAGE" >&2
+    exit 1 ;;
+esac
+
+"${PY[@]}" -m posext.pipeline status "$SWEEP_DIR" || true

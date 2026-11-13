@@ -67,11 +67,20 @@ Branch `chore/skeleton-setup`. Update this list as steps land.
 - [x] 6. `posext/train.py` + `posext/config.py` + `posext/loss.py` (chunked CE) +
   `posext/export.py` + `configs/rq1/*.yaml` + `configs/smoke.yaml`. Resume via
   `train_state.pt`; per-group grad clip for freq vs temperature.
-- [x] 7. `posext/eval/ppl.py`, `passkey.py`, `shortctx.py` (lm-eval); `ruler.py` is a
-  stub that exports the model and documents the NVIDIA RULER checkout.
+- [x] 7. `posext/eval/ppl.py`, `passkey.py`, `shortctx.py` (lm-eval), `ruler.py`
+  (`setup` / `prepare` / `run` / `score`; RULER's data + scoring, our inference; see notes).
+  Shared loading + greedy generation: `posext/eval/common.py`. Tests: `tests/test_ruler.py`.
 - [x] 8. `posext/baselines/yarn_grid.py` (val PPL @16k + val passkey → combined z-score).
 - [x] 9. `scripts/scc/{train,eval,yarn_grid}.qsub` (placeholders) + README run instructions.
   RQ4 stub: `posext/rq4.py`.
+  - Overnight pipeline: `scripts/scc/pipeline.sh <config> --sweep key=v1,v2` (`posext/pipeline.py`,
+    `scripts/scc/sweep_stage.qsub`): train array -> val PPL/passkey -> select -> test PPL/passkey +
+    RULER (array, one job per length) -> merge, chained with `-hold_jid`. Baselines (none/pi/yarn)
+    use the same call (no training; eval flags checked against the config). Tests:
+    `tests/test_pipeline.py`. README has the smoke-run recipe.
+  - Training curves: `uv run --with matplotlib python -m posext.plot_training outputs/sweeps/<...>`
+    (`posext/plot_training.py`, parses the `step k/N loss=...` log lines; matplotlib not a dependency).
+    Tests: `tests/test_plot_training.py` (plot test runs only with `--with matplotlib`).
 
 Notes for the remaining steps:
 - **All positional parameters live in one module, `model.model.posext`** (`PositionalEncoding`).
@@ -121,6 +130,19 @@ Notes for the remaining steps:
   `num_workers=0` (or one collator per worker with distinct seeds).
 - The copied model file keeps upstream style (ruff per-file ignores in `pyproject.toml`) so it
   diffs cleanly against transformers 4.57.1's `modeling_olmo2.py`.
+- **RULER = RULER's data and scoring, our inference.** RULER (pinned `RULER_COMMIT` in
+  `posext/eval/ruler.py`, Apache 2.0) generates the data with its own `prepare.py` (`base`
+  template, OLMo-2 HF tokenizer, default task configs); prompts are `input + answer_prefix`,
+  greedy, `tokens_to_generate` from RULER (128 for NIAH), batch size 1; scoring is RULER's
+  `string_match_all` (copied, attributed). We don't use RULER's inference: the paper's vLLM
+  can't run our patched attention, and its HF backend needs a full export per run (no
+  training-free modes), loads via `trust_remote_code` + FA2 with a silent fallback, and its
+  `evaluate.py` imports NeMo. Validation seed 1234 / 100 samples, test seed 42 (RULER's
+  default) / 500 samples (the paper's count). Data: `$POSEXT_DATA_CACHE/ruler/<tokenizer>/`;
+  each file has a `.meta.json` (commit, seed, count) that is checked on load, because RULER's
+  `prepare.py` keeps any existing file with the right line count and swallows task-script
+  errors. `run` is resumable (resubmit after wall time). SCC: `ruler_setup.sh` on a login
+  node (internet, ~2 min), `ruler_prepare.qsub` (CPU), `ruler.qsub` (GPU).
 
 ## Repository layout
 
@@ -213,7 +235,12 @@ values and the attention kernel unchanged). Two forms, selected by `temp.form`:
   `positions` is correct there. Evaluation should use batch size 1 or `positions`.)
 
 Optional field `pos.init_from_yarn: bool` (default false) initializes `a` from YaRN's
-frequencies instead of 0, to compare against AdaRoPE's initialization.
+frequencies (settings from `pos.yarn`) instead of 0, to compare against AdaRoPE's initialization.
+For `learned_freq_temp` it also starts the temperature at YaRN's attention scaling
+(team decision 2026-11-12): YaRN multiplies cos/sin by f, i.e. logits by f², so
+`log_tau = ln f²` (constant) or `tau = 1/f²`, `gamma = 0` (AdaScale), and the model equals
+`yarn` mode exactly at step 0 (tested). `learned_freq` has no temperature, so there it sets
+the frequencies only.
 
 ### DaRoPE coordinate
 
@@ -263,8 +290,9 @@ count at startup and store it with results.
 - `eval/passkey.py`: synthetic passkey retrieval (repeated filler text with a random
   5-digit key at controlled depths), accuracy over lengths 4k–16k and depths 0–100%.
   Generate validation and test prompts with different seeds.
-- `eval/ruler.py`: thin wrapper around NVIDIA's RULER repo for a subset of tasks
-  (needle-in-a-haystack variants, variable tracking) at 4k/8k/16k.
+- `eval/ruler.py`: NVIDIA RULER (Hsieh et al., 2024) at 4k/8k/16k. Default tasks: the 8
+  needle-in-a-haystack variants (team decision 2026-11-11); variable tracking (`vt`) and the
+  other RULER tasks are available via `--tasks`.
 - `eval/shortctx.py`: HellaSwag, ARC-Easy, PIQA via `lm-evaluation-harness`.
 - RQ3 extra probe: key–value recall with many competing pairs (stub for now).
 - All results are written as JSON keyed by config name and seed.
@@ -334,8 +362,3 @@ change, and flag in the README or PR description if something argues against the
     the RQ3 runs.
 - Reference repos worth reading: `dwzhu-pku/PoSE` (position skipping, training loop),
   `jquesnelle/yarn` (PI/YaRN, passkey and perplexity scripts), NVIDIA `RULER`.
-
-## Out of scope for the skeleton
-
-Running full experiment sweeps, RQ4 implementation, head-level interpretability
-analysis, plotting beyond a simple results table.

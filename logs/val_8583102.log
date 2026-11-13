@@ -1,0 +1,45 @@
+POSEXT_ROOT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/nnandini/.cache/uv
+HF_HOME=/projectnb/cs599b1/students/nnandini/.cache/huggingface
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/nnandini/posext_data
+/projectnb/cs599b1/students/nnandini/final-project/FrozenRoPE/.venv/lib/python3.11/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.passkey' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.passkey'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 497.43it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.27s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.54it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.35it/s]
+2026-11-11 19:57:14,405 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq
+This is a friendly reminder - the current text generation call has exceeded the model's predefined maximum length (4096). Depending on the model, you may observe exceptions, performance degradation, or nothing at all.
+2026-11-11 19:57:17,767 INFO posext.eval.passkey: passkey 10/150  running acc=0.10
+2026-11-11 19:57:20,842 INFO posext.eval.passkey: passkey 20/150  running acc=0.25
+2026-11-11 19:57:23,900 INFO posext.eval.passkey: passkey 30/150  running acc=0.37
+2026-11-11 19:57:26,962 INFO posext.eval.passkey: passkey 40/150  running acc=0.42
+2026-11-11 19:57:30,014 INFO posext.eval.passkey: passkey 50/150  running acc=0.54
+2026-11-11 19:57:33,986 INFO posext.eval.passkey: passkey 60/150  running acc=0.45
+2026-11-11 19:57:37,946 INFO posext.eval.passkey: passkey 70/150  running acc=0.39
+2026-11-11 19:57:41,906 INFO posext.eval.passkey: passkey 80/150  running acc=0.34
+2026-11-11 19:57:45,875 INFO posext.eval.passkey: passkey 90/150  running acc=0.36
+2026-11-11 19:57:49,854 INFO posext.eval.passkey: passkey 100/150  running acc=0.41
+2026-11-11 19:57:56,039 INFO posext.eval.passkey: passkey 110/150  running acc=0.37
+2026-11-11 19:58:02,235 INFO posext.eval.passkey: passkey 120/150  running acc=0.34
+2026-11-11 19:58:08,455 INFO posext.eval.passkey: passkey 130/150  running acc=0.32
+2026-11-11 19:58:14,665 INFO posext.eval.passkey: passkey 140/150  running acc=0.29
+2026-11-11 19:58:20,874 INFO posext.eval.passkey: passkey 150/150  running acc=0.27
+{
+  "seed": 1,
+  "n": 150,
+  "accuracy": 0.2733333333333333,
+  "by_length": {
+    "4096": 0.54,
+    "8192": 0.28,
+    "16384": 0.0
+  },
+  "by_depth": {
+    "0.0": 0.03333333333333333,
+    "0.25": 0.13333333333333333,
+    "0.5": 0.2,
+    "0.75": 0.36666666666666664,
+    "1.0": 0.6333333333333333
+  },
+  "source": "outputs/rq1f_learned_freq_head_lr3e-2"
+}

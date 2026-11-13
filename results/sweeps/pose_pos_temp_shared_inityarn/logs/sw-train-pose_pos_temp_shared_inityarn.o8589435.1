@@ -1,0 +1,361 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-606  JOB_ID=8589435  TASK=1  STAGE=variant  SWEEP_DIR=outputs/sweeps/pose_pos_temp_shared_inityarn
+Thu Nov 12 08:55:59 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX A6000               On  |   00000000:01:00.0 Off |                    0 |
+| 49%   78C    P2            299W /  300W |    6590MiB /  46068MiB |     92%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX A6000               On  |   00000000:21:00.0 Off |                    0 |
+| 30%   43C    P2             78W /  300W |    1302MiB /  46068MiB |     20%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX A6000               On  |   00000000:41:00.0 Off |                    0 |
+| 36%   54C    P5             19W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX A6000               On  |   00000000:61:00.0 Off |                    0 |
+| 30%   34C    P5             19W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX A6000               On  |   00000000:81:00.0 Off |                    0 |
+| 30%   33C    P5             25W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX A6000               On  |   00000000:A1:00.0 Off |                    0 |
+| 30%   33C    P5             21W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX A6000               On  |   00000000:C1:00.0 Off |                    0 |
+| 30%   33C    P5             23W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX A6000               On  |   00000000:E1:00.0 Off |                    0 |
+| 30%   33C    P5             21W /  300W |       1MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A         3570310      C   ...ndaenvs/prodistill/bin/python       6580MiB |
+|    1   N/A  N/A         3515471      C   ...ng/.conda/envs/cgm/bin/python       1292MiB |
++-----------------------------------------------------------------------------------------+
+2026-11-12 08:56:06,670 INFO posext.pipeline: Variant 1/2: rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 08:56:06,670 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.train --config outputs/sweeps/pose_pos_temp_shared_inityarn/configs/rq1_learned_freq_temp_shared__lr1e-2.yaml --device cuda --no-wandb --resume
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 2281.37it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.04it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.96it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.73it/s]
+2026-11-12 08:56:13,343 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+2026-11-12 08:56:13,345 INFO posext.models.build: Trainable parameters: 576 of 1,484,917,312 (0.000039%) in ['model.posext.a', 'model.posext.tau', 'model.posext.gamma']
+2026-11-12 08:57:50,866 INFO posext.data.pg19: Cached 400 PG-19 train chunks of length 4096 at /projectnb/cs599b1/students/fdzeolla/posext_data/pg19_train_4096_c2831d23c0bb.pt
+2026-11-12 08:57:50,922 INFO posext.train: Training rq1_learned_freq_temp_shared__lr1e-2 for 2000 steps on cuda (regime=pose, seq_len=4096, target_len=16384)
+2026-11-12 08:57:53,443 INFO posext.train: step 1/2000  loss=2.6025  ppl?13.50  grad_norm=17.227  2.5s
+2026-11-12 08:57:59,293 INFO posext.train: step 10/2000  loss=2.4461  ppl?11.54  grad_norm=5.031  8.4s
+2026-11-12 08:58:05,587 INFO posext.train: step 20/2000  loss=2.8143  ppl?16.68  grad_norm=7.670  14.7s
+2026-11-12 08:58:11,890 INFO posext.train: step 30/2000  loss=2.7060  ppl?14.97  grad_norm=98.683  21.0s
+2026-11-12 08:58:18,211 INFO posext.train: step 40/2000  loss=2.5354  ppl?12.62  grad_norm=5.061  27.3s
+2026-11-12 08:58:24,547 INFO posext.train: step 50/2000  loss=2.9480  ppl?19.07  grad_norm=198.613  33.6s
+2026-11-12 08:58:30,900 INFO posext.train: step 60/2000  loss=2.6054  ppl?13.54  grad_norm=1342.860  40.0s
+2026-11-12 08:58:37,274 INFO posext.train: step 70/2000  loss=2.7918  ppl?16.31  grad_norm=10.273  46.4s
+2026-11-12 08:58:43,657 INFO posext.train: step 80/2000  loss=2.7839  ppl?16.18  grad_norm=166.352  52.7s
+2026-11-12 08:58:50,363 INFO posext.train: step 90/2000  loss=2.5580  ppl?12.91  grad_norm=3.019  59.4s
+2026-11-12 08:58:56,769 INFO posext.train: step 100/2000  loss=2.8494  ppl?17.28  grad_norm=153.054  65.8s
+2026-11-12 08:58:56,776 INFO posext.train: Saved checkpoint at step 100 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 08:59:03,191 INFO posext.train: step 110/2000  loss=3.1668  ppl?23.73  grad_norm=1.732  72.3s
+2026-11-12 08:59:09,613 INFO posext.train: step 120/2000  loss=2.6298  ppl?13.87  grad_norm=37.998  78.7s
+2026-11-12 08:59:16,039 INFO posext.train: step 130/2000  loss=2.7870  ppl?16.23  grad_norm=10.647  85.1s
+2026-11-12 08:59:22,472 INFO posext.train: step 140/2000  loss=2.4438  ppl?11.52  grad_norm=1.416  91.5s
+2026-11-12 08:59:28,912 INFO posext.train: step 150/2000  loss=2.6293  ppl?13.86  grad_norm=104.777  98.0s
+2026-11-12 08:59:35,441 INFO posext.train: step 160/2000  loss=3.1589  ppl?23.55  grad_norm=122.578  104.5s
+2026-11-12 08:59:41,905 INFO posext.train: step 170/2000  loss=2.6889  ppl?14.72  grad_norm=0.773  111.0s
+2026-11-12 08:59:48,371 INFO posext.train: step 180/2000  loss=2.4796  ppl?11.94  grad_norm=0.721  117.4s
+2026-11-12 08:59:54,838 INFO posext.train: step 190/2000  loss=2.6968  ppl?14.83  grad_norm=0.735  123.9s
+2026-11-12 09:00:01,305 INFO posext.train: step 200/2000  loss=2.5847  ppl?13.26  grad_norm=10.535  130.4s
+2026-11-12 09:00:01,310 INFO posext.train: Saved checkpoint at step 200 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:00:07,777 INFO posext.train: step 210/2000  loss=2.8824  ppl?17.86  grad_norm=0.693  136.9s
+2026-11-12 09:00:14,237 INFO posext.train: step 220/2000  loss=2.6011  ppl?13.48  grad_norm=2.239  143.3s
+2026-11-12 09:00:20,694 INFO posext.train: step 230/2000  loss=3.0671  ppl?21.48  grad_norm=4.902  149.8s
+2026-11-12 09:00:27,267 INFO posext.train: step 240/2000  loss=2.6790  ppl?14.57  grad_norm=4.166  156.3s
+2026-11-12 09:00:33,721 INFO posext.train: step 250/2000  loss=2.6182  ppl?13.71  grad_norm=4.228  162.8s
+2026-11-12 09:00:40,174 INFO posext.train: step 260/2000  loss=2.7656  ppl?15.89  grad_norm=87.704  169.3s
+2026-11-12 09:00:46,628 INFO posext.train: step 270/2000  loss=2.5608  ppl?12.95  grad_norm=0.555  175.7s
+2026-11-12 09:00:53,082 INFO posext.train: step 280/2000  loss=2.4937  ppl?12.11  grad_norm=0.567  182.2s
+2026-11-12 09:00:59,536 INFO posext.train: step 290/2000  loss=2.5781  ppl?13.17  grad_norm=0.577  188.6s
+2026-11-12 09:01:05,992 INFO posext.train: step 300/2000  loss=2.7503  ppl?15.65  grad_norm=4.047  195.1s
+2026-11-12 09:01:05,997 INFO posext.train: Saved checkpoint at step 300 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:01:12,452 INFO posext.train: step 310/2000  loss=3.2233  ppl?25.11  grad_norm=1.511  201.5s
+2026-11-12 09:01:18,955 INFO posext.train: step 320/2000  loss=2.6147  ppl?13.66  grad_norm=6.642  208.0s
+2026-11-12 09:01:25,413 INFO posext.train: step 330/2000  loss=2.8776  ppl?17.77  grad_norm=3.251  214.5s
+2026-11-12 09:01:31,870 INFO posext.train: step 340/2000  loss=2.7419  ppl?15.52  grad_norm=1.694  220.9s
+2026-11-12 09:01:38,329 INFO posext.train: step 350/2000  loss=2.6401  ppl?14.02  grad_norm=1.643  227.4s
+2026-11-12 09:01:44,784 INFO posext.train: step 360/2000  loss=2.7800  ppl?16.12  grad_norm=1.493  233.9s
+2026-11-12 09:01:51,242 INFO posext.train: step 370/2000  loss=2.6973  ppl?14.84  grad_norm=0.439  240.3s
+2026-11-12 09:01:57,699 INFO posext.train: step 380/2000  loss=2.6826  ppl?14.62  grad_norm=1.446  246.8s
+2026-11-12 09:02:04,156 INFO posext.train: step 390/2000  loss=2.7871  ppl?16.23  grad_norm=4.834  253.2s
+2026-11-12 09:02:10,764 INFO posext.train: step 400/2000  loss=2.9050  ppl?18.27  grad_norm=64.266  259.8s
+2026-11-12 09:02:10,769 INFO posext.train: Saved checkpoint at step 400 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:02:17,241 INFO posext.train: step 410/2000  loss=2.4219  ppl?11.27  grad_norm=17.902  266.3s
+2026-11-12 09:02:23,700 INFO posext.train: step 420/2000  loss=2.7926  ppl?16.32  grad_norm=236.154  272.8s
+2026-11-12 09:02:30,153 INFO posext.train: step 430/2000  loss=2.8322  ppl?16.98  grad_norm=0.914  279.2s
+2026-11-12 09:02:36,606 INFO posext.train: step 440/2000  loss=2.7890  ppl?16.26  grad_norm=1.050  285.7s
+2026-11-12 09:02:43,059 INFO posext.train: step 450/2000  loss=2.6061  ppl?13.55  grad_norm=2.550  292.1s
+2026-11-12 09:02:49,512 INFO posext.train: step 460/2000  loss=2.4819  ppl?11.96  grad_norm=1.677  298.6s
+2026-11-12 09:02:55,965 INFO posext.train: step 470/2000  loss=2.4920  ppl?12.09  grad_norm=1.692  305.0s
+2026-11-12 09:03:02,483 INFO posext.train: step 480/2000  loss=2.6409  ppl?14.03  grad_norm=1.743  311.6s
+2026-11-12 09:03:08,937 INFO posext.train: step 490/2000  loss=2.7381  ppl?15.46  grad_norm=3.954  318.0s
+2026-11-12 09:03:15,392 INFO posext.train: step 500/2000  loss=2.3924  ppl?10.94  grad_norm=1.950  324.5s
+2026-11-12 09:03:15,397 INFO posext.train: Saved checkpoint at step 500 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:03:21,851 INFO posext.train: step 510/2000  loss=2.7020  ppl?14.91  grad_norm=0.486  330.9s
+2026-11-12 09:03:28,305 INFO posext.train: step 520/2000  loss=2.5771  ppl?13.16  grad_norm=74.169  337.4s
+2026-11-12 09:03:34,760 INFO posext.train: step 530/2000  loss=2.6000  ppl?13.46  grad_norm=0.787  343.8s
+2026-11-12 09:03:41,213 INFO posext.train: step 540/2000  loss=2.8870  ppl?17.94  grad_norm=915.459  350.3s
+2026-11-12 09:03:47,667 INFO posext.train: step 550/2000  loss=2.6428  ppl?14.05  grad_norm=1.579  356.7s
+2026-11-12 09:03:54,171 INFO posext.train: step 560/2000  loss=2.6522  ppl?14.19  grad_norm=1.723  363.2s
+2026-11-12 09:04:00,623 INFO posext.train: step 570/2000  loss=2.7624  ppl?15.84  grad_norm=3.106  369.7s
+2026-11-12 09:04:07,076 INFO posext.train: step 580/2000  loss=2.7267  ppl?15.28  grad_norm=1.668  376.2s
+2026-11-12 09:04:13,528 INFO posext.train: step 590/2000  loss=2.7303  ppl?15.34  grad_norm=1.199  382.6s
+2026-11-12 09:04:19,981 INFO posext.train: step 600/2000  loss=2.5726  ppl?13.10  grad_norm=2.096  389.1s
+2026-11-12 09:04:19,986 INFO posext.train: Saved checkpoint at step 600 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:04:26,438 INFO posext.train: step 610/2000  loss=2.4792  ppl?11.93  grad_norm=11.499  395.5s
+2026-11-12 09:04:32,892 INFO posext.train: step 620/2000  loss=2.8110  ppl?16.63  grad_norm=7.486  402.0s
+2026-11-12 09:04:39,411 INFO posext.train: step 630/2000  loss=2.6423  ppl?14.05  grad_norm=2.089  408.5s
+2026-11-12 09:04:45,865 INFO posext.train: step 640/2000  loss=2.7568  ppl?15.75  grad_norm=2.850  414.9s
+2026-11-12 09:04:52,319 INFO posext.train: step 650/2000  loss=2.7193  ppl?15.17  grad_norm=2.162  421.4s
+2026-11-12 09:04:58,774 INFO posext.train: step 660/2000  loss=2.6226  ppl?13.77  grad_norm=0.663  427.9s
+2026-11-12 09:05:05,228 INFO posext.train: step 670/2000  loss=2.7148  ppl?15.10  grad_norm=0.564  434.3s
+2026-11-12 09:05:11,682 INFO posext.train: step 680/2000  loss=2.6479  ppl?14.12  grad_norm=5.366  440.8s
+2026-11-12 09:05:18,134 INFO posext.train: step 690/2000  loss=2.5288  ppl?12.54  grad_norm=0.766  447.2s
+2026-11-12 09:05:24,586 INFO posext.train: step 700/2000  loss=2.5386  ppl?12.66  grad_norm=1.398  453.7s
+2026-11-12 09:05:24,591 INFO posext.train: Saved checkpoint at step 700 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:05:31,095 INFO posext.train: step 710/2000  loss=2.7734  ppl?16.01  grad_norm=2.763  460.2s
+2026-11-12 09:05:37,548 INFO posext.train: step 720/2000  loss=2.6530  ppl?14.20  grad_norm=0.912  466.6s
+2026-11-12 09:05:44,002 INFO posext.train: step 730/2000  loss=2.6034  ppl?13.51  grad_norm=0.526  473.1s
+2026-11-12 09:05:50,454 INFO posext.train: step 740/2000  loss=3.0191  ppl?20.47  grad_norm=158.418  479.5s
+2026-11-12 09:05:56,907 INFO posext.train: step 750/2000  loss=2.7535  ppl?15.70  grad_norm=1.421  486.0s
+2026-11-12 09:06:03,361 INFO posext.train: step 760/2000  loss=2.8976  ppl?18.13  grad_norm=399.292  492.4s
+2026-11-12 09:06:09,815 INFO posext.train: step 770/2000  loss=2.6404  ppl?14.02  grad_norm=0.681  498.9s
+2026-11-12 09:06:16,269 INFO posext.train: step 780/2000  loss=2.6260  ppl?13.82  grad_norm=1.129  505.3s
+2026-11-12 09:06:22,817 INFO posext.train: step 790/2000  loss=2.8913  ppl?18.02  grad_norm=0.320  511.9s
+2026-11-12 09:06:29,280 INFO posext.train: step 800/2000  loss=2.6273  ppl?13.84  grad_norm=1.394  518.4s
+2026-11-12 09:06:29,285 INFO posext.train: Saved checkpoint at step 800 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:06:35,742 INFO posext.train: step 810/2000  loss=2.5037  ppl?12.23  grad_norm=0.849  524.8s
+2026-11-12 09:06:42,198 INFO posext.train: step 820/2000  loss=2.8296  ppl?16.94  grad_norm=1.631  531.3s
+2026-11-12 09:06:48,654 INFO posext.train: step 830/2000  loss=2.6519  ppl?14.18  grad_norm=97.920  537.7s
+2026-11-12 09:06:55,112 INFO posext.train: step 840/2000  loss=2.5341  ppl?12.60  grad_norm=16.060  544.2s
+2026-11-12 09:07:01,569 INFO posext.train: step 850/2000  loss=2.7828  ppl?16.16  grad_norm=18.318  550.6s
+2026-11-12 09:07:08,026 INFO posext.train: step 860/2000  loss=2.6005  ppl?13.47  grad_norm=16.531  557.1s
+2026-11-12 09:07:14,551 INFO posext.train: step 870/2000  loss=2.7287  ppl?15.31  grad_norm=1.099  563.6s
+2026-11-12 09:07:21,007 INFO posext.train: step 880/2000  loss=2.8580  ppl?17.43  grad_norm=4.593  570.1s
+2026-11-12 09:07:27,466 INFO posext.train: step 890/2000  loss=2.6012  ppl?13.48  grad_norm=1.087  576.5s
+2026-11-12 09:07:33,924 INFO posext.train: step 900/2000  loss=2.6109  ppl?13.61  grad_norm=0.870  583.0s
+2026-11-12 09:07:33,930 INFO posext.train: Saved checkpoint at step 900 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:07:40,389 INFO posext.train: step 910/2000  loss=2.5296  ppl?12.55  grad_norm=0.474  589.5s
+2026-11-12 09:07:46,848 INFO posext.train: step 920/2000  loss=2.7714  ppl?15.98  grad_norm=0.901  595.9s
+2026-11-12 09:07:53,307 INFO posext.train: step 930/2000  loss=2.5577  ppl?12.91  grad_norm=0.475  602.4s
+2026-11-12 09:07:59,869 INFO posext.train: step 940/2000  loss=2.6045  ppl?13.53  grad_norm=21.311  608.9s
+2026-11-12 09:08:06,339 INFO posext.train: step 950/2000  loss=2.5605  ppl?12.94  grad_norm=1.892  615.4s
+2026-11-12 09:08:12,802 INFO posext.train: step 960/2000  loss=2.6118  ppl?13.62  grad_norm=1.381  621.9s
+2026-11-12 09:08:19,264 INFO posext.train: step 970/2000  loss=2.7471  ppl?15.60  grad_norm=232.261  628.3s
+2026-11-12 09:08:25,728 INFO posext.train: step 980/2000  loss=2.6198  ppl?13.73  grad_norm=0.843  634.8s
+2026-11-12 09:08:32,191 INFO posext.train: step 990/2000  loss=2.7520  ppl?15.67  grad_norm=3.750  641.3s
+2026-11-12 09:08:38,655 INFO posext.train: step 1000/2000  loss=2.6197  ppl?13.73  grad_norm=30.839  647.7s
+2026-11-12 09:08:38,670 INFO posext.train: Saved checkpoint at step 1000 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:08:45,131 INFO posext.train: step 1010/2000  loss=2.7153  ppl?15.11  grad_norm=31.743  654.2s
+2026-11-12 09:08:51,647 INFO posext.train: step 1020/2000  loss=2.6049  ppl?13.53  grad_norm=0.783  660.7s
+2026-11-12 09:08:58,111 INFO posext.train: step 1030/2000  loss=2.7923  ppl?16.32  grad_norm=5.325  667.2s
+2026-11-12 09:09:04,575 INFO posext.train: step 1040/2000  loss=2.6584  ppl?14.27  grad_norm=0.640  673.7s
+2026-11-12 09:09:11,040 INFO posext.train: step 1050/2000  loss=2.8474  ppl?17.24  grad_norm=2.196  680.1s
+2026-11-12 09:09:17,505 INFO posext.train: step 1060/2000  loss=2.8512  ppl?17.31  grad_norm=5.725  686.6s
+2026-11-12 09:09:23,970 INFO posext.train: step 1070/2000  loss=2.6821  ppl?14.62  grad_norm=11.001  693.0s
+2026-11-12 09:09:30,434 INFO posext.train: step 1080/2000  loss=2.6538  ppl?14.21  grad_norm=0.597  699.5s
+2026-11-12 09:09:36,898 INFO posext.train: step 1090/2000  loss=2.6231  ppl?13.78  grad_norm=45.595  706.0s
+2026-11-12 09:09:43,452 INFO posext.train: step 1100/2000  loss=2.7522  ppl?15.68  grad_norm=164.404  712.5s
+2026-11-12 09:09:43,458 INFO posext.train: Saved checkpoint at step 1100 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:09:49,926 INFO posext.train: step 1110/2000  loss=2.6318  ppl?13.90  grad_norm=76.036  719.0s
+2026-11-12 09:09:56,387 INFO posext.train: step 1120/2000  loss=2.9127  ppl?18.41  grad_norm=53.869  725.5s
+2026-11-12 09:10:02,848 INFO posext.train: step 1130/2000  loss=2.5944  ppl?13.39  grad_norm=0.846  731.9s
+2026-11-12 09:10:09,308 INFO posext.train: step 1140/2000  loss=2.7843  ppl?16.19  grad_norm=55.584  738.4s
+2026-11-12 09:10:15,769 INFO posext.train: step 1150/2000  loss=2.4214  ppl?11.26  grad_norm=0.711  744.8s
+2026-11-12 09:10:22,230 INFO posext.train: step 1160/2000  loss=2.5971  ppl?13.42  grad_norm=0.435  751.3s
+2026-11-12 09:10:28,690 INFO posext.train: step 1170/2000  loss=2.6176  ppl?13.70  grad_norm=0.621  757.8s
+2026-11-12 09:10:35,257 INFO posext.train: step 1180/2000  loss=2.5711  ppl?13.08  grad_norm=0.591  764.3s
+2026-11-12 09:10:41,721 INFO posext.train: step 1190/2000  loss=2.5645  ppl?12.99  grad_norm=0.984  770.8s
+2026-11-12 09:10:48,184 INFO posext.train: step 1200/2000  loss=2.7418  ppl?15.52  grad_norm=0.784  777.3s
+2026-11-12 09:10:48,189 INFO posext.train: Saved checkpoint at step 1200 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:10:54,652 INFO posext.train: step 1210/2000  loss=2.6047  ppl?13.53  grad_norm=0.828  783.7s
+2026-11-12 09:11:01,115 INFO posext.train: step 1220/2000  loss=2.8876  ppl?17.95  grad_norm=0.375  790.2s
+2026-11-12 09:11:07,577 INFO posext.train: step 1230/2000  loss=2.4684  ppl?11.80  grad_norm=0.882  796.7s
+2026-11-12 09:11:14,041 INFO posext.train: step 1240/2000  loss=2.7344  ppl?15.40  grad_norm=0.502  803.1s
+2026-11-12 09:11:20,630 INFO posext.train: step 1250/2000  loss=2.6590  ppl?14.28  grad_norm=5.215  809.7s
+2026-11-12 09:11:27,099 INFO posext.train: step 1260/2000  loss=2.7201  ppl?15.18  grad_norm=0.571  816.2s
+2026-11-12 09:11:33,557 INFO posext.train: step 1270/2000  loss=2.8265  ppl?16.89  grad_norm=1.030  822.6s
+2026-11-12 09:11:40,016 INFO posext.train: step 1280/2000  loss=2.6263  ppl?13.82  grad_norm=1.717  829.1s
+2026-11-12 09:11:46,476 INFO posext.train: step 1290/2000  loss=2.7168  ppl?15.13  grad_norm=0.771  835.6s
+2026-11-12 09:11:52,935 INFO posext.train: step 1300/2000  loss=2.7538  ppl?15.70  grad_norm=3.656  842.0s
+2026-11-12 09:11:52,940 INFO posext.train: Saved checkpoint at step 1300 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:11:59,399 INFO posext.train: step 1310/2000  loss=2.4697  ppl?11.82  grad_norm=1.569  848.5s
+2026-11-12 09:12:05,858 INFO posext.train: step 1320/2000  loss=2.6236  ppl?13.78  grad_norm=1.757  854.9s
+2026-11-12 09:12:12,363 INFO posext.train: step 1330/2000  loss=2.5689  ppl?13.05  grad_norm=1.326  861.4s
+2026-11-12 09:12:18,822 INFO posext.train: step 1340/2000  loss=2.7252  ppl?15.26  grad_norm=57.809  867.9s
+2026-11-12 09:12:25,283 INFO posext.train: step 1350/2000  loss=2.7175  ppl?15.14  grad_norm=21.704  874.4s
+2026-11-12 09:12:31,742 INFO posext.train: step 1360/2000  loss=2.7933  ppl?16.34  grad_norm=0.605  880.8s
+2026-11-12 09:12:38,203 INFO posext.train: step 1370/2000  loss=2.5375  ppl?12.65  grad_norm=1.043  887.3s
+2026-11-12 09:12:44,662 INFO posext.train: step 1380/2000  loss=2.6441  ppl?14.07  grad_norm=2.617  893.7s
+2026-11-12 09:12:51,123 INFO posext.train: step 1390/2000  loss=2.7132  ppl?15.08  grad_norm=1.085  900.2s
+2026-11-12 09:12:57,581 INFO posext.train: step 1400/2000  loss=2.5660  ppl?13.01  grad_norm=4.923  906.7s
+2026-11-12 09:12:57,586 INFO posext.train: Saved checkpoint at step 1400 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:13:04,113 INFO posext.train: step 1410/2000  loss=2.6479  ppl?14.12  grad_norm=48.251  913.2s
+2026-11-12 09:13:10,571 INFO posext.train: step 1420/2000  loss=2.6237  ppl?13.79  grad_norm=4.228  919.6s
+2026-11-12 09:13:17,029 INFO posext.train: step 1430/2000  loss=2.5882  ppl?13.31  grad_norm=1.254  926.1s
+2026-11-12 09:13:23,488 INFO posext.train: step 1440/2000  loss=2.9670  ppl?19.43  grad_norm=3.135  932.6s
+2026-11-12 09:13:29,948 INFO posext.train: step 1450/2000  loss=2.6654  ppl?14.37  grad_norm=264.337  939.0s
+2026-11-12 09:13:36,407 INFO posext.train: step 1460/2000  loss=2.4457  ppl?11.54  grad_norm=2.213  945.5s
+2026-11-12 09:13:42,866 INFO posext.train: step 1470/2000  loss=2.6649  ppl?14.37  grad_norm=2.464  951.9s
+2026-11-12 09:13:49,326 INFO posext.train: step 1480/2000  loss=2.5627  ppl?12.97  grad_norm=0.563  958.4s
+2026-11-12 09:13:55,849 INFO posext.train: step 1490/2000  loss=2.6092  ppl?13.59  grad_norm=1.613  964.9s
+2026-11-12 09:14:02,307 INFO posext.train: step 1500/2000  loss=2.5722  ppl?13.09  grad_norm=2.247  971.4s
+2026-11-12 09:14:02,313 INFO posext.train: Saved checkpoint at step 1500 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:14:08,770 INFO posext.train: step 1510/2000  loss=2.6489  ppl?14.14  grad_norm=4.143  977.8s
+2026-11-12 09:14:15,230 INFO posext.train: step 1520/2000  loss=2.5764  ppl?13.15  grad_norm=4.681  984.3s
+2026-11-12 09:14:21,690 INFO posext.train: step 1530/2000  loss=2.6414  ppl?14.03  grad_norm=0.935  990.8s
+2026-11-12 09:14:28,150 INFO posext.train: step 1540/2000  loss=2.5400  ppl?12.68  grad_norm=0.514  997.2s
+2026-11-12 09:14:34,611 INFO posext.train: step 1550/2000  loss=2.6643  ppl?14.36  grad_norm=36.900  1003.7s
+2026-11-12 09:14:41,072 INFO posext.train: step 1560/2000  loss=2.4664  ppl?11.78  grad_norm=131.592  1010.1s
+2026-11-12 09:14:47,617 INFO posext.train: step 1570/2000  loss=2.6184  ppl?13.71  grad_norm=1.601  1016.7s
+2026-11-12 09:14:54,076 INFO posext.train: step 1580/2000  loss=2.7949  ppl?16.36  grad_norm=4.901  1023.2s
+2026-11-12 09:15:00,535 INFO posext.train: step 1590/2000  loss=2.5857  ppl?13.27  grad_norm=35.046  1029.6s
+2026-11-12 09:15:06,993 INFO posext.train: step 1600/2000  loss=2.4686  ppl?11.81  grad_norm=1.173  1036.1s
+2026-11-12 09:15:06,998 INFO posext.train: Saved checkpoint at step 1600 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:15:13,456 INFO posext.train: step 1610/2000  loss=2.5714  ppl?13.08  grad_norm=4.017  1042.5s
+2026-11-12 09:15:19,914 INFO posext.train: step 1620/2000  loss=2.4911  ppl?12.07  grad_norm=179.871  1049.0s
+2026-11-12 09:15:26,372 INFO posext.train: step 1630/2000  loss=2.6419  ppl?14.04  grad_norm=1.943  1055.4s
+2026-11-12 09:15:32,828 INFO posext.train: step 1640/2000  loss=2.6717  ppl?14.46  grad_norm=1.034  1061.9s
+2026-11-12 09:15:39,349 INFO posext.train: step 1650/2000  loss=2.7189  ppl?15.16  grad_norm=73.437  1068.4s
+2026-11-12 09:15:45,802 INFO posext.train: step 1660/2000  loss=2.5394  ppl?12.67  grad_norm=0.638  1074.9s
+2026-11-12 09:15:52,256 INFO posext.train: step 1670/2000  loss=2.7073  ppl?14.99  grad_norm=0.852  1081.3s
+2026-11-12 09:15:58,712 INFO posext.train: step 1680/2000  loss=2.7841  ppl?16.19  grad_norm=0.898  1087.8s
+2026-11-12 09:16:05,167 INFO posext.train: step 1690/2000  loss=2.4938  ppl?12.11  grad_norm=0.643  1094.2s
+2026-11-12 09:16:11,623 INFO posext.train: step 1700/2000  loss=2.3711  ppl?10.71  grad_norm=0.683  1100.7s
+2026-11-12 09:16:11,627 INFO posext.train: Saved checkpoint at step 1700 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:16:18,080 INFO posext.train: step 1710/2000  loss=2.5800  ppl?13.20  grad_norm=7.928  1107.2s
+2026-11-12 09:16:24,581 INFO posext.train: step 1720/2000  loss=2.9120  ppl?18.39  grad_norm=0.665  1113.7s
+2026-11-12 09:16:31,036 INFO posext.train: step 1730/2000  loss=2.6892  ppl?14.72  grad_norm=1.471  1120.1s
+2026-11-12 09:16:37,492 INFO posext.train: step 1740/2000  loss=2.7188  ppl?15.16  grad_norm=1.431  1126.6s
+2026-11-12 09:16:43,948 INFO posext.train: step 1750/2000  loss=2.7727  ppl?16.00  grad_norm=3.443  1133.0s
+2026-11-12 09:16:50,402 INFO posext.train: step 1760/2000  loss=2.6412  ppl?14.03  grad_norm=1.253  1139.5s
+2026-11-12 09:16:56,856 INFO posext.train: step 1770/2000  loss=2.5385  ppl?12.66  grad_norm=1.022  1145.9s
+2026-11-12 09:17:03,311 INFO posext.train: step 1780/2000  loss=2.5615  ppl?12.96  grad_norm=275.306  1152.4s
+2026-11-12 09:17:09,764 INFO posext.train: step 1790/2000  loss=2.8097  ppl?16.61  grad_norm=3.616  1158.8s
+2026-11-12 09:17:16,364 INFO posext.train: step 1800/2000  loss=2.6586  ppl?14.28  grad_norm=99.636  1165.4s
+2026-11-12 09:17:16,368 INFO posext.train: Saved checkpoint at step 1800 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:17:22,828 INFO posext.train: step 1810/2000  loss=2.6501  ppl?14.15  grad_norm=0.774  1171.9s
+2026-11-12 09:17:29,287 INFO posext.train: step 1820/2000  loss=2.3732  ppl?10.73  grad_norm=1.017  1178.4s
+2026-11-12 09:17:35,744 INFO posext.train: step 1830/2000  loss=2.7149  ppl?15.10  grad_norm=28.639  1184.8s
+2026-11-12 09:17:42,203 INFO posext.train: step 1840/2000  loss=2.8373  ppl?17.07  grad_norm=1.233  1191.3s
+2026-11-12 09:17:48,661 INFO posext.train: step 1850/2000  loss=2.9226  ppl?18.59  grad_norm=16.233  1197.7s
+2026-11-12 09:17:55,119 INFO posext.train: step 1860/2000  loss=2.9168  ppl?18.48  grad_norm=159.143  1204.2s
+2026-11-12 09:18:01,576 INFO posext.train: step 1870/2000  loss=2.5161  ppl?12.38  grad_norm=14.713  1210.7s
+2026-11-12 09:18:08,173 INFO posext.train: step 1880/2000  loss=2.8329  ppl?16.99  grad_norm=1.347  1217.3s
+2026-11-12 09:18:14,643 INFO posext.train: step 1890/2000  loss=2.5452  ppl?12.75  grad_norm=2.723  1223.7s
+2026-11-12 09:18:21,099 INFO posext.train: step 1900/2000  loss=2.4357  ppl?11.42  grad_norm=5.887  1230.2s
+2026-11-12 09:18:21,104 INFO posext.train: Saved checkpoint at step 1900 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:18:27,559 INFO posext.train: step 1910/2000  loss=2.7218  ppl?15.21  grad_norm=0.824  1236.6s
+2026-11-12 09:18:34,016 INFO posext.train: step 1920/2000  loss=2.6507  ppl?14.16  grad_norm=82.753  1243.1s
+2026-11-12 09:18:40,473 INFO posext.train: step 1930/2000  loss=2.6406  ppl?14.02  grad_norm=0.884  1249.6s
+2026-11-12 09:18:46,931 INFO posext.train: step 1940/2000  loss=2.7154  ppl?15.11  grad_norm=17.678  1256.0s
+2026-11-12 09:18:53,388 INFO posext.train: step 1950/2000  loss=2.7202  ppl?15.18  grad_norm=6.167  1262.5s
+2026-11-12 09:18:59,996 INFO posext.train: step 1960/2000  loss=2.6750  ppl?14.51  grad_norm=1.024  1269.1s
+2026-11-12 09:19:06,468 INFO posext.train: step 1970/2000  loss=2.6010  ppl?13.48  grad_norm=0.524  1275.5s
+2026-11-12 09:19:12,937 INFO posext.train: step 1980/2000  loss=2.6965  ppl?14.83  grad_norm=42.148  1282.0s
+2026-11-12 09:19:19,405 INFO posext.train: step 1990/2000  loss=2.8234  ppl?16.83  grad_norm=1.244  1288.5s
+2026-11-12 09:19:25,872 INFO posext.train: step 2000/2000  loss=2.6661  ppl?14.38  grad_norm=0.420  1294.9s
+2026-11-12 09:19:25,877 INFO posext.train: Saved checkpoint at step 2000 -> outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2
+2026-11-12 09:19:26,887 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.ppl --run outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2 --split validation --lengths 4096,8192,16384 --max-sequences 50 --device cuda --out outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2/val_ppl.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 2022.33it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.06it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.99it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.76it/s]
+2026-11-12 09:19:32,917 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+2026-11-12 09:19:42,733 INFO posext.eval.ppl: PPL@4096 (validation): 15.987  (nll=2.7718, 204750 tokens)
+2026-11-12 09:20:02,744 INFO posext.eval.ppl: PPL@8192 (validation): 14.310  (nll=2.6609, 409550 tokens)
+2026-11-12 09:20:46,523 INFO posext.eval.ppl: PPL@16384 (validation): 15.921  (nll=2.7676, 819150 tokens)
+{
+  "split": "validation",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.7717783784866334,
+      "ppl": 15.987039751786927,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 2.6609324502944944,
+      "ppl": 14.309625894641181,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 2.767629151344299,
+      "ppl": 15.920843319510263,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2"
+}
+2026-11-12 09:20:47,453 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.passkey --run outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2 --seed 0 --n-per-cell 10 --device cuda --out outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2/val_passkey.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.passkey' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.passkey'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1030.29it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.03it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.91it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.69it/s]
+2026-11-12 09:20:53,693 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=learned_freq_temp
+This is a friendly reminder - the current text generation call has exceeded the model's predefined maximum length (4096). Depending on the model, you may observe exceptions, performance degradation, or nothing at all.
+2026-11-12 09:20:57,659 INFO posext.eval.passkey: passkey 10/150  running acc=0.50
+2026-11-12 09:21:01,361 INFO posext.eval.passkey: passkey 20/150  running acc=0.70
+2026-11-12 09:21:05,065 INFO posext.eval.passkey: passkey 30/150  running acc=0.70
+2026-11-12 09:21:08,769 INFO posext.eval.passkey: passkey 40/150  running acc=0.78
+2026-11-12 09:21:12,468 INFO posext.eval.passkey: passkey 50/150  running acc=0.82
+2026-11-12 09:21:18,098 INFO posext.eval.passkey: passkey 60/150  running acc=0.85
+2026-11-12 09:21:23,728 INFO posext.eval.passkey: passkey 70/150  running acc=0.87
+2026-11-12 09:21:29,363 INFO posext.eval.passkey: passkey 80/150  running acc=0.89
+2026-11-12 09:21:34,999 INFO posext.eval.passkey: passkey 90/150  running acc=0.89
+2026-11-12 09:21:40,637 INFO posext.eval.passkey: passkey 100/150  running acc=0.90
+2026-11-12 09:21:49,837 INFO posext.eval.passkey: passkey 110/150  running acc=0.82
+2026-11-12 09:21:57,823 INFO posext.eval.passkey: passkey 120/150  running acc=0.75
+2026-11-12 09:22:05,817 INFO posext.eval.passkey: passkey 130/150  running acc=0.69
+2026-11-12 09:22:13,813 INFO posext.eval.passkey: passkey 140/150  running acc=0.64
+2026-11-12 09:22:21,811 INFO posext.eval.passkey: passkey 150/150  running acc=0.60
+{
+  "seed": 0,
+  "n": 150,
+  "accuracy": 0.6,
+  "by_length": {
+    "4096": 0.82,
+    "8192": 0.98,
+    "16384": 0.0
+  },
+  "by_depth": {
+    "0.0": 0.5,
+    "0.25": 0.6333333333333333,
+    "0.5": 0.5666666666666667,
+    "0.75": 0.6333333333333333,
+    "1.0": 0.6666666666666666
+  },
+  "source": "outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2"
+}
+Sweep pose_pos_temp_shared_inityarn  (submitted 2026-11-12 08:53:50, jobs {'train': '8589435', 'select': '8589436', 'test': '8589437', 'ruler': '8589438', 'ruler_merge': '8589439'})
+variant                                                      trained valPPL@16384  passkey
+rq1_learned_freq_temp_shared__lr1e-2                             yes      15.921    0.600
+rq1_learned_freq_temp_shared__lr3e-2                         partial           -        -
+
+Not selected yet.

@@ -1,0 +1,22 @@
+{
+  "split": "test",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.839883122444153,
+      "ppl": 17.113765205202675,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 2.8731329250335693,
+      "ppl": 17.6923603017351,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 2.8654143238067626,
+      "ppl": 17.556325701595682,
+      "tokens": 819150.0
+    }
+  },
+  "source": "outputs/sweeps/pose_pos_temp_shared_inityarn/runs/rq1_learned_freq_temp_shared__lr1e-2"
+}

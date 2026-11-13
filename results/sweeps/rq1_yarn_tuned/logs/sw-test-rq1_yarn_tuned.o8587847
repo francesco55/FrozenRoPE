@@ -1,0 +1,123 @@
+env.sh: HF_HOME was /projectnb/cs599b1/students/fdzeolla/.cache/huggingface; using /projectnb/cs599b1/students/fdzeolla/hf_home
+env.sh: UV_CACHE_DIR was /projectnb/cs599b1/students/fdzeolla/.cache/uv; using /projectnb/cs599b1/students/fdzeolla/uv_cache
+POSEXT_ROOT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE
+UV_PROJECT_ENVIRONMENT=/projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv
+UV_CACHE_DIR=/projectnb/cs599b1/students/fdzeolla/uv_cache
+HF_HOME=/projectnb/cs599b1/students/fdzeolla/hf_home
+POSEXT_DATA_CACHE=/projectnb/cs599b1/students/fdzeolla/posext_data
+Host=scc-211  JOB_ID=8587847  TASK=undefined  STAGE=test  SWEEP_DIR=outputs/sweeps/rq1_yarn_tuned
+Thu Nov 12 06:41:49 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A40                     On  |   00000000:17:00.0 Off |                    0 |
+|  0%   66C    P0            295W /  300W |   41521MiB /  46068MiB |    100%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A40                     On  |   00000000:65:00.0 Off |                    0 |
+|  0%   64C    P0            273W /  300W |   37335MiB /  46068MiB |    100%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA A40                     On  |   00000000:CA:00.0 Off |                    0 |
+|  0%   30C    P8             21W /  300W |       0MiB /  46068MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA A40                     On  |   00000000:E3:00.0 Off |                    0 |
+|  0%   52C    P0            170W /  300W |    1265MiB /  46068MiB |     95%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A         2993348      C   python                                41510MiB |
+|    1   N/A  N/A         3429675      C   ...ng/.conda/envs/cgm/bin/python      37326MiB |
+|    3   N/A  N/A         3066869      C   ...amv/ec601/.scc/env/bin/python       1256MiB |
++-----------------------------------------------------------------------------------------+
+2026-11-12 06:41:57,640 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.ppl --model allenai/OLMo-2-0425-1B --pos-mode yarn --factor 4.0 --beta-fast 64.0 --beta-slow 2.0 --attention-factor 1.2 --split test --lengths 4096,8192,16384 --max-sequences 50 --device cuda --out results/sweeps/rq1_yarn_tuned/test_ppl_rq1_yarn_tuned.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.ppl' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.ppl'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1275.25it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.49s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.27it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.12it/s]
+2026-11-12 06:42:04,910 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=yarn
+2026-11-12 06:42:14,798 INFO posext.eval.ppl: PPL@4096 (test): 19.950  (nll=2.9932, 204750 tokens)
+2026-11-12 06:42:34,716 INFO posext.eval.ppl: PPL@8192 (test): 22.875  (nll=3.1300, 409550 tokens)
+2026-11-12 06:43:18,348 INFO posext.eval.ppl: PPL@16384 (test): 21.375  (nll=3.0622, 819150 tokens)
+{
+  "split": "test",
+  "seed": 0,
+  "lengths": {
+    "4096": {
+      "nll": 2.993211703300476,
+      "ppl": 19.94965207432777,
+      "tokens": 204750.0
+    },
+    "8192": {
+      "nll": 3.1300289630889893,
+      "ppl": 22.87464205313997,
+      "tokens": 409550.0
+    },
+    "16384": {
+      "nll": 3.0622324562072754,
+      "ppl": 21.375223185757832,
+      "tokens": 819150.0
+    }
+  },
+  "source": {
+    "pos_mode": "yarn"
+  }
+}
+2026-11-12 06:43:19,133 INFO posext.pipeline: $ /projectnb/cs599b1/students/fdzeolla/FrozenRoPE/.venv/bin/python -m posext.eval.passkey --model allenai/OLMo-2-0425-1B --pos-mode yarn --factor 4.0 --beta-fast 64.0 --beta-slow 2.0 --attention-factor 1.2 --seed 1 --n-per-cell 10 --device cuda --out results/sweeps/rq1_yarn_tuned/test_passkey_rq1_yarn_tuned.json
+<frozen runpy>:128: RuntimeWarning: 'posext.eval.passkey' found in sys.modules after import of package 'posext.eval', but prior to execution of 'posext.eval.passkey'; this may result in unpredictable behaviour
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 752.61it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.28s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.42it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.27it/s]
+2026-11-12 06:43:26,458 INFO posext.models.build: Loaded allenai/OLMo-2-0425-1B with posext mode=yarn
+This is a friendly reminder - the current text generation call has exceeded the model's predefined maximum length (4096). Depending on the model, you may observe exceptions, performance degradation, or nothing at all.
+2026-11-12 06:43:30,883 INFO posext.eval.passkey: passkey 10/150  running acc=0.90
+2026-11-12 06:43:34,958 INFO posext.eval.passkey: passkey 20/150  running acc=0.90
+2026-11-12 06:43:39,040 INFO posext.eval.passkey: passkey 30/150  running acc=0.93
+2026-11-12 06:43:43,106 INFO posext.eval.passkey: passkey 40/150  running acc=0.95
+2026-11-12 06:43:47,180 INFO posext.eval.passkey: passkey 50/150  running acc=0.94
+2026-11-12 06:43:53,093 INFO posext.eval.passkey: passkey 60/150  running acc=0.95
+2026-11-12 06:43:58,995 INFO posext.eval.passkey: passkey 70/150  running acc=0.96
+2026-11-12 06:44:04,905 INFO posext.eval.passkey: passkey 80/150  running acc=0.93
+2026-11-12 06:44:10,820 INFO posext.eval.passkey: passkey 90/150  running acc=0.88
+2026-11-12 06:44:16,735 INFO posext.eval.passkey: passkey 100/150  running acc=0.79
+2026-11-12 06:44:27,557 INFO posext.eval.passkey: passkey 110/150  running acc=0.80
+2026-11-12 06:44:38,385 INFO posext.eval.passkey: passkey 120/150  running acc=0.76
+2026-11-12 06:44:49,216 INFO posext.eval.passkey: passkey 130/150  running acc=0.72
+2026-11-12 06:45:00,046 INFO posext.eval.passkey: passkey 140/150  running acc=0.71
+2026-11-12 06:45:10,881 INFO posext.eval.passkey: passkey 150/150  running acc=0.68
+{
+  "seed": 1,
+  "n": 150,
+  "accuracy": 0.68,
+  "by_length": {
+    "4096": 0.94,
+    "8192": 0.64,
+    "16384": 0.46
+  },
+  "by_depth": {
+    "0.0": 0.9333333333333333,
+    "0.25": 0.7333333333333333,
+    "0.5": 0.6333333333333333,
+    "0.75": 0.7,
+    "1.0": 0.4
+  },
+  "source": {
+    "pos_mode": "yarn"
+  }
+}
+Sweep rq1_yarn_tuned  (submitted 2026-11-12 01:14:47, jobs {'train': '8587845', 'select': '8587846', 'test': '8587847', 'ruler': '8587848', 'ruler_merge': '8587849'})
+variant                                                      trained valPPL@16384  passkey
+rq1_yarn_tuned                                                     -      18.917    0.727  <- selected
+
+Test results for rq1_yarn_tuned:
+  ppl      PPL@4096=19.950  PPL@8192=22.875  PPL@16384=21.375   (results/sweeps/rq1_yarn_tuned/test_ppl_rq1_yarn_tuned.json)
+  passkey  acc=0.680  by length {'4096': 0.94, '8192': 0.64, '16384': 0.46}   (results/sweeps/rq1_yarn_tuned/test_passkey_rq1_yarn_tuned.json)
+  ruler    pending   (results/sweeps/rq1_yarn_tuned/test_ruler_rq1_yarn_tuned.json)
