@@ -121,7 +121,7 @@ $4$k PPL relative to the unmodified model.
 
 We train only positional parameters (frequency scales and, when used, AdaScale
 temperatures) with next-token cross-entropy on the $16$k PG-19 chunks
-(batch size~$1$, $500$ steps, AdamW, no weight decay, grad clip~$1.0$, bf16).
+(batch size~$1$, $500$ steps, AdamW \citep{loshchilov2019adamw}, no weight decay, grad clip~$1.0$, bf16).
 We sweep LR $\in\{10^{-2},3{\times}10^{-2}\}$ (and earlier $10^{-3}$) and select
 the LR by validation PPL at $16$k.
 Baselines include stock RoPE, Position Interpolation \citep{chen2023pi} (factor~$4$),
@@ -167,9 +167,38 @@ Learned, head & YaRN & 16{,}896 & 17.01 & \textbf{17.41} & \textbf{15.09} & 0.00
 
 \section{Future Work}
 \label{sec:future}
-% Midway outline item 4, "Project plan". Concrete list of remaining experiments/analyses until the final report (Dec 17);
-% note changes from the proposal and why. RQ4 uses LoRA \citep{hu2022lora}.
-TODO.
+\label{sec:plan}
+% Midway outline item 4, "Project plan". Source: report/midway_project_plan.tex.
+% Still to mention: RQ4 (LoRA \citep{hu2022lora}, full fine-tuning) and short-context benchmarks.
+
+Our remaining work follows the proposal's RQ2--RQ4 path and tightens evaluation.
+
+\paragraph{RULER.}
+We will broaden RULER beyond our current eight NIAH tasks and compare more closely
+to the official evaluation stack.
+The reference pipeline depends on vLLM, which cannot run our patched attention, so we
+will keep our HF loaders for inference while aligning data generation, prompts, and
+scoring with RULER's scripts where possible.
+We will also break results down \textbf{per task} (not only averages) and plot
+\textbf{accuracy by needle depth/position} for passkey and NIAH-style probes.
+
+\paragraph{PoSE (RQ2).}
+We will reimplement \textbf{PoSE} \citep{zhu2024pose} closer to the original recipe:
+short contiguous chunks with \textbf{deleted middle text} (or multiple gaps), so skipped
+position IDs correspond to skipped content.
+Our current variant only inserts a gap in contiguous text (pushes neighboring tokens
+apart without removing content); we will treat that as an ablation against true PoSE.
+As an extra idea, we will try \textbf{random/uniform gap sizes} and ask whether gap
+length should be chosen in an informed way (e.g., matching target relative distances)
+without defeating PoSE's goal of cheaper short-sequence training.
+We will log \textbf{validation loss alongside training} for these runs.
+
+\paragraph{Analysis and stretch goals.}
+To explain retrieval wins/losses, we will compare \textbf{attention weights} on
+needle tokens for strong vs.\ weak configurations.
+As a stretch (RQ3), we will retrofit \textbf{DaRoPE}-style \citep{levy2026darope}
+slow-band coordinates onto the frozen backbone and compare them to learned frequencies
+on perplexity and retrieval.
 
 % TODO: remove \nocite{*} once the text cites the papers (it lists every .bib entry).
 \nocite{*}
