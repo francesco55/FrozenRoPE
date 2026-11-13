@@ -59,7 +59,7 @@ We treat context extension as a parameter-efficient learning problem. Given a pr
 \end{equation}
 while preserving its behavior up to $L$. We learn a scale for each RoPE frequency and a per-head temperature (\S\ref{sec:method}), starting from exactly the original model. Beyond the practical goal, this asks a scientific question: \emph{how much of context extension is positional?} If training $\phi$ alone closes most of the gap to fine-tuning $W$, the length limit lies in how positions are encoded, not in the backbone weights.
 
-\paragraph{Questions and progress.}
+\paragraph{Research questions and progress.}
 RQ1 asks what learning RoPE parameters per model, layer or head on a frozen backbone adds beyond tuned YaRN; RQ2 whether they can be learned from 4k sequences alone with PoSE position skipping \citep{zhu2024pose}; RQ3 whether slow bands should instead learn a content-dependent coordinate, as in DaRoPE \citep{levy2026darope}; and RQ4 which backbone weights must change to close what remains. RQ1 is complete on test data: every configuration with a learned temperature beats tuned YaRN on 16k perplexity, and the best one also on RULER (\S\ref{sec:results}). For RQ2, models trained on 4k text match long-data training up to 8k but fail to retrieve at 16k.
 
 \section{Experiments}
@@ -83,7 +83,7 @@ length-dependent scale
 \begin{equation}
 \lambda_h(i) = \frac{1}{\tau_h}\Big[\ln\Big(1 + \frac{\max(i+1,\,L)}{L}\Big)\Big]^{\gamma_h},
 \end{equation}
-with $\tau_h, \gamma_h$ learned per head (512 parameters) and $i+1$ the number of keys query $i$ sees. The bracket is constant up to $L$ and grows beyond it, so $\gamma_h$ sets how much a head sharpens on long contexts, separately from $\tau_h$. Initialization: $\tau_h = 1, \gamma_h = 0$ ($\lambda_h = 1$), or $\tau_h = 1/f^2$ for the YaRN start ($f$: YaRN's attention factor).
+with $\tau_h, \gamma_h$ learned per head (512 parameters) and $i+1$ the number of keys query $i$ sees. With $\tau_h$ alone, the temperature is constant: sharpening that helps at 16k changes the model equally at 4k. The bracket is constant up to $L$ and grows beyond it, so $\gamma_h$ sets how much a head sharpens on long contexts, separately from $\tau_h$. Initialization: $\tau_h = 1, \gamma_h = 0$ ($\lambda_h = 1$), or $\tau_h = 1/f^2$ for the YaRN start ($f$: YaRN's attention factor).
 
 \paragraph{PoSE.} For RQ2, PoSE \citep{zhu2024pose} trains on 4k-token sequences split at a random point, with a random offset added to the second piece's position ids, so relative distances span up to $L'$. Unlike the original, which fine-tunes all weights and takes the second piece's text from later in the document, we train only $\phi$ and keep the text contiguous.
 
@@ -92,14 +92,14 @@ with $\tau_h, \gamma_h$ learned per head (512 parameters) and $i+1$ the number o
 \label{sec:metrics}
 
 Training and perplexity use PG-19 \citep{rae2020pg19}, a corpus of long English books
-(\texttt{emozilla/pg19} mirror; non-overlapping chunks): 100 training chunks of 16k tokens
-(at most one per book), and 50 validation and 50 test chunks at each of 4k / 8k / 16k.
+(\texttt{emozilla/pg19} mirror; OLMo-2 tokenizer; non-overlapping chunks, tails dropped): 100 training chunks of 16k tokens
+(at most one per book; seed~0), and 50 validation and 50 test chunks at each of 4k / 8k / 16k.
 Retrieval is used only for evaluation, with two synthetic benchmarks.
 Passkey \citep{mohtashami2023landmark} inserts a random five-digit key into
 repeated filler at a controlled depth; we score exact key recovery
-(750 test / 150 validation prompts).
+(750 test / 150 validation prompts; seeds 1 / 0).
 RULER \citep{hsieh2024ruler}: we evaluate the eight NIAH task variants
-at 4k / 8k / 16k (500 test / 100 validation samples per task and length), with prompts from RULER's scripts and official string-match
+at 4k / 8k / 16k (500 test / 100 validation samples per task and length; seeds 42 / 1234), with prompts from RULER's scripts and official string-match
 scoring under greedy decoding; inference uses our own Hugging Face code, since RULER's
 vLLM pipeline cannot run our patched attention.
 We report PG-19 perplexity (4k also checks short-context regression), passkey accuracy,
