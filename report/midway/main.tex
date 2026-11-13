@@ -135,9 +135,6 @@ Our remaining work follows the proposal's RQ2--RQ4 path and tightens evaluation.
 \paragraph{Evaluation.}
 We will broaden RULER beyond our current eight NIAH tasks and compare more closely
 to the official evaluation stack.
-The reference pipeline depends on vLLM, which cannot run our patched attention, so we
-will keep our HF loaders for inference while aligning data generation, prompts, and
-scoring with RULER's scripts where possible.
 We will also break results down per task (not only averages) and plot
 accuracy by needle depth/position for passkey and NIAH-style probes.
 
@@ -151,6 +148,8 @@ As an extra idea, we will try random/uniform gap sizes and ask whether gap
 length should be chosen in an informed way (e.g., matching target relative distances)
 without defeating PoSE's goal of cheaper short-sequence training.
 We will log validation loss alongside training for these runs.
+To test whether negative $\gamma_h$ causes the 16k failure, we will clamp $\gamma_h \geq 0$
+at evaluation, which needs no retraining.
 
 \paragraph{DaRoPE (RQ3).}
 Learned frequencies still tie slow-band angles to position, so they grow without bound beyond $L$. Following DaRoPE \citep{levy2026darope}, each head will replace position $m$ on the slow bands with a learned, content-dependent coordinate
