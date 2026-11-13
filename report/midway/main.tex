@@ -36,8 +36,7 @@
 \maketitle
 
 \begin{abstract}
-% < 250 words. Problem + main findings so far. Write last.
-TODO.
+Language models that use rotary position embeddings (RoPE) fail beyond their pretraining length. Extending them usually means fine-tuning all weights or applying a fixed rule such as YaRN. We ask how much of context extension is positional: can a \emph{frozen} model be extended by learning only how it encodes position? We extend OLMo-2-1B from 4k to 16k tokens by training per-band frequency scales, at model, layer or head granularity, together with a per-head attention temperature. This is at most ${\sim}$17k parameters, about 0.001\% of the model. Our best configuration is learned per head and starts from YaRN. Against grid-tuned YaRN, it lowers 16k perplexity on PG-19 from 21.4 to 15.1 and more than doubles RULER needle-in-a-haystack accuracy at 16k ($24.0 \rightarrow 53.1$), while staying within one point of the original model's 4k perplexity. We also find that perplexity alone does not predict long-range retrieval. Next, we test content-dependent slow-band coordinates (DaRoPE) and measure how much of the remaining gap requires changing the backbone weights.
 \end{abstract}
 
 \section{Introduction}
@@ -59,15 +58,16 @@ We treat context extension as a parameter-efficient learning problem. Given a pr
 \begin{equation}
 \min_{\phi}\; \mathbb{E}_{x\sim\mathcal{D}_{L'}}\big[-\log p_{W,\phi}(x)\big],
 \end{equation}
-while preserving its behavior up to $L$. Our base parameterization rescales each frequency, $\hat\theta_{h,j} = e^{a_{h,j}}\theta_j$, and adds a per-head temperature. At $a=0$ the model is exactly the original. Beyond the practical goal, this asks a scientific question: \emph{how much of context extension is positional?} If training $\phi$ alone closes most of the gap to fine-tuning $W$, the length limit lies in how positions are encoded, not in the backbone weights.
+while preserving its behavior up to $L$. We learn a scale for each RoPE frequency and a per-head temperature (\S\ref{sec:method}), starting from exactly the original model. Beyond the practical goal, this asks a scientific question: \emph{how much of context extension is positional?} If training $\phi$ alone closes most of the gap to fine-tuning $W$, the length limit lies in how positions are encoded, not in the backbone weights.
 
 \paragraph{Questions and progress.}
-RQ1 asks what learning RoPE parameters per model, layer or head on a frozen backbone adds beyond tuned YaRN; RQ2 whether they can be learned from 4k sequences alone with PoSE position skipping \citep{zhu2024pose}; RQ3 whether slow bands should instead learn a content-dependent coordinate, as in DaRoPE \citep{levy2026darope}; and RQ4 which backbone weights must change to close what remains. RQ1 is complete on test data: every learned configuration beats tuned YaRN on 16k perplexity while training at most ${\sim}$17k parameters, and the best one, per-head and started from YaRN, also leads on RULER at 16k at a small cost at 4k. Passkey retrieval disagrees for this model, which we analyze in \S\ref{sec:results}. RQ2 is running.
+RQ1 asks what learning RoPE parameters per model, layer or head on a frozen backbone adds beyond tuned YaRN; RQ2 whether they can be learned from 4k sequences alone with PoSE position skipping \citep{zhu2024pose}; RQ3 whether slow bands should instead learn a content-dependent coordinate, as in DaRoPE \citep{levy2026darope}; and RQ4 which backbone weights must change to close what remains. RQ1 is complete on test data: every configuration with a learned temperature beats tuned YaRN on 16k perplexity, and the best one also on RULER (\S\ref{sec:results}). Passkey retrieval disagrees for this model, which we analyze in \S\ref{sec:results}. For RQ2, models trained on 4k text match long-data training up to 8k but fail to retrieve at 16k.
 
 \section{Experiments}
 % "Description of progress" in the midway outline: Methods, Data, Metrics, Training; then Results (Sec. 3).
 
 \subsection{Methods}
+\label{sec:method}
 
 \paragraph{Model.} We extend OLMo-2-0425-1B \citep{olmo2024olmo2}: 16 layers of 16 heads (no grouped-query attention), head dimension 128 (64 bands), RoPE base $b = 5\times10^5$, $L = 4096$.
 
@@ -90,7 +90,7 @@ length-dependent scale
 \end{equation}
 with $\tau_h, \gamma_h$ learned per head (512 parameters) and $i+1$ the number of keys query $i$ sees. With $\tau_h$ alone, the temperature is constant: sharpening that helps at 16k changes the model equally at 4k. The bracket is constant up to $L$ and grows beyond it, so $\gamma_h$ sets how much a head sharpens on long contexts, separately from $\tau_h$. Initialization: $\tau_h = 1, \gamma_h = 0$ ($\lambda_h = 1$), or $\tau_h = 1/f^2$ for the YaRN start ($f$: YaRN's attention factor).
 
-\paragraph{PoSE.} To learn $\phi$ without long sequences, PoSE \citep{zhu2024pose} trains on 4k-token sequences whose position ids skip ahead: the sequence is split into two pieces at a random point, and the second piece's positions are shifted by a random offset, so relative distances span up to $L'$ while the model only ever sees 4k tokens. Unlike the original, which fine-tunes all weights and takes the second piece's text from later in the document, we train only $\phi$ and keep the text contiguous, skipping positions only. We use it for RQ2 (\S\ref{sec:future}).
+\paragraph{PoSE.} To learn $\phi$ without long sequences, PoSE \citep{zhu2024pose} trains on 4k-token sequences whose position ids skip ahead: the sequence is split into two pieces at a random point, and the second piece's positions are shifted by a random offset, so relative distances span up to $L'$ while the model only ever sees 4k tokens. Unlike the original, which fine-tunes all weights and takes the second piece's text from later in the document, we train only $\phi$ and keep the text contiguous, skipping positions only. We use it for RQ2 (\S\ref{sec:results}).
 
 \subsection{Data}
 \label{sec:data}
@@ -113,7 +113,8 @@ repeated filler at a controlled depth; we score exact key recovery
 RULER \citep{hsieh2024ruler}: we evaluate the eight NIAH task variants
 at $4$k / $8$k / $16$k (validation: $100$ samples per task and length, seed~$1234$;
 test: $500$, seed~$42$), with prompts from RULER's scripts and official string-match
-scoring under greedy decoding.
+scoring under greedy decoding; inference uses our own Hugging Face code, since RULER's
+vLLM pipeline cannot run our patched attention.
 
 \subsection{Metrics}
 \label{sec:metrics}
@@ -155,20 +156,16 @@ and typically takes from tens of minutes to a few GPU-hours per checkpoint.
 Our remaining work follows the proposal's RQ2--RQ4 path and tightens evaluation.
 
 \paragraph{Evaluation.}
-We will broaden RULER beyond our current eight NIAH tasks and compare more closely
-to the official evaluation stack.
-The reference pipeline depends on vLLM, which cannot run our patched attention, so we
-will keep our HF loaders for inference while aligning data generation, prompts, and
-scoring with RULER's scripts where possible.
-We will also break results down per task (not only averages) and plot
-accuracy by needle depth/position for passkey and NIAH-style probes.
+We will broaden RULER beyond our current eight NIAH tasks, report per-task scores
+rather than only averages, and extend the per-depth breakdown of Table~\ref{tab:depth}
+from passkey to the NIAH tasks.
 
 \paragraph{PoSE (RQ2).}
 We will reimplement PoSE \citep{zhu2024pose} closer to the original recipe:
 short contiguous chunks with deleted middle text (or multiple gaps), so skipped
 position IDs correspond to skipped content.
-Our current variant only inserts a gap in contiguous text (pushes neighboring tokens
-apart without removing content); we will treat that as an ablation against true PoSE.
+Our current contiguous-text variant (\S\ref{sec:method}) then becomes an ablation
+against true PoSE.
 As an extra idea, we will try random/uniform gap sizes and ask whether gap
 length should be chosen in an informed way (e.g., matching target relative distances)
 without defeating PoSE's goal of cheaper short-sequence training.
